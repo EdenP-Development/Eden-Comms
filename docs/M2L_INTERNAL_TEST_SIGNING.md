@@ -3,6 +3,24 @@
 **Status:** Implementation and disposable-key CI smoke test can be checked without phones.  
 **Not activated:** A real durable signing key and five GitHub **environment secrets** have **not** been provided/configured. A real in-place upgrade has not been tested. Issue #27 stays OPEN.
 
+## After the November 24 organization transfer
+
+The repository is now `EdenP-Development/Eden-Comms`. The
+existing original-package private test-signing workflow continues
+to reference the **same five `EC_INTERNAL_*` secret names** and
+protected `internal-test` environment. Shared EdenP policy prefers
+**organization Actions secrets restricted to this repository**,
+rather than reusing keys from other games. An `internal-test`
+environment secret with the same name may override an organization
+secret; reconcile that privately before dispatch. No verified original
+private signing credentials or certificate currently exist in public
+evidence. Do not create a replacement, re-sign an existing update
+channel with a new key or claim installation continuity.
+The historical setup below targets **environment secrets** and
+must not be used to overwrite existing organization or environment
+credentials. Owner-controlled private backups and a verified
+actual signed APK are required for a persistent internal channel.
+
 ## Why two APK pipelines
 
 - **Every PR/push** still runs the ordinary [Android debug checks](../.github/workflows/android-debug.yml), signing with a **throwaway default Android debug key**. These build artifacts are for static, compile and one-install investigation only. Even with the same `applicationId`, subsequent debug APKs might not install over one another.

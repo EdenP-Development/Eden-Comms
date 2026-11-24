@@ -29,7 +29,7 @@ class FakeGitHub:
         self.calls.append((args, secret_input, extra_env))
         if args == ["gh", "api", "user"]:
             return json.dumps({"login": self.login}).encode()
-        if args == ["gh", "api", "repos/PlayerEden/Eden-Comms/environments/internal-test"]:
+        if args == ["gh", "api", "repos/EdenP-Development/Eden-Comms/environments/internal-test"]:
             return json.dumps({
                 "name": self.environment,
                 "deployment_branch_policy": {
@@ -38,7 +38,7 @@ class FakeGitHub:
                 }
             }).encode()
         if args == ["gh", "api",
-                    "repos/PlayerEden/Eden-Comms/environments/internal-test/deployment-branch-policies"]:
+                    "repos/EdenP-Development/Eden-Comms/environments/internal-test/deployment-branch-policies"]:
             return json.dumps({
                 "branch_policies": [{"name": name} for name in self.branch_names]
             }).encode()

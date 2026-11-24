@@ -22,7 +22,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPOSITORY = "PlayerEden/Eden-Comms"
+REPOSITORY = "EdenP-Development/Eden-Comms"
 ENVIRONMENT = "internal-test"
 ALIAS_PATTERN = re.compile(r"[a-z][a-z0-9_-]{0,63}\Z")
 SECRET_NAMES = (
@@ -227,7 +227,7 @@ def configure(path, alias, runner=run_safely, password_prompt=getpass.getpass,
     fingerprint = inspect_keystore(keystore_path, alias, storepass,
                                    keypass, runner)
     print("PUBLIC certificate SHA-256: " + fingerprint)
-    print("Five environment secrets will be added to PlayerEden/Eden-Comms "
+    print("Five environment secrets will be added to EdenP-Development/Eden-Comms "
           "under the protected internal-test environment.")
     if confirm("Type UPLOAD NEW TEST KEY to continue: ").strip() != "UPLOAD NEW TEST KEY":
         raise SetupError("Owner did not authorize the secret upload")

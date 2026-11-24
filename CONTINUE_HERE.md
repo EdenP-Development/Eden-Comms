@@ -1,14 +1,13 @@
 # Continue Eden Comms
 
-**Organizational integration (November 24, 2026):** [EdenP Development
-pre-transfer inventory and post-transfer checklist](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
-The owner must transfer this repository through its settings. Until an
-actual transfer and post-transfer CI are verified, keep the current
-`PlayerEden/Eden-Comms` source of truth, and do not switch workflow
-repository guards prematurely. Shared standards:
-https://github.com/EdenP-Development/Eden-Development-Standards.
+**EdenP Development organization transfer verified November 24, 2026.**
+Current canonical repository: [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms).
+The same GitHub repository ID, 162 historical branches, issues and main
+source history were preserved. [Transfer evidence and signing boundaries](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
+Shared standards: https://github.com/EdenP-Development/Eden-Development-Standards.
+Do not mistake public-test Preview signing for private production signing.
 
-**Canonical source:** `main` of `PlayerEden/Eden-Comms`. Read this page before
+**Canonical source:** `main` of `EdenP-Development/Eden-Comms`. Read this page before
 coding in a new chat; use live GitHub commit and CI state, not the last chat's
 claims or a local temporary workspace.
 
@@ -27,8 +26,8 @@ Charter is still normative and cannot be overridden by styling decisions.
 4. [Security/privacy contract](docs/PRIVACY_SECURITY_CHARTER.md),
    [local retention policy](docs/DATA_RETENTION_AND_EXPIRY.md),
    [peer trust policy](docs/TRUST_RETENTION_AND_HELP_PLAN.md).
-5. [GitHub Actions](https://github.com/PlayerEden/Eden-Comms/actions)
-   and [pull requests](https://github.com/PlayerEden/Eden-Comms/pulls).
+5. [GitHub Actions](https://github.com/EdenP-Development/Eden-Comms/actions)
+   and [pull requests](https://github.com/EdenP-Development/Eden-Comms/pulls).
 
 ## Development operating agreement
 

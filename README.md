@@ -1,9 +1,11 @@
 # Eden Comms
 
+**Repository transferred November 24, 2026:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms). Existing Android application IDs, keys, artwork, code history and product design are preserved. [Transfer audit and current handoff](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md). Private original-package signing is not yet credential-verified; the public-test Preview signer remains unchanged.
+
 **EdenP Development integration:** [November 24 ownership/signing
 preflight](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md)
 · [Central standards hub](https://github.com/EdenP-Development/Eden-Development-Standards).
-Current repository ownership must be verified live before assuming transfer.
+Ownership transfer and GitHub connector read/write have been verified; current build status is in the handoff.
 
 **Continuing this project in a new chat?** Start at [CONTINUE_HERE.md](CONTINUE_HERE.md) for the current handoff, chronological work log, QA status, and safe next task. The detailed milestone documents remain in `docs/`.
 
@@ -168,7 +170,7 @@ The preview includes an in-app **Privacy & data** explainer under Settings and H
 - [M2s actual chat UI screen, local preview, and real-text security gates](docs/M2S_CHAT_UI_LOCAL_PREVIEW.md)
 - [M2t message-status guide, future ACK meanings and review-only delivery test contract](docs/M2T_MESSAGE_DELIVERY_STATUS_CONTRACT.md)
 - [M2u actual bounded UTF-8 TEXT/ACK parser (unwired) and real LAN security gate](docs/M2U_BOUNDED_TEXT_WIRE_AND_SECURITY_GATE.md)
-- [Core M3 real secure LAN text implementation and independent review tracking](https://github.com/PlayerEden/Eden-Comms/issues/42)
+- [Core M3 real secure LAN text implementation and independent review tracking](https://github.com/EdenP-Development/Eden-Comms/issues/42)
 - [M2v actual two-phone debug approval flow, security limits and physical QA](docs/M2V_DEBUG_BILATERAL_APPROVAL_TEST.md)
 - [M2w required matching TLS 1.3 RFC 9266 exporter binding before debug READY](docs/M2W_DEBUG_TLS_CHANNEL_BINDING_MATCH.md)
 - [M2x session-bound Approve/Decline controls for debug fixed-phrase LAN](docs/M2X_DEBUG_SESSION_BOUND_APPROVAL.md)

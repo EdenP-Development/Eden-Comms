@@ -22,7 +22,7 @@ jobs:
       - name: Guard repository, main branch and authorized actor
         run: |
           set -euo pipefail
-          test "$GITHUB_REPOSITORY" = "PlayerEden/Eden-Comms"
+          test "$GITHUB_REPOSITORY" = "EdenP-Development/Eden-Comms"
           test "$GITHUB_REF" = "refs/heads/main"
           test "$GITHUB_ACTOR" = "PlayerEden"
       - uses: actions/checkout@v4

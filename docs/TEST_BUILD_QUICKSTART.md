@@ -1,7 +1,7 @@
 # Eden Comms Preview — field test quick start
 
 This sheet accompanies the **development-only** APK downloaded from the
-official `PlayerEden/Eden-Comms` GitHub Actions Preview workflow. This is
+official `EdenP-Development/Eden-Comms` GitHub Actions Preview workflow. This is
 NOT a reviewed secure messenger. Use only harmless sample text.
 
 ## Current integrated app — first five minutes
@@ -391,5 +391,5 @@ wired in source. Their two-phone radio and audio behavior remain
 **unverified on real devices**, and all require independent security
 review before production release. No background sessions are promised.
 
-See the canonical [two-phone field test issue #26](https://github.com/PlayerEden/Eden-Comms/issues/26)
+See the canonical [two-phone field test issue #26](https://github.com/EdenP-Development/Eden-Comms/issues/26)
 and [debug LAN usability notes](F0_LAN_CHAT_TEST_USABILITY_2026_11_08.md).

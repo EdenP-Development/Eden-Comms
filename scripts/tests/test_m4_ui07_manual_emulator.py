@@ -31,7 +31,7 @@ class ManualEmulatorHarnessContract(unittest.TestCase):
         s = WORKFLOW.read_text()
         self.assertIn("  workflow_dispatch:", s)
         self.assertIn('test "$GITHUB_REF" = "refs/heads/main"', s)
-        self.assertIn('test "$GITHUB_REPOSITORY" = "PlayerEden/Eden-Comms"', s)
+        self.assertIn('test "$GITHUB_REPOSITORY" = "EdenP-Development/Eden-Comms"', s)
         for bad in ("\n  push:", "\n  pull_request:", "\n  workflow_run:",
                     "\n  schedule:", "secrets.", "EC_INTERNAL_KEYSTORE_",
                     "contents: write"):

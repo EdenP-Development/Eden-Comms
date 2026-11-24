@@ -4,6 +4,40 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## 2026-11-24 — EdenP Development transfer confirmed, workflow migration
+
+**Verified actual GitHub ownership:** now `EdenP-Development/Eden-Comms`;
+stable repo ID `1445090231`, unchanged pre-migration `main`
+`fb495a27ad2150a16c2aa17671ff55c21bfe6b2c`, 162 branches,
+10 open issues including real [visual issue #167](https://github.com/EdenP-Development/Eden-Comms/issues/167),
+0 open PRs before this integration. GitHub read/write/admin proven by
+successful post-transfer branch and source commits.
+
+**Real changes (post-transfer integration PR):** move two Preview
+workflow `github.repository` guards, owner-restricted manual
+internal-test workflow, manual emulator workflow, private signer
+setup helper and its mock tests, to the **org repo path**. Keep
+`PlayerEden` as the sole manual protected signing actor, keep
+`internal-test` environment, exact `main`, strict original
+fingerprint matching, **public AOSP Preview signer and existing
+application IDs unchanged**. Add a migration-specific source
+regression; update active README, Continue, Design Bible,
+Current Handoff, owner Preview guide and signing documentation,
+and preserve all dated milestones and assets.
+
+**Open QA gates:** exact PR-head Android/JVM/Python/security CI,
+post-merge main CI, new org-hosted signed Preview and actual
+emulator checks still **pending**; private original-package
+signing secrets/key custody cannot be confirmed from public data,
+so no key was generated or rotated. Existing phone install-over,
+real two-phone matrix, privacy and independent crypto QA remain
+**NOT RUN**. There is **no verified itch public release**.
+
+**Next:** complete PR/main and org-preview evidence, update **only**
+Eden Comms's central registry entry on latest live SHA, then
+resume issue #167 Home landscape scroll overlay/Voice tile visual
+acceptance—not another speculative networking milestone.
+
 ## 2026-11-24 — EdenP Development centralized transition preflight
 
 **Owner request:** Transfer Eden Comms into `EdenP-Development`
