@@ -1,5 +1,10 @@
 # Eden Comms
 
+**EdenP Development integration:** [November 24 ownership/signing
+preflight](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md)
+· [Central standards hub](https://github.com/EdenP-Development/Eden-Development-Standards).
+Current repository ownership must be verified live before assuming transfer.
+
 **Continuing this project in a new chat?** Start at [CONTINUE_HERE.md](CONTINUE_HERE.md) for the current handoff, chronological work log, QA status, and safe next task. The detailed milestone documents remain in `docs/`.
 
 **Current product reference:** [Eden Comms Design Bible](docs/EDEN_COMMS_DESIGN_BIBLE.md)

@@ -1,5 +1,13 @@
 # Continue Eden Comms
 
+**Organizational integration (November 24, 2026):** [EdenP Development
+pre-transfer inventory and post-transfer checklist](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
+The owner must transfer this repository through its settings. Until an
+actual transfer and post-transfer CI are verified, keep the current
+`PlayerEden/Eden-Comms` source of truth, and do not switch workflow
+repository guards prematurely. Shared standards:
+https://github.com/EdenP-Development/Eden-Development-Standards.
+
 **Canonical source:** `main` of `PlayerEden/Eden-Comms`. Read this page before
 coding in a new chat; use live GitHub commit and CI state, not the last chat's
 claims or a local temporary workspace.

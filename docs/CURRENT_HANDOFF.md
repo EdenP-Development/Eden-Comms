@@ -1,8 +1,26 @@
 # Eden Comms — Current development handoff
 
-Updated: **November 10, 2026**. This is a concise launch point, not a
+Updated: **November 24, 2026** (migration preflight; product code unchanged). This is a concise launch point, not a
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
+
+## EdenP Development transition preflight — November 24, 2026
+
+The owner requested preservation-first integration into
+`EdenP-Development`. On the preflight date the repository was still
+`PlayerEden/Eden-Comms`, GitHub repo ID `1445090231`,
+`main` at `2a19e91f2af15a788920c032bc1eba4e9fbdc2e4`.
+No open PRs; existing issue/history and signing identity must be
+preserved. The shared EdenP [registry](https://github.com/EdenP-Development/Eden-Development-Standards/blob/main/APP_REGISTRY.json)
+has a verified **transfer-pending** non-secret Eden Comms record.
+
+[Read the exact integration inventory and post-transfer plan](EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
+Do not update the repository guards or claim org signing/build success
+before owner transfer. The public `.preview` development signer is
+verified, but original-package internal private signing remains
+**unverified**. Do not replace or invent the old key; protect installed
+app state. Same UI/transport roadmap, design bible, user-provided
+Home screenshots and issue #167 remain the next development work.
 
 ## Product direction
 
