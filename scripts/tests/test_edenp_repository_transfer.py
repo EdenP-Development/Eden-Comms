@@ -4,6 +4,7 @@ This is static/workflow test evidence. It does not prove that private
 organization secrets exist, verify a private signer, or test hardware.
 """
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,7 +44,15 @@ class EdenPRepositoryTransfer(unittest.TestCase):
         self.assertIn("environment: internal-test", w)
         self.assertIn("permissions:\n  contents: read", w)
         self.assertIn("EC_INTERNAL_KEYSTORE_BASE64", w)
-        self.assertIn("EC_INTERNAL_CERT_SHA256", w)
+        self.assertEqual(set(re.findall(r"secrets\.([A-Z0-9_]+)", w)),
+                         {"EC_INTERNAL_KEYSTORE_BASE64", "EC_INTERNAL_KEYSTORE_PASSWORD"})
+        self.assertIn("EC_INTERNAL_KEY_ALIAS: eden-comms-internal-test", w)
+        self.assertIn("EC_INTERNAL_KEY_PASSWORD: ${{ secrets.EC_INTERNAL_KEYSTORE_PASSWORD }}", w)
+        self.assertIn("signing/internal-test-cert-sha256.txt", w)
+        self.assertRegex(read("signing/internal-test-cert-sha256.txt").strip(),
+                         r"^[0-9a-f]{64}$")
+        self.assertIn('[[ "$pin" =~ ^[0-9a-f]{64}$ ]]', w)
+        self.assertIn('--expected-signer-sha256 "$EXPECTED_CERT_SHA256"', w)
         self.assertIn("--expected-signer-sha256", w)
         self.assertIn("scripts/sign_internal_test_apk.sh", w)
 
@@ -61,7 +70,8 @@ class EdenPRepositoryTransfer(unittest.TestCase):
         self.assertIn('REPOSITORY = "' + ORG_REPO + '"', setup)
         self.assertNotIn('REPOSITORY = "' + OLD_REPO + '"', setup)
         self.assertIn('owner.get("login") != "PlayerEden"', setup)
-        self.assertIn("ALREADY EXIST", setup)
+        self.assertIn("Legacy uploader disabled", setup)
+        self.assertNotIn('"gh", "secret", "set"', setup)
         self.assertIn("Selected deployment branch policies must contain exactly main", setup)
         self.assertIn("gh\", \"secret\", \"list", setup)
         self.assertIn("--env", setup)
