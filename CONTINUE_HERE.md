@@ -1,5 +1,14 @@
 # Continue Eden Comms
 
+**Latest verified technical receipt:** [EdenP post-transfer build/signing record](docs/EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md)
+— migrated repo `EdenP-Development/Eden-Comms`, current main
+`a0952f602fa8482ecdc84a8220d4f5a7673f64f5`,
+org Android CI **SUCCESS**, org-hosted public-key Preview **200016**
+built with unchanged signing certificate. Private original-package
+signing and actual two-phone acceptance **UNVERIFIED**. Visual issue
+[#167](https://github.com/EdenP-Development/Eden-Comms/issues/167)
+is the next owner-led QA checkpoint.
+
 **EdenP Development organization transfer verified November 24, 2026.**
 Current canonical repository: [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms).
 The same GitHub repository ID, 162 historical branches, issues and main
