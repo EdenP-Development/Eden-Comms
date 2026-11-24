@@ -15,6 +15,13 @@ claim that planned functions work on physical devices. It consolidates
 the [visual asset kit](VISUAL_ASSET_KIT_V1.md), and the
 [core roadmap](FULL_FUNCTION_DEVELOPMENT_TEST_ROADMAP_2026_11_07.md).
 
+**Organizational provenance (November 24):** development source is
+[the same transferred Eden Comms repository](https://github.com/EdenP-Development/Eden-Comms);
+the [shared EdenP standards](https://github.com/EdenP-Development/Eden-Development-Standards)
+govern repo-level release/signing/backups without replacing this
+app-specific visual identity or security charter. No core functionality,
+privacy or design decision was reset by the transfer.
+
 ## 1. Identity and governing principles
 
 - **Product:** Eden Comms (EC); umbrella brand: **Eden Practical**.
@@ -206,7 +213,7 @@ For implementation details and constraints, use
 | Security/privacy production approval | Release flags FALSE | Static audit checks exist | Independent review NOT RUN |
 
 **Last checked main:** `359443f3a29ef7cce5442b54e94124dd0eaea72a`.
-Check [GitHub Actions](https://github.com/PlayerEden/Eden-Comms/actions)
+Check [GitHub Actions](https://github.com/EdenP-Development/Eden-Comms/actions)
 for any new merged revision before relying on these entries.
 An audit PR is correcting the emulator package binding; its success must
 be observed separately.
