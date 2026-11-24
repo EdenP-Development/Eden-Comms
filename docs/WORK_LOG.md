@@ -4,6 +4,46 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## 2026-11-24 — EdenP Development centralized transition preflight
+
+**Owner request:** Transfer Eden Comms into `EdenP-Development`
+and shared standards without losing progress, design bible, source
+history, signing identity or actual user app data.
+
+**Live audit:** Repo still `PlayerEden/Eden-Comms`, ID `1445090231`,
+main `2a19e91f2af15a788920c032bc1eba4e9fbdc2e4`,
+161 branches on first two GitHub pages, 0 open PRs, 10 open
+issues; no public release verified. Most recent Android main CI
+passed; Preview `200014` built and verified with its public
+AOSP test certificate and artifact hash; full emulator visual
+job failed after 13 scenes, and issue #167 tracks the observed
+overlapping Home scroll cue plus landscape Voice navigation.
+Actual 18×3 physical matrix and independent security still not run.
+
+**Central standards:** Read live central README, app registry,
+organization transition, signing key management, release policy,
+save preservation, disaster recovery, release checklist and
+shared templates. Updated **only this project's entry** in the
+shared `APP_REGISTRY.json` with verified, non-secret package,
+cert, version, source and CI evidence; ownership transfer marked
+pending. No private keys, passwords or fake release statuses.
+
+**Signing:** Preserved public-test-signed isolated
+`com.edenpractical.comms.preview` identity. Original
+`com.edenpractical.comms` internal-test/production key custody
+and private secret availability are unverified, no key generated
+or overwritten. Guarded private signing workflow currently
+uses old owner `GITHUB_REPOSITORY`, so updating it before transfer
+would break protected builds. See
+[preflight and exact post-transfer checklist](EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
+
+**Next:** owner GitHub transfer, connector access/history checks,
+update workflow guards + source assertions and current docs,
+run actual post-transfer CI/Preview, verify original signer only
+if credentials exist and are accessible; resume issue #167 and
+one consolidated phone QA. This is an integration preflight,
+**not a completed migration**.
+
 ## 2026-11-10 — Whole-app / GitHub quality audit and design bible
 
 **Reason:** The owner requested an overall audit, not another feature
