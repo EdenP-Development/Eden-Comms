@@ -4,6 +4,38 @@
 post-transfer checklist, **not** a declaration that migration or signing
 verification has already succeeded.
 
+## November 24 follow-up — actual transfer VERIFIED
+
+**Current, authoritative repository:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms).
+The owner completed the transfer. Live GitHub returned immutable repo ID
+`1445090231`, the preserved `main` SHA
+`fb495a27ad2150a16c2aa17671ff55c21bfe6b2c`, **162** existing
+branches across two pages, zero open PRs on entry, and all **10**
+open issues including [#167](https://github.com/EdenP-Development/Eden-Comms/issues/167).
+Read/write/admin permissions were verified on the transferred repo by
+a successful branch creation and commit.
+
+The detailed pre-transfer inventory **below remains historical evidence**,
+not current ownership instructions. A post-transfer integration PR now
+updates exact owner checks (two Preview jobs, manually signed
+`internal-test` and manual emulator), the existing local signing-helper
+repository target and their Python security regression tests. It retains
+the actual signing actor `PlayerEden`, `main`-only restrictions, protected
+environment and pinned public Preview signer. Active README, design bible,
+handoff, Preview guide and signing docs point to the org repo.
+
+**Verification gates at this checkpoint:** exact PR-head Android/JVM/Python
+and post-merge main CI pending; *new org-hosted Preview APK* pending;
+protected original-package private signer and restricted org secret
+availability **UNVERIFIED**; 18×3 physical two-phone matrix and independent
+security review **NOT RUN**. No app IDs, secrets, signer identities,
+hardware features, assets or Design Bible policies have been replaced.
+
+After successful CI, update this note with exact run IDs and modify
+only Eden Comms's entry in the [live central registry](https://github.com/EdenP-Development/Eden-Development-Standards/blob/main/APP_REGISTRY.json).
+Other projects' records may change concurrently. Next substantive UI
+work remains issue #167.
+
 ## Organization and repository
 
 - **Current owner:** `PlayerEden`; current repo:
