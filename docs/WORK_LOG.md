@@ -22,7 +22,7 @@ measured footer. [Exact PR CI SUCCESS](https://github.com/EdenP-Development/Eden
 The subsequent [Preview 200016 build succeeded](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143156),
 same certificate, exact APK SHA
 `0a3e10354328aec1054c06a62c49439dcd4d3ee7846ee8da041b0ed1ee77ee39`.
-Actual new emulator screenshot acceptance is **pending separately**.
+Actual new emulator check **FAILED** at landscape Voice/PTT label after 13 real screenshots. Reviewing the new landscape screenshot confirmed the scroll cue NO LONGER overlays the Connect button. Its emulator driver, however, starts each swipe at 78% of viewport height, directly on the newly reserved bottom footer. A follow-on source fix moves the test swipe origin to 64% (inside scrolling content) and adds a direct mocked-ADB regression, without changing the app's connection or security code. Full visual PASS still pending.
 
 The central [APP_REGISTRY.json](https://github.com/EdenP-Development/Eden-Development-Standards/blob/main/APP_REGISTRY.json)
 was updated from live content by changing **only the Eden Comms**
