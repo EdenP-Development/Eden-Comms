@@ -29,7 +29,7 @@ concurrency:
 jobs:
   build-preview:
     name: Build pinned public-test-signed debug preview
-    if: github.repository == 'PlayerEden/Eden-Comms' && github.ref == 'refs/heads/main'
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -180,7 +180,7 @@ jobs:
   integrated-visual:
     name: Inspect actual installable Preview UI on Android emulator
     needs: build-preview
-    if: github.repository == 'PlayerEden/Eden-Comms' && github.ref == 'refs/heads/main'
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
