@@ -27,7 +27,7 @@ not an older repository redirect or earlier chat.
 | [First org-hosted Preview 200015](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45490751311) | Signed APK build **SUCCESS**; separate emulator job **FAILED** at Voice/PTT landscape lookup (13 real scenes saved) |
 | [Observed Home layout fix #170](https://github.com/EdenP-Development/Eden-Comms/pull/170) | Overlay replaced with measured footer; PR-head Android/JVM/Python **SUCCESS**, merged main `a0952f602fa8482ecdc84a8220d4f5a7673f64f5` |
 | [Main Android CI after fix](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143260) | **SUCCESS** |
-| [New Preview 200016](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143156) | Signed APK build **SUCCESS**; latest emulator visual acceptance needs separate confirmation |
+| [New Preview 200016](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143156) | Signed APK build **SUCCESS**; emulator UI job **FAILED** at landscape Voice/PTT lookup after 13 real screens. New screenshot confirms scroll hint no longer overlaps controls; driver swipe began on newly reserved footer, not scroll viewport |
 
 **Org Preview 200016 APK:** `com.edenpractical.comms.preview`,
 `0.2.12-preview-200016`, code `200016`, exact source
