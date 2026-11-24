@@ -4,6 +4,19 @@ Updated: **November 24, 2026** (migration preflight; product code unchanged). Th
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
 
+## Active next deliverable — Home visual issue #167
+
+Post-transfer CI produced a verified signed org-hosted Preview 200015
+with the unchanged public AOSP certificate. The **separate** emulator
+visual QA job must establish whether the existing Home scroll overlay
+and landscape Voice/PTT issue is reproducible. A focused Compose fix
+has been submitted: the Home scroll cue moves into a reserved footer
+below the weighted scrolling viewport, never over the Connect button
+or cards. Run PR-head CI and an actual fresh signed Preview/emulator
+inspection before claiming the updated UI is visually accepted.
+Production communication remains disabled and physical two-phone
+acceptance NOT RUN.
+
 ## EdenP Development post-transfer state — November 24, 2026
 
 - **Ownership VERIFIED:** `EdenP-Development/Eden-Comms`,
