@@ -5,6 +5,21 @@
 
 The manual [Internal signed test APK workflow](../.github/workflows/android-internal-test-apk.yml) already isolates long-lived test signing from disposable CI signing. To actually use it, the repo owner must supply a dedicated long-lived **test-only** PKCS12 keystore and five GitHub **environment secrets**. This local helper eliminates the risky manual copy/paste of a base64 keystore or passwords.
 
+## Organization migration note (November 24, 2026)
+
+The helper's GitHub repository target has been updated to
+`EdenP-Development/Eden-Comms` while keeping its **PlayerEden**
+authenticated-actor and exact-`main` environment restrictions.
+This is a historical *environment-secret* setup guide. EdenP's
+current policy prefers dedicated **organization Actions secrets**
+with selected-repository access, and **no automatic generation or
+overwriting** of previously used signing material. Do not run
+`--configure` merely to standardize a signer. First inspect existing
+private backup custody and all org/environment secret **names**,
+then use a credential-preserving trusted setup and actual signing
+preflight. The public Preview uses a different, publicly known test
+key and requires no private signing credentials.
+
 ## 1. Do this on your own trusted PC, not in ChatGPT
 
 Install Java JDK (keytool) and [GitHub CLI (gh)](https://cli.github.com/), then log in to GitHub as **PlayerEden**:
@@ -23,7 +38,7 @@ This key must **not** be a production Play App Signing key, existing app identit
 
 ## 2. Protect the GitHub environment before any upload
 
-In your browser: [Eden-Comms environment settings](https://github.com/PlayerEden/Eden-Comms/settings/environments) → create/open **internal-test**.
+In your browser: [Eden-Comms environment settings](https://github.com/EdenP-Development/Eden-Comms/settings/environments) → create/open **internal-test**.
 
 Set **Deployment branches and tags → Selected branches and tags**, with exactly one branch pattern: **main**. Do not allow a wildcard, a release branch, tags, or all branches. Where GitHub supports it, require deployment review from an authorized reviewer and prevent self-approval, but keep in mind some settings depend on plan/repository ownership. Review all workflow changes to main before running the manual signer; a trusted Actions workflow is required because GitHub's encrypted secrets do not protect against malicious workflow code once authorized.
 
@@ -77,8 +92,8 @@ These are physical acceptance steps, **not completed by this PR**. No Android ap
 - Use **one backed-up key for all test updates**. A lost/rotated signer can require a clean install that destroys local identities/settings. Do not assume Android key-rotation support across all prior debug builds.
 - Anyone able to change a workflow on \`main\` or approve a privileged environment run can potentially abuse its secrets. Protect repo writers, environment approvals, and review any Gradle/workflow changes that might exfiltrate secrets. Repository public CI artifacts may be downloadable by others.
 - The helper uses Python standard library, gh CLI, and JDK keytool, on the owner's computer only. Simulated unit tests mock all upload operations; they **never** call GitHub with actual credentials.
-- A one-time pass means five *secret names* exist, **not** that an owner has activated a trustworthy signer or proven upgrades. [Signing issue #27](https://github.com/PlayerEden/Eden-Comms/issues/27) stays **OPEN** until two verified builds and real Keystore/settings preservation pass.
-- [Real-device two-phone QA #26](https://github.com/PlayerEden/Eden-Comms/issues/26) and [independently reviewed normal text #42](https://github.com/PlayerEden/Eden-Comms/issues/42) remain **OPEN**.
+- A one-time pass means five *secret names* exist, **not** that an owner has activated a trustworthy signer or proven upgrades. [Signing issue #27](https://github.com/EdenP-Development/Eden-Comms/issues/27) stays **OPEN** until two verified builds and real Keystore/settings preservation pass.
+- [Real-device two-phone QA #26](https://github.com/EdenP-Development/Eden-Comms/issues/26) and [independently reviewed normal text #42](https://github.com/EdenP-Development/Eden-Comms/issues/42) remain **OPEN**.
 
 ### References
 
