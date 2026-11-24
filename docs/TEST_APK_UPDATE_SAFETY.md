@@ -43,7 +43,7 @@ Before promising in-place upgrades:
 
 ## Current safety boundary
 
-This CI-only addition does not modify application logic, permissions, TLS/QR, message handling, `ReleaseCapabilities`, Android package identity or signing configuration. The experimental debug demo remains **four fixed harmless phrases**, with real two-phone testing still pending [Issue #26](https://github.com/PlayerEden/Eden-Comms/issues/26).
+This CI-only addition does not modify application logic, permissions, TLS/QR, message handling, `ReleaseCapabilities`, Android package identity or signing configuration. The experimental debug demo remains **four fixed harmless phrases**, with real two-phone testing still pending [Issue #26](https://github.com/EdenP-Development/Eden-Comms/issues/26).
 
 **References:**
 - [Android Developers — How app updates work](https://developer.android.com/google/play/app-updates)
