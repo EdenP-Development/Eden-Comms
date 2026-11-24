@@ -24,7 +24,13 @@ class HomeScrollCueSourceTest(unittest.TestCase):
         self.assertIn("pageScroll.canScrollForward &&", s)
         self.assertIn("pageScroll.value < 12", s)
         self.assertIn('"↓  SCROLL FOR MORE"', s)
-        self.assertIn(".align(Alignment.BottomCenter)", s)
+        # A reserved footer is a sibling to the weighted scroll viewport,
+        # never a Box overlay intercepting CONNECT NEARBY in landscape.
+        self.assertIn("Column(modifier = Modifier.fillMaxSize()) {", s)
+        self.assertIn(".fillMaxWidth()\n                                .weight(1f)", s)
+        self.assertIn(".align(Alignment.CenterHorizontally)", s)
+        self.assertNotIn(".align(Alignment.BottomCenter)", s)
+        self.assertIn("Reserved footer + scrolling content", s)
         self.assertIn(".heightIn(min = 48.dp)", s)
         self.assertIn("pageScroll.animateScrollTo(", s)
         self.assertIn(".coerceAtMost(pageScroll.maxValue)", s)

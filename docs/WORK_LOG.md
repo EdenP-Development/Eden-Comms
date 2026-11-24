@@ -4,6 +4,28 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## 2026-11-24 — Owner visual feedback: reserve scroll cue outside Home controls
+
+**Observed:** [Issue #167](https://github.com/EdenP-Development/Eden-Comms/issues/167)
+has actual emulator PNGs showing the olive scroll hint covering
+`CONNECT NEARBY` at 1280×720 landscape and card text on
+720×1280 compact portrait. The same visual run failed the
+landscape Voice/PTT locator. Preserve the real scroll-discovery
+feature but make it safe and unobtrusive.
+
+**Actual Compose fix:** Within the existing constrained app viewport,
+Home now uses a weighted scrollable Column and a **separate measured
+footer** for `↓ SCROLL FOR MORE`. The hint is not a Box overlay:
+no control can sit behind its tap target. It remains Home-only,
+scroll-overflow-only, at least 48dp high, tap to scroll, and disappears
+after scrolling. Test source guards were updated to prohibit
+`Alignment.BottomCenter` overlay and require the reserved footer.
+
+**QA truth:** Physical owner review, real emulator screenshot pass,
+landscape Voice/PTT reachability and 18×3 device connectivity
+tests remain **pending** until new actual runs. No network/crypto/
+voice/storage/signing or release capability changes.
+
 ## 2026-11-24 — EdenP Development transfer confirmed, workflow migration
 
 **Verified actual GitHub ownership:** now `EdenP-Development/Eden-Comms`;
