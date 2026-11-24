@@ -2,6 +2,12 @@
 
 **November 8, 2026 · based on the proven Sector Rebound/Operation Phosphor preview workflow.**
 
+**November 24 ownership update:** The source repository moved without
+changing the `com.edenpractical.comms.preview` package, pinned
+public AOSP test certificate or automatically increasing version codes.
+This is a *disposable development* identity, not Sudoku's signer
+or an organization-secret beta/production key.
+
 ## Why this exists
 
 APK updates are useful *during testing*. Android will usually refuse to
@@ -18,7 +24,7 @@ can exist on the same phone.
 
 ## How to use it
 
-1. Go to [Eden-Comms → Actions → Eden Comms - installable offline Preview APK](https://github.com/PlayerEden/Eden-Comms/actions/workflows/offline-preview-apk.yml).
+1. Go to [Eden-Comms → Actions → Eden Comms - installable offline Preview APK](https://github.com/EdenP-Development/Eden-Comms/actions/workflows/offline-preview-apk.yml).
 2. Choose **Run workflow → main**. The first workflow-file merge also runs one
    automatic smoke build. Normal app PRs and merges do NOT trigger duplicate
    preview builds; run it when you actually want a new tester APK to save
