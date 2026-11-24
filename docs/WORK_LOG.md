@@ -4,6 +4,39 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## 2026-11-24 — EdenP post-transfer integration and signed Preview evidence
+
+**Verified, not proposed:** immutable repo ID 1445090231 under
+`EdenP-Development/Eden-Comms`, preserved branches/history/issues,
+PR #169 org-guard migration and
+[Android main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45490751352).
+Old-owner guards replaced only after the actual transfer; original
+`PlayerEden` private-signing actor restriction retained.
+
+First org-hosted [Preview 200015 signed build succeeded](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45490751311)
+with the original public-test certificate; its separate emulator
+visual job **FAILED** at landscape Voice/PTT after real Home screenshots.
+PR #170 addresses the confirmed scroll-hint overlay through a
+measured footer. [Exact PR CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45491690934);
+[squash-merged main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143260).
+The subsequent [Preview 200016 build succeeded](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143156),
+same certificate, exact APK SHA
+`0a3e10354328aec1054c06a62c49439dcd4d3ee7846ee8da041b0ed1ee77ee39`.
+Actual new emulator screenshot acceptance is **pending separately**.
+
+The central [APP_REGISTRY.json](https://github.com/EdenP-Development/Eden-Development-Standards/blob/main/APP_REGISTRY.json)
+was updated from live content by changing **only the Eden Comms**
+entry. [Long-lived receipt](EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md)
+records identities, source hashes, testing and rollback boundaries.
+
+**No private signing credential verification** has been represented:
+the `EC_INTERNAL_*` protected workflow remains owner-only,
+manual/main, existing key availability unknown, no new keys
+created or substituted. Physical 18×3 phone QA, actual install-over
+and independent protocol/privacy/accessibility review remain open.
+Next actual QA step is #167 screenshots and the consolidated
+physical matrix, not a new feature scope.
+
 ## 2026-11-24 — Owner visual feedback: reserve scroll cue outside Home controls
 
 **Observed:** [Issue #167](https://github.com/EdenP-Development/Eden-Comms/issues/167)
