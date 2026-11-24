@@ -192,13 +192,8 @@ def inspect_keystore(keystore_path, alias, storepass, keypass,
 
 
 def upload_secret(name, value, runner=run_safely):
-    """Value only over stdin: no --body, argv password, log or temp .env."""
-    if name not in SECRET_NAMES or not isinstance(value, str) or not value:
-        raise SetupError("Invalid internal-test signing credential input")
-    runner([
-        "gh", "secret", "set", name,
-        "--repo", REPOSITORY, "--env", ENVIRONMENT
-    ], secret_input=value.encode("utf-8"))
+    """Retired: never upload environment credentials from this helper."""
+    raise SetupError("Legacy uploader disabled; use manual organization setup")
 
 
 def configure(path, alias, runner=run_safely, password_prompt=getpass.getpass,
@@ -226,12 +221,11 @@ def main(argv=None):
         if args.check:
             present, missing = check_state()
             print("Protected environment: internal-test; owner PlayerEden; exact main policy")
-            print("Configured secret NAMES: " + str(len(present)) + "/2")
-            if missing:
-                print("Missing names: " + ", ".join(sorted(missing)))
-                print("No credential values can be read through this tool.")
+            print("Environment-only shadowing secret NAMES: " + str(len(present)) + "/2")
+            if present:
+                print("STOP: reconcile environment shadowing before organization setup.")
                 return 1
-            print("Secret names present; NOT proof key values/signing are valid.")
+            print("No matching environment names; organization/repository scope not inspected.")
             return 0
         if args.keystore is None:
             parser.error("--configure requires --keystore")
