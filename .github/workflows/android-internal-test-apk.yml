@@ -1,7 +1,7 @@
 name: Internal signed test APK
 
 # Intentionally never runs on pull_request, pull_request_target, workflow_run or push.
-# The owner must manually start this on main, with protected environment secrets.
+# The owner must manually start this on main, with repository-restricted organization secrets and protected environment.
 on:
   workflow_dispatch:
 
@@ -50,6 +50,13 @@ jobs:
           test "$code" -gt 11 && test "$code" -le 2100000000
           echo "EDEN_INTERNAL_CODE=$code" >> "$GITHUB_ENV"
           echo "Internal test versionCode: $code"
+      - name: Require reviewed public certificate pin
+        run: |
+          set -euo pipefail
+          pin="$(cat signing/internal-test-cert-sha256.txt)"
+          [[ "$pin" =~ ^[0-9a-f]{64}$ ]] || { echo "Private signer pin not configured"; exit 1; }
+          test "$pin" != "a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc"
+          echo "EXPECTED_CERT_SHA256=$pin" >> "$GITHUB_ENV"
       - name: Build and test without ANY signing secrets in Gradle
         run: |
           set -euo pipefail
@@ -64,16 +71,14 @@ jobs:
         env:
           EC_INTERNAL_KEYSTORE_BASE64: ${{ secrets.EC_INTERNAL_KEYSTORE_BASE64 }}
           EC_INTERNAL_KEYSTORE_PASSWORD: ${{ secrets.EC_INTERNAL_KEYSTORE_PASSWORD }}
-          EC_INTERNAL_KEY_ALIAS: ${{ secrets.EC_INTERNAL_KEY_ALIAS }}
-          EC_INTERNAL_KEY_PASSWORD: ${{ secrets.EC_INTERNAL_KEY_PASSWORD }}
+          EC_INTERNAL_KEY_ALIAS: eden-comms-internal-test
+          EC_INTERNAL_KEY_PASSWORD: ${{ secrets.EC_INTERNAL_KEYSTORE_PASSWORD }}
         run: |
           set -euo pipefail
           bash scripts/sign_internal_test_apk.sh \
             app/build/outputs/apk/debug/app-debug.apk \
             app/build/outputs/apk/internal-test/eden-comms-internal-test.apk
       - name: Verify exact persistent signer pin and internal APK identity
-        env:
-          EXPECTED_CERT_SHA256: ${{ secrets.EC_INTERNAL_CERT_SHA256 }}
         run: |
           set -euo pipefail
           test -n "$EXPECTED_CERT_SHA256"
