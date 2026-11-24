@@ -85,7 +85,7 @@ class M3dSigningSetupTests(unittest.TestCase):
             list(mod.SECRET_NAMES),
         ):
             fake = FakeGitHub(existing=existing)
-            with self.assertRaisesRegex(mod.SetupError, "EXIST"):
+            with self.assertRaisesRegex(mod.SetupError, "Legacy uploader disabled"):
                 mod.configure("/not/needed.p12", "eden-comms-internal-test",
                               runner=fake, confirm=lambda _: self.fail(
                                   "Should never prompt for risky overwrite"))
@@ -139,35 +139,13 @@ class M3dSigningSetupTests(unittest.TestCase):
         self.assertEqual(len(calls), 3)
         self.assertTrue(all("EDEN_SETUP_STOREPASS" in str(args) for args, _ in calls))
 
-    def test_full_owner_confirmed_setup_uploads_five_stdin_only_values(self):
-        with tempfile.TemporaryDirectory() as folder:
-            file = Path(folder) / "eden-internal.p12"
-            file.write_bytes(b"s" * 200)
-            if os.name == "posix":
-                file.chmod(0o600)
-            fake = FakeGitHub()
-            with patch.object(mod.shutil, "which", return_value="/trusted/tool"), \
-                 patch.object(mod, "inspect_keystore", return_value=CERT):
-                fingerprint = mod.configure(
-                    file, "eden-comms-internal-test", runner=fake,
-                    password_prompt=lambda _: "a-strong-passphrase-for-test",
-                    confirm=lambda _: "UPLOAD NEW TEST KEY"
-                )
-            self.assertEqual(fingerprint, CERT)
-            self.assertEqual(set(fake.values), SECRET_SET)
-            self.assertEqual(fake.values["EC_INTERNAL_CERT_SHA256"],
-                             CERT.encode())
-            self.assertEqual(fake.values["EC_INTERNAL_KEYSTORE_BASE64"],
-                             __import__("base64").b64encode(b"s" * 200))
-            self.assertTrue(file.exists())
-            for args, secret_input, _ in fake.calls:
-                for value in fake.values.values():
-                    # Secret bytes are never serialized into argv.
-                    self.assertNotIn(value.decode(), repr(args))
-                if args[:3] == ["gh", "secret", "set"]:
-                    self.assertIsNotNone(secret_input)
-            self.assertEqual(len([x for x in fake.calls
-                                  if x[0][:3] == ["gh", "secret", "set"]]), 5)
+    def test_retired_environment_uploader_never_writes(self):
+        fake = FakeGitHub()
+        with self.assertRaisesRegex(mod.SetupError, "Legacy uploader disabled"):
+            mod.configure("/not/needed.p12", "eden-comms-internal-test",
+                          runner=fake, confirm=lambda _: self.fail("Must not prompt"))
+        self.assertFalse(fake.calls)
+        self.assertEqual(len(mod.SECRET_NAMES), 2)
 
     def test_abort_confirmation_never_writes_any_secret(self):
         with tempfile.TemporaryDirectory() as folder:
