@@ -253,9 +253,15 @@ private fun EdenCommsApp() {
                         val pageScroll = rememberScrollState()
                         val scrollScope = rememberCoroutineScope()
                         val cueStepPx = with(LocalDensity.current) { 240.dp.roundToPx() }
+                        // Allocate a real footer row for the scroll hint.
+                        // An overlay blocked CONNECT NEARBY in landscape and
+                        // covered Text on compact phones. No content or touch
+                        // target may be concealed by an affordance.
+                        Column(modifier = Modifier.fillMaxSize()) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxWidth()
+                                .weight(1f)
                                 .verticalScroll(pageScroll)
                                 .padding(horizontal = 20.dp, vertical = if (compact) 10.dp else 16.dp),
                             verticalArrangement = Arrangement.spacedBy(if (compact) 10.dp else 13.dp)
@@ -362,9 +368,10 @@ private fun EdenCommsApp() {
                             pageScroll.canScrollForward &&
                             pageScroll.value < 12
                         ) {
-                            // Overlay the scrolling content, not the header or
-                            // system navigation. Never imply a second page or
-                            // show a prompt when the whole Home already fits.
+                            // Below (not OVER) the scroll viewport: the
+                            // cue has its own measured layout height, so it
+                            // cannot overlap Connect, Text, or any control.
+                            // Hide it when Home already fits or user scrolls.
                             val cueShape = RoundedCornerShape(24.dp)
                             TextButton(
                                 onClick = {
@@ -376,7 +383,7 @@ private fun EdenCommsApp() {
                                     }
                                 },
                                 modifier = Modifier
-                                    .align(Alignment.BottomCenter)
+                                    .align(Alignment.CenterHorizontally)
                                     .padding(bottom = 8.dp)
                                     .background(
                                         MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
@@ -400,6 +407,7 @@ private fun EdenCommsApp() {
                                 )
                             }
                         }
+                        } // Reserved footer + scrolling content
                     }
                 }
             }
