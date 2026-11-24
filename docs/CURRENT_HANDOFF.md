@@ -4,6 +4,25 @@ Updated: **November 24, 2026** (migration preflight; product code unchanged). Th
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
 
+## Latest verified source and signed build — November 24, 2026
+
+- Canonical `EdenP-Development/Eden-Comms`, repository ID `1445090231`,
+  main `a0952f602fa8482ecdc84a8220d4f5a7673f64f5`.
+- [Post-transfer migration PR #169](https://github.com/EdenP-Development/Eden-Comms/pull/169)
+  merged with [org main Android CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45490751352).
+- [Home scroll overlap fix PR #170](https://github.com/EdenP-Development/Eden-Comms/pull/170)
+  merged with [independent main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143260).
+  It uses a measured footer instead of obscuring Connect/Text with a
+  floating scroll button.
+- [Preview 200016 signed artifact](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45492143156/artifacts/14965554625)
+  was built from that exact SHA, certificate `a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc`.
+  Real emulator visual job **FAILED** at the final landscape Voice/PTT lookup despite capturing 13 real PNGs. The new screenshot confirms the scroll hint no longer obscures Connect; the test swipe instead started inside the footer at 78% of the 720px screen. The emulator driver is being corrected to drag from 64% within actual scroll content; new source QA plus real replay required before any visual PASS.
+- [Full migration, app identity and QA receipt](EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md).
+  Only the **public-test Preview** signer has verified continuity.
+  Original-package protected internal signer/org secret availability
+  and physical update remain unverified. Preserve all existing
+  IDs/keys, keep release communication flags disabled.
+
 ## Active next deliverable — Home visual issue #167
 
 Post-transfer CI produced a verified signed org-hosted Preview 200015

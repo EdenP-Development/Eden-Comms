@@ -4,6 +4,13 @@
 post-transfer checklist, **not** a declaration that migration or signing
 verification has already succeeded.
 
+**Current verification superseding the initial preflight:**
+[Signed org-hosted Android and app-identity receipts](EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md).
+This original pre-transfer inventory is retained for history.
+Actual organizational transfer, exact PR/main Android checks, and
+public-test Preview signing have been verified; private original-key
+secrets and the physical two-phone matrix remain unverified.
+
 ## November 24 follow-up — actual transfer VERIFIED
 
 **Current, authoritative repository:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms).
