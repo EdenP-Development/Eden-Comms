@@ -4,7 +4,31 @@ Updated: **November 24, 2026** (migration preflight; product code unchanged). Th
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
 
-## EdenP Development transition preflight — November 24, 2026
+## EdenP Development post-transfer state — November 24, 2026
+
+- **Ownership VERIFIED:** `EdenP-Development/Eden-Comms`,
+  same immutable GitHub repository ID `1445090231`, original
+  `main` source `fb495a27ad2150a16c2aa17671ff55c21bfe6b2c`
+  before workflow repairs, 162 branches, all 10 open issues,
+  zero open PRs at verification. GitHub connector read/write
+  confirmed by creation of the post-transfer integration branch.
+- **Workflows updated in integration PR (pending exact CI):**
+  Preview both org-only job guards, internal-test exact repo check,
+  manually dispatched emulator guard, and corresponding Python
+  source contracts. The only authorized signing actor remains
+  `PlayerEden` and environment `internal-test` / `main`
+  protection stay in place. The original private signer and
+  organization restricted-secret availability remain **UNVERIFIED**;
+  no private keys generated/rotated.
+- [Current integration details](EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md).
+  Next: exact PR-head CI → merge → independent main CI →
+  signed **org-hosted** Preview and real emulator evidence.
+  Continue existing [issue #167](https://github.com/EdenP-Development/Eden-Comms/issues/167)
+  for overlapping Home scroll cue and landscape Voice/PTT reachability
+  after organizational verification. No physical two-phone or
+  independent crypto acceptance yet.
+
+## Historical pre-transfer checkpoint — November 24, 2026
 
 The owner requested preservation-first integration into
 `EdenP-Development`. On the preflight date the repository was still
@@ -54,8 +78,8 @@ All transport/crypto code remains unreviewed development software.
 - [Latest decisions](DECISIONS.md), [Data retention](DATA_RETENTION_AND_EXPIRY.md)
   and [Peer memory](TRUST_RETENTION_AND_HELP_PLAN.md)
 - [Recent QA and decisions](WORK_LOG.md)
-- [CI runs](https://github.com/PlayerEden/Eden-Comms/actions)
-- [GitHub PRs](https://github.com/PlayerEden/Eden-Comms/pulls)
+- [CI runs](https://github.com/EdenP-Development/Eden-Comms/actions)
+- [GitHub PRs](https://github.com/EdenP-Development/Eden-Comms/pulls)
 
 ## Implemented in source and automated regression (not phone-accepted)
 
@@ -79,9 +103,9 @@ interpret a green JVM/CI run as passing either.
 
 ## Completed source checkpoint — F5-A
 
-[PR #148](https://github.com/PlayerEden/Eden-Comms/pull/148) merged at
+[PR #148](https://github.com/EdenP-Development/Eden-Comms/pull/148) merged at
 `53e581aad2c0cc30426b9674ed603d910d5c4d70`. [Post-merge Android
-CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42582592960).
+CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42582592960).
 Opt-in Keystore AES-GCM history of *actual approved LAN text events*,
 stored in app `noBackupFilesDir`. Every new session defaults to RAM-only;
 1h, 24h, 7d, 14d or 30d are explicit choices. Expiry filtering and
@@ -90,9 +114,9 @@ backup/security acceptance remains open; release variant is no-op.
 
 ## Completed code checkpoint — F5-B remembered public peer
 
-[PR #149](https://github.com/PlayerEden/Eden-Comms/pull/149) was merged as
+[PR #149](https://github.com/EdenP-Development/Eden-Comms/pull/149) was merged as
 `5364eea23914d95481625bde30590c7c2b3f93fc`.
-[Main-branch CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42585024948).
+[Main-branch CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42585024948).
 Separate DEBUG Keystore AES-GCM public fingerprint/expiry cache, explicit
 1–30-day consent and per-peer/clear-all deletion. F5-A chat history is
 separate. Records are viewed only after fresh verified LAN approval; they
@@ -100,9 +124,9 @@ never confer an automatic connection or trust. Production store remains no-op.
 
 ## Completed code checkpoint — F5-C verified nearby privacy
 
-[PR #150](https://github.com/PlayerEden/Eden-Comms/pull/150) merged into
+[PR #150](https://github.com/EdenP-Development/Eden-Comms/pull/150) merged into
 `main` at `9f69de394069fa8ac1c17d5ba459bccefb808e01`.
-[Post-merge CI passed 19/19 checks](https://github.com/PlayerEden/Eden-Comms/actions/runs/42648245844).
+[Post-merge CI passed 19/19 checks](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42648245844).
 One experimental, **debug-only** opt-in history/remember-peer UI now runs
 after real approved Bluetooth Classic and Wi-Fi Direct host/join sessions.
 Saved peer public fingerprints are not TLS pin authorization, and both
@@ -110,18 +134,18 @@ choices reset appropriately. No physical-device/security acceptance.
 
 ## Completed code checkpoint — F4-U Bluetooth/P2P voice bursts
 
-[PR #151](https://github.com/PlayerEden/Eden-Comms/pull/151) merged to
+[PR #151](https://github.com/EdenP-Development/Eden-Comms/pull/151) merged to
 `main` as `48c94f0c9a218363a5cd95d326517332ad41735e`.
-[Independent post-merge CI passed 19/19](https://github.com/PlayerEden/Eden-Comms/actions/runs/42653580697).
+[Independent post-merge CI passed 19/19](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42653580697).
 The previous DEBUG Bluetooth Classic and Wi-Fi Direct host/join voice option
 was a three-second **record-then-send** encrypted voice burst (not real-time).
 No physical radio/voice acceptance or cryptographic review.
 
 ## Completed code checkpoint — F4-V authenticated live nearby voice
 
-[PR #152](https://github.com/PlayerEden/Eden-Comms/pull/152)
+[PR #152](https://github.com/EdenP-Development/Eden-Comms/pull/152)
 merged as `ad821579dd5f03d770f9df96e9dac1683bf8ab79`.
-[Post-merge CI SUCCESS 19/19](https://github.com/PlayerEden/Eden-Comms/actions/runs/42658640505).
+[Post-merge CI SUCCESS 19/19](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42658640505).
 Bluetooth Classic and Wi-Fi Direct host/join reuse LAN's actual
 host-arbitrated encrypted REQUEST/GRANT/DENY/CANCEL/RELEASE floor;
 Android foreground mic sends 16kHz mono PCM 20ms frames WHILE held
@@ -132,9 +156,9 @@ is a regression-only fallback and also requires floor.
 
 ## Completed code checkpoint — M6-A unified Connect → Text/Talk
 
-[PR #153](https://github.com/PlayerEden/Eden-Comms/pull/153)
+[PR #153](https://github.com/EdenP-Development/Eden-Comms/pull/153)
 merged to `main` at `b9166cdc4f2809146c5aeeb8eac4f34397a860a7`.
-[Independent postmerge CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42663929342).
+[Independent postmerge CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42663929342).
 One debug Connect chooser routes to already authenticated Same Wi-Fi LAN,
 Bluetooth Classic and Wi-Fi Direct entrypoints. Existing nearby verified
 sessions show the shared **Text/Talk/Disconnect** shell and optional
@@ -144,9 +168,9 @@ are still FALSE. Physical two-phone UX and real OEM/security acceptance OPEN.
 
 ## Completed code checkpoint — M6-B tab safety and QA evidence
 
-[PR #154](https://github.com/PlayerEden/Eden-Comms/pull/154) merged to
+[PR #154](https://github.com/EdenP-Development/Eden-Comms/pull/154) merged to
 `main` as `3d0e2d6e050d7617079fd1929c85da227e6dea9c`.
-[Independent main CI passed 19/19](https://github.com/PlayerEden/Eden-Comms/actions/runs/42669197572).
+[Independent main CI passed 19/19](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42669197572).
 Nearby Bluetooth and Wi-Fi Direct verified sessions now cancel pending mic floor
 or release active AudioRecord when switching Talk → Text or unmounting Talk.
 Optional Advanced RAM-only local counters for text, ACK, floor and voice are
@@ -156,10 +180,10 @@ ready but **NOT RUN** on physical devices.
 
 ## Completed source checkpoint — M6-C accessible verified conversation
 
-[PR #155](https://github.com/PlayerEden/Eden-Comms/pull/155) merged to
+[PR #155](https://github.com/EdenP-Development/Eden-Comms/pull/155) merged to
 `main` at `9c158b1e9dfea6b82350069cb7cd842956cebd9c`.
-[Final PR CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42691177877);
-[independent main CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42691600680).
+[Final PR CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42691177877);
+[independent main CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42691600680).
 Verified Bluetooth/P2P Text buttons now consistently stop pending/active
 voice before switching from Talk; angular chat cards, screen-reader semantics
 and live mic permission refresh are present. Home, Help, Settings and
@@ -170,10 +194,10 @@ acceptance or independent security audit. Production CAN_* remain FALSE.
 
 ## Completed source checkpoint — M6-D guided nearby QR setup
 
-[PR #156](https://github.com/PlayerEden/Eden-Comms/pull/156)
+[PR #156](https://github.com/EdenP-Development/Eden-Comms/pull/156)
 merged to main as `475756467698407848429def12c0ab6fd04145d3`.
-[Final PR Android CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42692297197)
-and [independent main CI passed](https://github.com/PlayerEden/Eden-Comms/actions/runs/42692721109).
+[Final PR Android CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42692297197)
+and [independent main CI passed](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42692721109).
 Bluetooth's two QR stages and Wi-Fi Direct's three QR stages now
 show accurate host/join next actions, accessible status/heading semantics
 and a clear NOT YET VERIFIED boundary. No actual phone visual/TalkBack
@@ -182,10 +206,10 @@ or two-device acceptance took place. See
 
 ## Completed source checkpoint — M6-E text and peer-app ACK clarity
 
-[PR #157](https://github.com/PlayerEden/Eden-Comms/pull/157) merged
+[PR #157](https://github.com/EdenP-Development/Eden-Comms/pull/157) merged
 as `6dc2070692a7143c3e76e35599a16ec44a01580d`.
-[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42696448115);
-[independent `main` CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42696732161).
+[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42696448115);
+[independent `main` CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42696732161).
 Both Bluetooth and Wi-Fi Direct verified debug text use the same
 280-Unicode-codepoint draft gate (no UTF-16 truncation), bounded
 scrolling and Jump to latest. Queue acceptance, local TLS write,
@@ -196,10 +220,10 @@ TalkBack, actual two-phone or independent crypto acceptance.
 
 ## Completed source checkpoint — M6-F keyboard/privacy recovery
 
-[PR #158](https://github.com/PlayerEden/Eden-Comms/pull/158) merged as
+[PR #158](https://github.com/EdenP-Development/Eden-Comms/pull/158) merged as
 `ef155509e55125be11eef7e75c864c39594d29c6`.
-[Exact PR-head Android/JVM/Python/security CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42702688134);
-[independent merged-main CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42702975134).
+[Exact PR-head Android/JVM/Python/security CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42702688134);
+[independent merged-main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42702975134).
 All three actual Bluetooth/P2P debug conversation pages gained
 keyboard/system-bar insets and debug-only `adjustResize`, the shared
 verified shell hides keyboard/focus before Talk or Disconnect,
@@ -210,10 +234,10 @@ No actual Android emulator/phone/TalkBack/privacy or crypto acceptance.
 
 ## Completed source checkpoint — M6-G observed failure recovery
 
-[PR #159](https://github.com/PlayerEden/Eden-Comms/pull/159)
+[PR #159](https://github.com/EdenP-Development/Eden-Comms/pull/159)
 merged as `bca8156d53806e0deb1d98b68770d198d22d3200`.
-[Exact PR-head Android/JVM/Python/security CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42705244355);
-[independent merged-main CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42705668476).
+[Exact PR-head Android/JVM/Python/security CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42705244355);
+[independent merged-main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42705668476).
 Debug Bluetooth/P2P observed STOPPED, radio, and group-cleanup
 states now show separate, concrete instructions without auto-retry.
 Fresh explicitly started Wi-Fi Direct host/discovery clears stale
@@ -224,10 +248,10 @@ review still NOT RUN.
 
 ## Completed source checkpoint — M6-H one-use P2P three-QR request
 
-[PR #160](https://github.com/PlayerEden/Eden-Comms/pull/160)
+[PR #160](https://github.com/EdenP-Development/Eden-Comms/pull/160)
 merged as `cbbd61b95e1431392ff435bd182aa8b8324a675d`.
-[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42707312560);
-[independent merged-main CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42707691367).
+[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42707312560);
+[independent merged-main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42707691367).
 The Wi-Fi Direct QR coordinator now atomically claims a
 **single actual constructed pinned TLS request** per successful
 three-QR exchange. Duplicates are closed; only the existing
@@ -238,10 +262,10 @@ error behavior, and independent crypto/privacy review NOT RUN.
 
 ## Completed source checkpoint — M6-I interruption isolation
 
-[PR #161](https://github.com/PlayerEden/Eden-Comms/pull/161)
+[PR #161](https://github.com/EdenP-Development/Eden-Comms/pull/161)
 merged as `dd0366f966ffe419dda45b78631eb9cb71525725`.
-[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42725506431);
-[independent merged-main CI SUCCESS](https://github.com/PlayerEden/Eden-Comms/actions/runs/42725798742).
+[Exact-final-head PR Android/JVM/Python/security CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42725506431);
+[independent merged-main CI SUCCESS](https://github.com/EdenP-Development/Eden-Comms/actions/runs/42725798742).
 The actual Wi-Fi Direct Join callback failure path now closes only
 its original still-pending QR request if the exact radio token,
 OS group phase and unpromoted TLS state still match. All six
