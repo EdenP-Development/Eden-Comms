@@ -1,5 +1,12 @@
 # Eden Comms
 
+**Post-transfer verified source / APK evidence:**
+[Migration receipt](docs/EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md).
+The organization builds the **same** signed debug Preview APK
+(`com.edenpractical.comms.preview`), now version `200016`;
+private original-package signing has not been verified or changed.
+No public itch.io Eden Comms release has been asserted.
+
 **Repository transferred November 24, 2026:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms). Existing Android application IDs, keys, artwork, code history and product design are preserved. [Transfer audit and current handoff](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md). Private original-package signing is not yet credential-verified; the public-test Preview signer remains unchanged.
 
 **EdenP Development integration:** [November 24 ownership/signing
