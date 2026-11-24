@@ -76,8 +76,12 @@ def swipe_up():
     if not matches:
         raise RuntimeError("Could not read emulator screen size")
     w, h = map(int, matches[-1])
-    adb("shell", "input", "swipe", str(w // 2), str(int(h * .78)),
-        str(w // 2), str(int(h * .26)), "400")
+    # The Home "SCROLL FOR MORE" action occupies a real bottom footer.
+    # A drag starting at 78% of a 720px landscape viewport lands ON
+    # that button, never reaching the weighted scrolling content.
+    # Start well above the footer and below the fixed masthead.
+    adb("shell", "input", "swipe", str(w // 2), str(int(h * .64)),
+        str(w // 2), str(int(h * .30)), "400")
 
 
 def seek(label, *, scroll=False, timeout=30):
