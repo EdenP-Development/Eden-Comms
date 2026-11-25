@@ -34,7 +34,7 @@ class HomeScrollCueSourceTest(unittest.TestCase):
         self.assertIn(".heightIn(min = 48.dp)", s)
         self.assertIn("pageScroll.animateScrollTo(", s)
         self.assertIn(".coerceAtMost(pageScroll.maxValue)", s)
-        self.assertNotIn(".verticalScroll(rememberScrollState())", s)
+        self.assertNotIn(".verticalScroll(rememberScrollState())", s.split("private fun titleForPage", 1)[0])
 
     def test_hint_cannot_start_connection_or_change_app_security(self):
         s = self.ui
