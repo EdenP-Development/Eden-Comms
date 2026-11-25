@@ -17,3 +17,5 @@ Preserve Field Green original palette, approved EPS startup bytes/timing unless 
 
 ## Owner follow-up
 Defer VIS-02 final icon work until later; concept C remains directional only. Owner finds sketch flat, slim/basic and potentially off-center. Revisit optical balance, heavier silhouette, dimensional finish, restrained depth and small-size readability. Existing launcher remains unchanged. VIS-01 merged at b8ef17e0d332a79b01deec7867c38917969be0db after CI #537. VIS-03 first pass removes duplicate method entry (same route), moves supporting help below communication actions, reduces header/scroll footer bulk; CI pending. Preserve disclosures and 48dp targets.
+
+VIS-03 first pass merged at 63ecf26385e602e98c23209f4d82799f2d7c0415 after CI #539. VIS-04 first pass adds selectable radio cards with multi-color swatches, descriptions, supporting accent selection and switch, neutral privacy state text. Existing preference callbacks, privacy disclosures and peer deletion confirmation retained. Static regression added; Android CI and actual layout review pending. Icon remains deferred.
