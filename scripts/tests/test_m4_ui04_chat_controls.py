@@ -75,7 +75,7 @@ class M4Ui04ConversationContract(unittest.TestCase):
         self.assertLess(active.index("DebugConversationPanel("),
                         active.index('Text("End chat and disconnect")'))
         self.assertLess(active.index('Text("End chat and disconnect")'),
-                        active.index('if (showTestTools) {'))
+                        active.index('if (showTestTools && !talkSelected) {'))
         self.assertIn("ending?.endByUser()", active)
         self.assertIn("clearTemporaryPairing()", active)
         self.assertIn("debugText = debugText.finish()", active)
