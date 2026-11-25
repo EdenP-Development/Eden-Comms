@@ -16,7 +16,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import android.graphics.BitmapFactory
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
@@ -29,7 +32,14 @@ internal const val EPS_HOLD_MS = 1000
 
 @Composable
 internal fun EpsStartup(showInitially: Boolean, content: @Composable () -> Unit) {
-    var visible by remember { mutableStateOf(showInitially && ValueAnimator.areAnimatorsEnabled()) }
+    val context = LocalContext.current
+    val artwork: ImageBitmap? = remember {
+        if (!showInitially || !ValueAnimator.areAnimatorsEnabled()) null
+        else runCatching {
+            BitmapFactory.decodeResource(context.resources, R.drawable.eps_v1_runtime)?.asImageBitmap()
+        }.getOrNull()
+    }
+    var visible by remember { mutableStateOf(artwork != null) }
     val opacity = remember { Animatable(0f) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     DisposableEffect(lifecycle) {
@@ -52,7 +62,6 @@ internal fun EpsStartup(showInitially: Boolean, content: @Composable () -> Unit)
         visible = false
     }
     if (visible) {
-        val artwork = runCatching { /* Resource is verified at build time. */ R.drawable.eps_v1_runtime }.getOrNull()
         Box(
             Modifier.fillMaxSize().background(Color(0xFF111214))
                 .clickable(onClickLabel = "Skip startup") { visible = false }
@@ -61,7 +70,7 @@ internal fun EpsStartup(showInitially: Boolean, content: @Composable () -> Unit)
         ) {
             if (artwork != null) {
                 Image(
-                    painter = painterResource(artwork),
+                    bitmap = artwork,
                     contentDescription = "Eden Practical Solutions",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.safeDrawingPadding().padding(24.dp)
