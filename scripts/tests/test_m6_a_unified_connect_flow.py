@@ -35,7 +35,7 @@ class M6AUnifiedConnectFlow(unittest.TestCase):
         chooser = self.root.split("private fun NearbyScreen(", 1)[1].split(
             "private fun PushToTalkScreen()", 1
         )[0]
-        self.assertIn('FieldSectionHeader("CONNECT", "Choose how the phones connect")', chooser)
+        self.assertIn('FieldSectionHeader("CONNECTION METHODS", "Choose how the phones connect")', chooser)
         self.assertIn('method = NearbyMethodCatalog.current(ConnectionMethod.LAN)', chooser)
         self.assertIn('method = NearbyMethodCatalog.current(ConnectionMethod.BLUETOOTH)', chooser)
         self.assertIn('method = NearbyMethodCatalog.current(ConnectionMethod.WIFI_DIRECT)', chooser)

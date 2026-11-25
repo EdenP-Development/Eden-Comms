@@ -604,7 +604,7 @@ private fun NearbyScreen(
         ApplicationInfo.FLAG_DEBUGGABLE != 0
     var launchNotice by remember { mutableStateOf("") }
 
-    FieldSectionHeader("CONNECT", "Choose how the phones connect")
+    FieldSectionHeader("CONNECTION METHODS", "Choose how the phones connect")
     Text(
         "Pick one method on both phones, exchange the fresh codes and " +
             "approve each other. Only after those checks can you use Text " +
@@ -635,7 +635,7 @@ private fun NearbyScreen(
     )
     NearbyMethodCard(
         method = NearbyMethodCatalog.current(ConnectionMethod.BLUETOOTH),
-        icon = R.drawable.ic_eden_radio_tower,
+        icon = R.drawable.ic_eden_bluetooth,
         subtitle = "No router • both phones need Bluetooth",
         actionLabel = "USE BLUETOOTH",
         enabled = NearbyMethodCatalog.select(
@@ -648,7 +648,7 @@ private fun NearbyScreen(
     )
     NearbyMethodCard(
         method = NearbyMethodCatalog.current(ConnectionMethod.WIFI_DIRECT),
-        icon = R.drawable.ic_eden_wifi,
+        icon = R.drawable.ic_eden_pairing_phones,
         subtitle = "No router • check Android support, then choose Host or Join",
         actionLabel = "USE WI-FI DIRECT",
         enabled = NearbyMethodCatalog.select(
@@ -696,7 +696,7 @@ private fun NearbyMethodCard(
     enabled: Boolean,
     onAction: () -> Unit
 ) {
-    FieldFrame(accent = enabled) {
+    FieldFrame(accent = false) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -706,7 +706,7 @@ private fun NearbyMethodCard(
                 painter = painterResource(icon),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = supportingAccent()
             )
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -717,7 +717,7 @@ private fun NearbyMethodCard(
                 Text(subtitle, style = MaterialTheme.typography.bodySmall)
             }
             Text(
-                if (enabled) "TEST" else "OFF",
+                if (enabled) "TEST ONLY" else "UNAVAILABLE",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -726,12 +726,13 @@ private fun NearbyMethodCard(
             method.description,
             style = MaterialTheme.typography.bodySmall
         )
-        Button(
+        OutlinedButton(
             onClick = onAction,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-            shape = CutCornerShape(6.dp)
-        ) { Text(actionLabel) }
+            shape = CutCornerShape(6.dp),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = supportingAccent())
+        ) { Text(actionLabel, fontWeight = FontWeight.SemiBold) }
     }
 }
 
