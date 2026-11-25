@@ -19,6 +19,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -833,13 +835,54 @@ private fun SettingsScreen(
     val settingsContext = LocalContext.current.applicationContext
     val settingsScope = rememberCoroutineScope()
     SectionLabel("APPEARANCE")
-    AppearancePreference.entries.forEach { option ->
-        val sample = appearanceColors(option, darkMode)
-        Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).clickable { onAppearanceChange(option) }, verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = appearance == option, onClick = null)
-            Spacer(Modifier.width(12.dp))
-            Text(option.label, modifier = Modifier.weight(1f))
-            Box(Modifier.size(28.dp).background(sample.primary, CutCornerShape(4.dp)))
+    Column(
+        modifier = Modifier.fillMaxWidth().selectableGroup(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        AppearancePreference.entries.forEach { option ->
+            val sample = appearanceColors(option, darkMode)
+            val selected = appearance == option
+            val eps = option == AppearancePreference.EPS
+            Surface(
+                modifier = Modifier.fillMaxWidth()
+                    .selectable(selected = selected, role = Role.RadioButton,
+                        onClick = { onAppearanceChange(option) }),
+                shape = CutCornerShape(7.dp),
+                color = MaterialTheme.colorScheme.surface,
+                border = androidx.compose.foundation.BorderStroke(
+                    if (selected) 2.dp else 1.dp,
+                    if (selected) supportingAccent()
+                    else MaterialTheme.colorScheme.outline.copy(alpha = 0.45f)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(selected = selected, onClick = null,
+                        colors = RadioButtonDefaults.colors(selectedColor = supportingAccent()))
+                    Spacer(Modifier.width(10.dp))
+                    Column(modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Text(option.label, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            if (eps) "Amber, violet and gunmetal" else "Original olive and graphite",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                            val swatches = if (eps)
+                                listOf(Color(0xFFD6A044), sample.secondary, sample.background)
+                            else listOf(sample.primary, sample.surfaceVariant, sample.background)
+                            swatches.forEach { swatch ->
+                                Box(Modifier.size(18.dp).background(swatch, CutCornerShape(3.dp))
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CutCornerShape(3.dp)))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     Row(
@@ -861,7 +904,9 @@ private fun SettingsScreen(
         Switch(
             checked = darkMode,
             onCheckedChange = onDarkModeChange,
-            modifier = Modifier.semantics { contentDescription = "Dark appearance" }
+            modifier = Modifier.semantics { contentDescription = "Dark appearance" },
+            colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colorScheme.surface,
+                checkedTrackColor = supportingAccent())
         )
     }
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
@@ -881,13 +926,13 @@ private fun SettingsScreen(
             Text(
                 ConversationPrivacyContent.currentState,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         TextButton(
             onClick = { showHistoryHelp = true },
             modifier = Modifier.heightIn(min = 48.dp)
-        ) { Text("Learn more") }
+        ) { Text("Learn more", color = supportingAccent()) }
     }
     Text(
         ConversationPrivacyContent.currentExplanation,
