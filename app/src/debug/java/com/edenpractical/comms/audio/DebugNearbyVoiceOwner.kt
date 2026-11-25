@@ -34,6 +34,8 @@ internal class DebugNearbyVoiceOwner(context: Context) {
     @Volatile private var offerFrame: ((ByteArray) -> Boolean)? = null
     @Volatile private var finishStream: (() -> Boolean)? = null
 
+    var awaitingFloor by mutableStateOf(false)
+        private set
     var capturing by mutableStateOf(false)
         private set
     var finalizing by mutableStateOf(false)
@@ -72,6 +74,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
             DebugLanVoiceFloor.Ask.GRANTED -> startGrantedMicrophone()
             DebugLanVoiceFloor.Ask.PENDING -> {
                 pendingFloor = true
+                awaitingFloor = true
                 notice = "Requesting encrypted talk floor. Microphone is OFF."
                 true
             }
@@ -87,6 +90,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
     fun floorGranted() {
         if (!active || !pendingFloor) return
         pendingFloor = false
+        awaitingFloor = false
         if (!pressed || allowed?.invoke() != true) {
             cancelFloor?.invoke()
             notice = "Talk request released before mic started."
@@ -98,6 +102,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
     fun floorDenied() {
         if (!active || !pendingFloor) return
         pendingFloor = false
+        awaitingFloor = false
         pressed = false
         capturing = false
         notice = "Other phone is speaking. Talk floor denied; mic remained OFF."
@@ -157,6 +162,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
         if (!active) return
         if (pendingFloor) {
             pendingFloor = false
+            awaitingFloor = false
             pressed = false
             cancelFloor?.invoke()
             notice = "Talk request canceled before microphone started."
@@ -173,6 +179,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
     fun cancelCapture() {
         if (pendingFloor) {
             pendingFloor = false
+            awaitingFloor = false
             pressed = false
             cancelFloor?.invoke()
             notice = "Talk request canceled. Mic never started."
@@ -215,6 +222,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
         active = false
         pressed = false
         pendingFloor = false
+        awaitingFloor = false
         capturing = false
         finalizing = false
         allowed = null
