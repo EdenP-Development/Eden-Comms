@@ -552,11 +552,14 @@ internal class LanDemoSession(
                         !approvalGate.maySendPreset()) return@execute
                     sendPacket(packet)
                     didWrite = true
-                    val arrivedEarly = peerAckLedger.written(id)
+                    // Publish the local write before releasing the ACK ledger.
+                    // Otherwise the reader can report an ACK before this callback
+                    // is posted, even when the wire write already succeeded.
                     emit(Event(
                         Phase.TEXT_WRITTEN, "Development text written to TLS (not delivery)",
                         messageId = id, text = clean
                     ))
+                    val arrivedEarly = peerAckLedger.written(id)
                     if (arrivedEarly) emit(Event(
                         Phase.TEXT_PEER_ACK,
                         "Other app returned a test ACK (not a read receipt)",
