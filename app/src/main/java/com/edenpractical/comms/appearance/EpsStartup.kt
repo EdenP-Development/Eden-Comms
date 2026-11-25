@@ -28,7 +28,7 @@ import com.edenpractical.comms.R
 import kotlinx.coroutines.delay
 
 internal const val EPS_FADE_MS = 250
-internal const val EPS_HOLD_MS = 1000
+internal const val EPS_HOLD_MS = 2500
 
 @Composable
 internal fun EpsStartup(showInitially: Boolean, content: @Composable () -> Unit) {
