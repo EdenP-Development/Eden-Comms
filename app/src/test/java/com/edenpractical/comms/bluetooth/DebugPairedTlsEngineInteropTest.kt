@@ -28,6 +28,7 @@ import javax.net.ssl.SSLEngine
 import javax.net.ssl.X509KeyManager
 import org.junit.AfterClass
 import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
@@ -234,6 +235,7 @@ class DebugPairedTlsEngineInteropTest {
                 }
                 val hostAck = hostLab.receive()
                 try {
+                    assertFalse(hostMessages.written(1L))
                     assertEquals(1L, hostMessages.acceptAck(hostAck))
                 } finally {
                     hostAck.fill(0)
@@ -260,6 +262,7 @@ class DebugPairedTlsEngineInteropTest {
                 }
                 val joinAck = joinLab.receive()
                 try {
+                    assertFalse(joinMessages.written(1L))
                     assertEquals(1L, joinMessages.acceptAck(joinAck))
                 } finally {
                     joinAck.fill(0)
@@ -535,6 +538,7 @@ class DebugPairedTlsEngineInteropTest {
                 assertEquals("Same engine after controls", accepted.text)
                 try { joinLab.transmit(accepted.ack) } finally { accepted.ack.fill(0) }
                 val reply = hostLab.receive()
+                assertFalse(hostLedger.written(1L))
                 try { assertEquals(1L, hostLedger.acceptAck(reply)) } finally { reply.fill(0) }
                 assertEquals(0, hostLedger.outstanding())
 
@@ -546,6 +550,7 @@ class DebugPairedTlsEngineInteropTest {
                 assertEquals("Reverse on same TLS session", result.text)
                 try { hostLab.transmit(result.ack) } finally { result.ack.fill(0) }
                 val finalAck = joinLab.receive()
+                assertFalse(joinLedger.written(1L))
                 try { assertEquals(1L, joinLedger.acceptAck(finalAck)) }
                 finally { finalAck.fill(0) }
                 assertEquals(0, joinLedger.outstanding())
@@ -804,6 +809,7 @@ class DebugPairedTlsEngineInteropTest {
                     try { joinText.transmit(accepted.ack) }
                     finally { accepted.ack.fill(0) }
                     val ack = hostText.receive()
+                    assertFalse(hostLedger.written(1L))
                     try { assertEquals(1L, hostLedger.acceptAck(ack)) }
                     finally { ack.fill(0) }
                     assertEquals(0, hostLedger.outstanding())
@@ -817,6 +823,7 @@ class DebugPairedTlsEngineInteropTest {
                     try { hostText.transmit(received.ack) }
                     finally { received.ack.fill(0) }
                     val reverseAck = joinText.receive()
+                    assertFalse(joinLedger.written(1L))
                     try { assertEquals(1L, joinLedger.acceptAck(reverseAck)) }
                     finally { reverseAck.fill(0) }
                     assertEquals(0, joinLedger.outstanding())

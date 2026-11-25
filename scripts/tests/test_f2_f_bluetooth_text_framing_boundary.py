@@ -55,14 +55,22 @@ class F2FFrameSafetyBoundary(unittest.TestCase):
             'private var closed = false',
             'private var nextOutgoing = 1L',
             'private var nextIncoming = 1L',
-            'private val pending = LinkedHashSet<Long>()',
+            'private val pending = LinkedHashMap<Long, PendingState>()',
             'pending.size < MAX_PENDING',
-            'pending.add(id)',
+            'pending[id] = PendingState.QUEUED',
+            'PendingState.EARLY_ACK', 'PendingState.WRITTEN',
+            'fun written(id: Long): Boolean',
             'frame.messageId == nextIncoming',
             'pending.remove(frame.messageId)',
             'fun close()', 'pending.clear()'
         ):
             self.assertIn(marker, self.frame, marker)
+        channel = (BT / 'DebugBluetoothApprovedTextChannel.kt').read_text()
+        self.assertLess(channel.index('onEvent(Event.Written(id, pending.writtenText))'),
+                        channel.index('ledger.written(id)'))
+        self.assertIn('if (!closed && id != null) onEvent(Event.Acknowledged(id))', channel)
+        self.assertIn('earlyAckWaitsForWriteAndCannotBeReplayed', self.test)
+        self.assertIn('closeDiscardsDeferredAck', self.test)
         self.assertNotIn('System.currentTimeMillis()', self.frame)
         self.assertNotIn('SharedPreferences', self.frame)
 

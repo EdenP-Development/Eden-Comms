@@ -80,11 +80,13 @@ class DebugBluetoothTextFrameCodecTest {
         val received = join.acceptText(h1)
         assertEquals("Can you hear me?", received.text)
         assertEquals(1L, received.messageId)
+        assertFalse(host.written(1L))
         assertEquals(1L, host.acceptAck(received.ack))
         assertEquals(0, host.outstanding())
 
         val j1 = join.prepareText("Yes, on the simulated protocol!")
         val onHost = host.acceptText(j1)
+        assertFalse(join.written(1L))
         assertEquals(1L, join.acceptAck(onHost.ack))
         assertEquals(0, join.outstanding())
         host.close()
@@ -123,6 +125,8 @@ class DebugBluetoothTextFrameCodecTest {
         assertThrows(IllegalArgumentException::class.java) {
             ledger.acceptAck(codec.acknowledgment(3))
         }
+        assertFalse(ledger.written(1L))
+        assertFalse(ledger.written(2L))
         assertEquals(2L, ledger.acceptAck(codec.acknowledgment(2)))
         assertEquals(1L, ledger.acceptAck(codec.acknowledgment(1)))
         assertThrows(IllegalArgumentException::class.java) {
@@ -136,6 +140,7 @@ class DebugBluetoothTextFrameCodecTest {
         repeat(DebugBluetoothTextLedger.MAX_PENDING) { ledger.prepareText("x") }
         assertEquals(DebugBluetoothTextLedger.MAX_PENDING, ledger.outstanding())
         assertThrows(IllegalArgumentException::class.java) { ledger.prepareText("x") }
+        assertFalse(ledger.written(1L))
         assertEquals(1L, ledger.acceptAck(codec.acknowledgment(1)))
         assertEquals(9L, codec.decode(ledger.prepareText("new")).messageId)
 
@@ -143,6 +148,7 @@ class DebugBluetoothTextFrameCodecTest {
         repeat(DebugBluetoothTextLedger.MAX_MESSAGES_PER_DIRECTION) { i ->
             val id = codec.decode(many.prepareText("x")).messageId
             assertEquals(i + 1L, id)
+            assertFalse(many.written(id))
             many.acceptAck(codec.acknowledgment(id))
         }
         assertThrows(IllegalArgumentException::class.java) { many.prepareText("over") }
@@ -162,5 +168,27 @@ class DebugBluetoothTextFrameCodecTest {
         assertThrows(IllegalArgumentException::class.java) {
             codec.decode(ByteArray(codec.MAX_FRAME_BYTES + 1))
         }
+    }
+
+    @Test fun earlyAckWaitsForWriteAndCannotBeReplayed() {
+        val ledger = DebugBluetoothTextLedger()
+        ledger.prepareText("test")
+        assertEquals(null, ledger.acceptAck(codec.acknowledgment(1)))
+        assertEquals(1, ledger.outstanding())
+        assertThrows(IllegalArgumentException::class.java) {
+            ledger.acceptAck(codec.acknowledgment(1))
+        }
+        assertTrue(ledger.written(1))
+        assertEquals(0, ledger.outstanding())
+        assertFalse(ledger.written(1))
+    }
+
+    @Test fun closeDiscardsDeferredAck() {
+        val ledger = DebugBluetoothTextLedger()
+        ledger.prepareText("test")
+        assertEquals(null, ledger.acceptAck(codec.acknowledgment(1)))
+        ledger.close()
+        assertFalse(ledger.written(1))
+        assertEquals(0, ledger.outstanding())
     }
 }
