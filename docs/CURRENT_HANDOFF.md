@@ -4,6 +4,10 @@ Updated: **November 24, 2026** (migration preflight; product code unchanged). Th
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
 
+## EC-R4 — nearby microphone permission boundary (proposed)
+
+Beta 1 plan #178 merged at f8d086b03dfff82a4dad0dc2e04365af3b53c3f0 after CI #513 passed. Owner clarified professional software storefront preferred over itch.io; no storefront selected and no publication authorized. Source inspection found nearby voice owner's continuation checks cover authenticated session/radio, but not microphone permission at asynchronous grant and frame admission. Add explicit Android permission rechecks at request, grant, capture and PCM submission; clear pressed state on rejected grant. Keep audio receive independent of mic permission. No protocol, key or production capability changes. Source tests added; CI and physical revocation test pending. Rollback via reviewed revert. Next: assess LAN late grants and callback cleanup, then integrated QA. Charter no-ship gates remain.
+
 ## Beta 1 target — November 24, 2026
 
 Owner has set first downloadable Android Beta 1 (probably itch.io) as the goal. See [Beta 1 release plan](BETA_1_RELEASE_PLAN.md). EC-R3 #177 merged at 5ebe39e7cff4e5acce46fca62502ca879989db20 after three stale permission assertions corrected; CI #511 and main Android CI 45536101859 and private signing 45536101963 succeeded. Next EC-R4 lifecycle/recovery audit, then EC-R5, consolidated physical matrix and independent security review. Public functional beta remains NO-SHIP until charter gates pass; debug APK is internal QA only. No public distribution authorized. Scope frozen to existing local one-to-one core; no runtime change in this planning pass.

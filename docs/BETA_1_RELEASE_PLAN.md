@@ -1,6 +1,6 @@
 # Eden Comms — Beta 1 release plan
 
-Owner direction, November 24, 2026: target a first downloadable Android beta, probably itch.io, following GridMates: Sudoku's distribution approach. This is a target, not release authorization. The [Privacy and Security Charter](PRIVACY_SECURITY_CHARTER.md) remains normative, including STOP/NO-SHIP on unreviewed cryptography and absent security evidence. Do not publish the debuggable internal QA APK as a public beta or flip production flags to make a build work.
+Owner direction, November 24, 2026: target a first downloadable Android beta, professional software distribution preferred over itch.io; storefront selection deferred until release readiness. Evaluate Android stores, testing tracks and direct Eden Practical Solutions distribution. Keep Spudacus gaming distribution separate. This is a target, not release authorization. The [Privacy and Security Charter](PRIVACY_SECURITY_CHARTER.md) remains normative, including STOP/NO-SHIP on unreviewed cryptography and absent security evidence. Do not publish the debuggable internal QA APK as a public beta or flip production flags to make a build work.
 
 ## Scope freeze
 

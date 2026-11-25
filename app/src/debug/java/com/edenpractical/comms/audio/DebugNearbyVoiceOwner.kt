@@ -1,5 +1,7 @@
 package com.edenpractical.comms.audio
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -21,7 +23,11 @@ import com.edenpractical.comms.transport.DebugLanVoiceFloor
  * stops mic and queues an ordered END and RELEASE only after final PCM.
  */
 internal class DebugNearbyVoiceOwner(context: Context) {
-    private val audio = DebugLanVoiceAudio(context.applicationContext)
+    private val appContext = context.applicationContext
+    private val audio = DebugLanVoiceAudio(appContext)
+    private fun micPermitted(): Boolean =
+        appContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
     private val handler = Handler(Looper.getMainLooper())
     @Volatile private var version = 0
     @Volatile private var active = false
@@ -66,7 +72,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
 
     /** Called only by the explicit foreground touch/accessibility action. */
     fun beginCapture(): Boolean {
-        if (!active || pressed || capturing || finalizing ||
+        if (!active || pressed || capturing || finalizing || !micPermitted() ||
             allowed?.invoke() != true
         ) return false
         pressed = true
@@ -91,7 +97,8 @@ internal class DebugNearbyVoiceOwner(context: Context) {
         if (!active || !pendingFloor) return
         pendingFloor = false
         awaitingFloor = false
-        if (!pressed || allowed?.invoke() != true) {
+        if (!pressed || !micPermitted() || allowed?.invoke() != true) {
+            pressed = false
             cancelFloor?.invoke()
             notice = "Talk request released before mic started."
             return
@@ -109,7 +116,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
     }
 
     private fun startGrantedMicrophone(): Boolean {
-        if (!active || !pressed || allowed?.invoke() != true ||
+        if (!active || !pressed || !micPermitted() || allowed?.invoke() != true ||
             beginStream?.invoke() != true
         ) {
             pressed = false
@@ -120,7 +127,7 @@ internal class DebugNearbyVoiceOwner(context: Context) {
         val ticket = version
         val started = audio.startLiveCapture(
             onFrame = { pcm ->
-                current(ticket) && allowed?.invoke() == true &&
+                current(ticket) && micPermitted() && allowed?.invoke() == true &&
                     offerFrame?.invoke(pcm) == true
             },
             onStopped = { hadPcm ->
