@@ -578,6 +578,7 @@ class DebugWifiDirectDiscoveryActivity : ComponentActivity() {
                             .padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
+                        com.edenpractical.comms.ui.FieldHeaderRule()
                         Text(
                             if (verifiedChat.phase == DebugWifiDirectApprovedTcpSession.Phase.CHAT)
                                 "Wi-Fi Direct conversation" else "Join a Wi-Fi Direct connection",
