@@ -126,7 +126,8 @@ internal class DebugBluetoothTextLedger {
     private var closed = false
     private var nextOutgoing = 1L
     private var nextIncoming = 1L
-    private val pending = LinkedHashSet<Long>()
+    private enum class PendingState { QUEUED, WRITTEN, EARLY_ACK }
+    private val pending = LinkedHashMap<Long, PendingState>()
 
     @Synchronized
     fun prepareText(text: String): ByteArray {
@@ -136,7 +137,7 @@ internal class DebugBluetoothTextLedger {
         }
         val id = nextOutgoing
         val bytes = DebugBluetoothTextFrameCodec.text(id, text)
-        pending.add(id)
+        pending[id] = PendingState.QUEUED
         nextOutgoing++
         return bytes
     }
@@ -157,13 +158,38 @@ internal class DebugBluetoothTextLedger {
     }
 
     @Synchronized
-    fun acceptAck(bytes: ByteArray): Long {
+    fun acceptAck(bytes: ByteArray): Long? {
         require(!closed) { "Bluetooth test ledger closed" }
         val frame = DebugBluetoothTextFrameCodec.decode(bytes)
-        require(frame.kind == DebugBluetoothTextFrameCodec.Kind.ACK &&
-            pending.remove(frame.messageId)
-        ) { "Bluetooth ACK unknown, duplicate or early" }
-        return frame.messageId
+        require(frame.kind == DebugBluetoothTextFrameCodec.Kind.ACK)
+        return when (pending[frame.messageId]) {
+            PendingState.QUEUED -> {
+                pending[frame.messageId] = PendingState.EARLY_ACK
+                null
+            }
+            PendingState.WRITTEN -> {
+                pending.remove(frame.messageId)
+                frame.messageId
+            }
+            else -> throw IllegalArgumentException("Bluetooth ACK unknown or duplicate")
+        }
+    }
+
+    /** Called only after encrypted transmit and publication of Written. */
+    @Synchronized
+    fun written(id: Long): Boolean {
+        if (closed) return false
+        return when (pending[id]) {
+            PendingState.QUEUED -> {
+                pending[id] = PendingState.WRITTEN
+                false
+            }
+            PendingState.EARLY_ACK -> {
+                pending.remove(id)
+                true
+            }
+            else -> false
+        }
     }
 
     @Synchronized
