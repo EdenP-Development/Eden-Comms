@@ -92,4 +92,46 @@ class LanRecoveryPolicyTest {
         )
         assertEquals(0, closed.get())
     }
+
+    @Test fun stalledGracefulWriterCannotPreventIndependentForcedClose() {
+        val registry = SessionSocketRegistry()
+        val socket = java.net.Socket()
+        registry.ownSocket(socket)
+        val entered = java.util.concurrent.CountDownLatch(1)
+        val release = java.util.concurrent.CountDownLatch(1)
+        val done = java.util.concurrent.CountDownLatch(1)
+        val timer = java.util.concurrent.atomic.AtomicReference<(() -> Unit)?>(null)
+        val worker = kotlin.concurrent.thread(isDaemon = true) {
+            try {
+                LanGracefulStop.begin(
+                    scheduleHardClose = { _, action -> timer.set(action) },
+                    enqueueClose = {
+                        entered.countDown()
+                        release.await(5, java.util.concurrent.TimeUnit.SECONDS)
+                    },
+                    hardClose = { registry.close() }
+                )
+            } finally { done.countDown() }
+        }
+        try {
+            assertTrue(entered.await(3, java.util.concurrent.TimeUnit.SECONDS))
+            requireNotNull(timer.get()).invoke()
+            assertTrue(socket.isClosed)
+            assertEquals(1L, done.count)
+        } finally {
+            release.countDown()
+            registry.close()
+            worker.join(1000)
+        }
+    }
+
+    @Test fun missingPrefixAndEveryPartialNetworkLossFailsClosed() {
+        for (network in listOf("wifi", null))
+            for (address in listOf("address", null))
+                for (prefix in listOf(24, null)) {
+                    assertEquals(network != null && address != null && prefix != null,
+                        WifiLinkContinuity.unchanged("wifi", "address", 24,
+                            network, address, prefix))
+                }
+    }
 }
