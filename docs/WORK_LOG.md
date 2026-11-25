@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EC-R5 — Home and Help practical copy (proposed)
+
+PR #181 merged at db8052c24512f313cd276e81d309c090f596b408 after CI #519 success. Reviewed design Bible, actual Home/Help source and existing disconnected emulator rubric. Preserve graphite/sage utility design, existing navigation, responsive cards and prominent development warning. Clarify no-account nearby communication on Home; add expandable Help for method selection, fresh pairing after interruption and listen-only microphone guidance. No new onboarding wall or runtime transport/permission changes. Source regression added. Exact-head CI pending; MainActivity change triggers existing signed isolated Preview/visual workflow after merge. Inspect actual screenshot artifacts before declaring visual acceptance. Physical and independent security gates remain NOT RUN.
+
 ## EC-R5 entry — verified EC-R4 baseline and recovery review
 
 PR #180 merged at 2a690fd160f5a2cf2fef8904052cf6c7672b48c9; main Android CI 45545690005 and signing 45545690006 succeeded. Internal 10009, APK SHA-256 133fcca12730238a2d5857b36b37dd7262a2be3c82b3ca24c0cfbad2e8285a20, same private signer. [Artifact](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45545690006/artifacts/14991567419), expires December 2. Reviewed M6-G recovery audit, actual nearby guidance and LAN continuity/graceful-stop policies: existing explicit fresh pairing, observed cleanup and bounded forced-close behavior should be retained, not rewritten without observed defect. This is a targeted source review, not exhaustive lifecycle or physical evidence. Updated consolidated matrix with current candidate and permission/voice/UX regressions, upgrade 10008 to 10009. All 54 cases remain NOT RUN. Begin integrated UI/quality audit; unresolved recovery behavior to be tested on devices. No public beta or security claims, no runtime/production capability change.
