@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EC-R5 — privacy disclosure parity (proposed)
+
+PR #182 merged at 9bd44548ec4c6e93aa2899bf9f275d1dff99c09a after exact-head CI #522 passed. Main CI 45550020917 and private signing 45550020965 passed; isolated Preview visual run 45550020954 pending verification. Settings and contextual help previously described optional history/peer memory as LAN-only or unavailable. F5-C actual approved Bluetooth/P2P privacy wiring and LAN controls support all three debug methods. Correct copy to distinguish session-only default, separately opted-in history and peer identity, LAN-only disappearing timer, release unavailable, and fresh approval. Update source/JVM assertions; no storage, authorization or release flags changed. Exact-head CI pending. Physical/security acceptance NOT RUN.
+
 ## EC-R5 — Home and Help practical copy (proposed)
 
 PR #181 merged at db8052c24512f313cd276e81d309c090f596b408 after CI #519 success. Reviewed design Bible, actual Home/Help source and existing disconnected emulator rubric. Preserve graphite/sage utility design, existing navigation, responsive cards and prominent development warning. Clarify no-account nearby communication on Home; add expandable Help for method selection, fresh pairing after interruption and listen-only microphone guidance. No new onboarding wall or runtime transport/permission changes. Source regression added. Exact-head CI pending; MainActivity change triggers existing signed isolated Preview/visual workflow after merge. Inspect actual screenshot artifacts before declaring visual acceptance. Physical and independent security gates remain NOT RUN.
