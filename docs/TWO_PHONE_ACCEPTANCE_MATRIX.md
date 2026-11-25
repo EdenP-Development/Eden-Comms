@@ -8,9 +8,9 @@ security. [Continue here](../CONTINUE_HERE.md) ·
 
 ## Candidate and installation preflight (November 24)
 
-Current reference candidate: [private internal QA 10002](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45529515834/artifacts/14983823881), source 20eac5ae75cab2c89ffc290517ec014b43f20293. Artifact expires December 2; use the newest independently verified candidate if it expires or source changes. Do not mix Preview and internal packages across acceptance evidence.
+Current reference candidate: [private internal QA 10009](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45545690006/artifacts/14991567419), source 2a690fd160f5a2cf2fef8904052cf6c7672b48c9. Artifact expires December 2; use the newest independently verified candidate if it expires or source changes. Do not mix Preview and internal packages across acceptance evidence.
 
-Before the consolidated session, compare installed package, signer and version with the candidate. If a disposable original-package installation has a different signer, use the isolated Preview channel or obtain explicit informed consent for a clean install; never silently remove app data. For the upgrade case, install verified internal A (10001), opt into a local identity and change theme, then install B (10002) over A without uninstalling. Confirm settings and identity survive on each device; record only pass/fail and redacted reason. Do not log actual peer identities.
+Before the consolidated session, compare installed package, signer and version with the candidate. If a disposable original-package installation has a different signer, use the isolated Preview channel or obtain explicit informed consent for a clean install; never silently remove app data. For the upgrade case, install verified internal A (10008), opt into a local identity and change theme, then install B (10009) over A without uninstalling. Confirm settings and identity survive on each device; record only pass/fail and redacted reason. Do not log actual peer identities.
 
 Record each C01–C18 outcome independently for LAN, Bluetooth Classic and Wi-Fi Direct (54 cases). For a failure record candidate source/version, method, case, host/join role, Android major version, observed behavior and reproducibility, without messages, QR contents, audio or device identifiers. Prioritize authorization, microphone teardown, retention and disconnect failures before cosmetic issues. No result may be inferred from CI. This is preparation only; all physical cases remain NOT RUN.
 
@@ -185,6 +185,10 @@ PASS/FAIL/BLOCKED/NOT RUN without identifying the phones, QR pins,
 audio, raw message bodies or sensitive screenshots. Source/JVM
 callback-race tests alone are not phone acceptance.
 [Source audit](M6_I_P2P_INTERRUPTED_CALLBACK_ISOLATION_AUDIT.md).
+
+### EC-R4 microphone permission and EC-R1/R2 conversation parity — NOT RUN
+
+Within C02/C08/C10/C11/C12/C16 on each transport, deny microphone permission, verify text remains usable, then explicitly grant and start a new verified session if Android interrupted the old one. On a disposable test device attempt permission loss while awaiting a grant and while capturing; expect no new microphone capture or audio submission after permission is observed lost, release or terminate the floor, and no stale ready state. If Android kills the app or cannot reproduce the timing, record that observation or BLOCKED rather than claiming a race was tested. For LAN also test tap-record-then-send cancellation. In C11/C13/C14 confirm Text/Talk switching preserves only intended session state, optional LAN history controls start collapsed, hide closes transient saved-history views and deletion confirmation, and disconnect remains reachable. No permission change should be required merely to receive audio. Physical evidence only.
 
 ## Recording one test case
 
