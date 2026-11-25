@@ -233,7 +233,17 @@ internal fun LocalPairingTestScreen(
      * and existing ECVP frames, but sends each 20ms frame DURING the hold.
      * The UI never creates a socket, unverified session or background service.
      */
+    fun microphonePermitted(): Boolean =
+        context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+
     fun beginLiveCaptureWithFloor(session: LanDemoSession): Boolean {
+        if (!microphonePermitted()) {
+            session.cancelUnstartedVoiceFloor()
+            micAllowed = false
+            voiceNote = "Microphone permission lost. Talk request cancelled."
+            return false
+        }
         // This is reached only after the host owns the floor locally or the
         // joiner received the exact REQUEST-correlated GRANT.
         val startedSession = session.startLiveVoice()
@@ -261,7 +271,7 @@ internal fun LocalPairingTestScreen(
         liveVoiceHandle = handle
         val voiceAttempt = attemptVersion
         val startedAudio = voiceAudio.startLiveCapture(
-            onFrame = { pcm -> handle.offerPcm(pcm) },
+            onFrame = { pcm -> microphonePermitted() && handle.offerPcm(pcm) },
             onStopped = { hadPcm ->
                 handle.finish()
                 handler.post {
@@ -365,6 +375,12 @@ internal fun LocalPairingTestScreen(
     // optional visible tap controls. This still records, THEN sends one bounded
     // burst on the same debug-only, already-approved TLS session.
     fun beginTapCaptureWithFloor(live: LanDemoSession): Boolean {
+        if (!microphonePermitted()) {
+            live.cancelUnstartedVoiceFloor()
+            micAllowed = false
+            voiceNote = "Microphone permission lost. Talk request cancelled."
+            return false
+        }
         // Accessible two-tap fallback retains record-then-send, but both the
         // capture and queued burst require the same explicit floor ownership.
         val voiceAttempt = attemptVersion
@@ -393,7 +409,10 @@ internal fun LocalPairingTestScreen(
                 // This critical section orders the user's Cancel/Hide against
                 // the worker's short enqueue operation. A prior cancel wins
                 // and *never* sends. A prior enqueue cannot be recalled.
-                val result = sendGate.submitIfActive { live.sendVoiceBurst(clip) }
+                val result = sendGate.submitIfActive {
+                    if (microphonePermitted()) live.sendVoiceBurst(clip)
+                    else LanDemoSession.VoiceSendResult.INVALID_AUDIO
+                }
                 if (result != LanDemoSession.VoiceSendResult.QUEUED)
                     live.cancelUnstartedVoiceFloor()
                 handler.post {
