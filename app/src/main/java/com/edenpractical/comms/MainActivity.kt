@@ -909,29 +909,37 @@ private fun SettingsScreen(
         onClick = onPrivacy
     )
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.20f))
-    Row(
-        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = CutCornerShape(7.dp),
+        color = MaterialTheme.colorScheme.surface,
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp, MaterialTheme.colorScheme.outline.copy(alpha = .35f)
+        )
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(ConversationPrivacyContent.currentTitle, fontWeight = FontWeight.SemiBold)
             Text(
                 ConversationPrivacyContent.currentState,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                "By default, visible session text clears when you disconnect or leave the app.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            FieldHelp(
+                question = "How message history works",
+                answer = ConversationPrivacyContent.currentExplanation
+            )
+            TextButton(
+                onClick = { showHistoryHelp = true },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                colors = ButtonDefaults.textButtonColors(contentColor = supportingAccent())
+            ) { Text("Learn more") }
         }
-        TextButton(
-            onClick = { showHistoryHelp = true },
-            modifier = Modifier.heightIn(min = 48.dp)
-        ) { Text("Learn more", color = supportingAccent()) }
     }
-    Text(
-        ConversationPrivacyContent.currentExplanation,
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.20f))
     FieldDisclosureCard(
         title = "Conversation privacy",
         summary = "Verified test chat on all three connection methods offers separate optional encrypted history and remembered public peer identity in DEBUG only. No auto-pairing.",
