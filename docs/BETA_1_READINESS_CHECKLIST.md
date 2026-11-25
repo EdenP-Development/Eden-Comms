@@ -1,5 +1,12 @@
 # Beta 1 readiness checklist
 
+## Current checkpoint — Visual Review 5 and Beta 1 reliability (2026-11-25)
+
+This checkpoint supersedes earlier visual status below. PR #205 merged at 542145f0389d8b32113bb9850bee7a9daa330081 after CI #580. Main Android run 45586732879 and private signing run 45586732727 passed. [Internal 10034](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45586732727/artifacts/15008313812), expires Dec 2; APK SHA-256 7d4a3617a0f620e5849e40a269160a2d99aaac705972f17192b5b13265dbbcde. Same pinned internal signer. Central registry updated ab0f78913de1cc3b561225a95276e26026ccffac. Owner approved the original matte product icon concept and three-second skippable EPS splash; native derivative icon is merged but physical artwork acceptance remains open. Owner cannot currently upload screenshots; do not block other engineering on visual feedback.
+
+Pre-icon integrated Preview run 45582913336 at e94265f6a587c0ec1719bca43163789347c9b7a4 passed and captured 28 screenshots (artifact 15007657884). No qualitative screenshot inspection or post-icon emulator pass claimed. Add icon resource paths to Preview trigger so subsequent icon changes get integrated checks. Next reliability work: review production boundary, stale callbacks, teardown, retries and test coverage by transport; prefer targeted fixes over feature expansion. All 54 physical cases and independent security review remain NOT RUN; no public functional beta or publication authorized. Use harmless test content only.
+
+
 ## Current checkpoint — EPS Visual Review 2 (2026-11-25)
 
 Owner physically reviewed internal 10015 (source c673600b0eff13134ee6546c4ab6d742f2fff190). EPS/Field Green light and dark screens observed; visual acceptance NOT granted. Owner selected concept C, Modular Comms, as the product-icon direction, not final artwork. Preserve fixed EPS publisher startup art, existing launcher until replacement accepted, app IDs/signing/data and security gates. See docs/EPS_VISUAL_REVIEW_1_FEEDBACK.md and docs/EPS_VISUAL_REFINEMENT_PLAN.md. Next VIS-01 semantic color roles and compact Home design, VIS-02 icon candidates; consolidate visual review rather than small APK churn.
