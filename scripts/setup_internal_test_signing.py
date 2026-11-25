@@ -28,10 +28,9 @@ ALIAS_PATTERN = re.compile(r"[a-z][a-z0-9_-]{0,63}\Z")
 SECRET_NAMES = (
     "EC_INTERNAL_KEYSTORE_BASE64",
     "EC_INTERNAL_KEYSTORE_PASSWORD",
-    "EC_INTERNAL_KEY_ALIAS",
-    "EC_INTERNAL_KEY_PASSWORD",
-    "EC_INTERNAL_CERT_SHA256",
 )
+LEGACY_NAMES = {"EC_INTERNAL_KEY_ALIAS", "EC_INTERNAL_KEY_PASSWORD", "EC_INTERNAL_CERT_SHA256"}
+FIXED_ALIAS = "eden-comms-internal-test"
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -193,76 +192,15 @@ def inspect_keystore(keystore_path, alias, storepass, keypass,
 
 
 def upload_secret(name, value, runner=run_safely):
-    """Value only over stdin: no --body, argv password, log or temp .env."""
-    if name not in SECRET_NAMES or not isinstance(value, str) or not value:
-        raise SetupError("Invalid internal-test signing credential input")
-    runner([
-        "gh", "secret", "set", name,
-        "--repo", REPOSITORY, "--env", ENVIRONMENT
-    ], secret_input=value.encode("utf-8"))
+    """Retired: never upload environment credentials from this helper."""
+    raise SetupError("Legacy uploader disabled; use manual organization setup")
 
 
 def configure(path, alias, runner=run_safely, password_prompt=getpass.getpass,
               confirm=input):
-    present, _ = check_state(runner)
-    if present:
-        raise SetupError(
-            "One or more internal-test signing secrets ALREADY EXIST. "
-            "Refusing overwrite/rotation. Verify the existing signer setup "
-            "and resolve any partial configuration manually."
-        )
-    if shutil.which("keytool") is None or shutil.which("gh") is None:
-        raise SetupError("Install Java JDK (keytool) and authenticated GitHub CLI (gh)")
-    keystore_path = safe_keystore_file(path)
-    if not ALIAS_PATTERN.fullmatch(alias):
-        raise SetupError("Invalid signing alias")
-
-    print("New dedicated test-only signer: " + str(keystore_path.name))
-    print("Keep a SECURE OFF-REPO backup of this file and both passwords.")
-    print("Do not replace existing keys to solve an APK upgrade failure.")
-    storepass = password_prompt("Keystore password (hidden): ")
-    keypass = password_prompt("Private key password (hidden; PKCS12 often matches store): ")
-    if len(storepass) < 12 or len(keypass) < 12:
-        raise SetupError("Use a strong password of at least 12 characters")
-    fingerprint = inspect_keystore(keystore_path, alias, storepass,
-                                   keypass, runner)
-    print("PUBLIC certificate SHA-256: " + fingerprint)
-    print("Five environment secrets will be added to EdenP-Development/Eden-Comms "
-          "under the protected internal-test environment.")
-    if confirm("Type UPLOAD NEW TEST KEY to continue: ").strip() != "UPLOAD NEW TEST KEY":
-        raise SetupError("Owner did not authorize the secret upload")
-
-    # Re-check immediately before any write; do not rotate on concurrent setup.
-    if existing_secrets(runner) & set(SECRET_NAMES):
-        raise SetupError("Signing secret names appeared before upload; refusing")
-    values = {
-        "EC_INTERNAL_KEYSTORE_BASE64": base64.b64encode(
-            keystore_path.read_bytes()).decode("ascii"),
-        "EC_INTERNAL_KEYSTORE_PASSWORD": storepass,
-        "EC_INTERNAL_KEY_ALIAS": alias,
-        "EC_INTERNAL_KEY_PASSWORD": keypass,
-        "EC_INTERNAL_CERT_SHA256": fingerprint,
-    }
-    try:
-        for name in SECRET_NAMES:
-            upload_secret(name, values[name], runner)
-        if not set(SECRET_NAMES).issubset(existing_secrets(runner)):
-            raise SetupError("All five secret names are not visible after upload")
-    except SetupError as exc:
-        raise SetupError(
-            "Some secret writes may have completed. DO NOT run the signing "
-            "workflow or rerun this setup automatically. Check the five "
-            "secret NAMES in GitHub, reconcile with the original backed-up "
-            "keystore, and repair manually; never silently rotate a used signer."
-        ) from exc
-
-    print("SETUP UPLOADED: all five secret NAMES are present in the protected "
-          "environment. GitHub does not reveal their values.")
-    print("NOT YET VERIFIED: successful pinned APK signing, second compatible "
-          "build, or actual identity-preserving in-place phone upgrade.")
-    print("Next: manually trigger the Internal signed test APK workflow on main; "
-          "check signer SHA-256 and CI artifact evidence.")
-    return fingerprint
+    # Organization-secret creation is deliberately manual; the retired
+    # environment uploader must never overwrite or shadow an org signer.
+    raise SetupError("Legacy uploader disabled. Existing or new credentials must be reconciled using the two-secret organization setup guide.")
 
 
 def main(argv=None):
@@ -273,7 +211,7 @@ def main(argv=None):
     mode.add_argument("--check", action="store_true",
                       help="Read only: inspect GitHub environment and secret NAMES")
     mode.add_argument("--configure", action="store_true",
-                      help="Owner-approved initial secret upload; no overwrite")
+                      help="Retired: use the organization signing setup guide")
     parser.add_argument("--keystore", type=Path,
                         help="Existing backed-up PKCS12 test keystore OUTSIDE checkout")
     parser.add_argument("--alias", default="eden-comms-internal-test",
@@ -283,12 +221,11 @@ def main(argv=None):
         if args.check:
             present, missing = check_state()
             print("Protected environment: internal-test; owner PlayerEden; exact main policy")
-            print("Configured secret NAMES: " + str(len(present)) + "/5")
-            if missing:
-                print("Missing names: " + ", ".join(sorted(missing)))
-                print("No credential values can be read through this tool.")
+            print("Environment-only shadowing secret NAMES: " + str(len(present)) + "/2")
+            if present:
+                print("STOP: reconcile environment shadowing before organization setup.")
                 return 1
-            print("Secret names present; NOT proof key values/signing are valid.")
+            print("No matching environment names; organization/repository scope not inspected.")
             return 0
         if args.keystore is None:
             parser.error("--configure requires --keystore")

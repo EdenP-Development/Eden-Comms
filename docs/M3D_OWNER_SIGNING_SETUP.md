@@ -1,3 +1,7 @@
+# Historical setup — superseded
+
+**Do not execute the five-secret upload instructions below.** The legacy uploader is disabled. Follow [the two-secret migration guide](M2L_INTERNAL_TEST_SIGNING.md) instead. Existing credentials must not be overwritten.
+
 # Eden Comms M3d — secure one-time internal APK signer setup
 
 **Prepared:** 2026-11-06  
