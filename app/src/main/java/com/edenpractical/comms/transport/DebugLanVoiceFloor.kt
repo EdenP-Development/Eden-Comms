@@ -32,7 +32,7 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
     private val abandonedRequests = LinkedHashSet<Long>()
     private var nextRequest = 0L
     private var lastRemoteRequest = 0L
-    private var startedAtMs = 0L
+    private var startedAtMs: Long? = null
     private var remoteAudioStarted = false
     private var remoteTurnConsumed = false
     private var closed = false
@@ -49,7 +49,7 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
     fun requestLocal(nowMs: Long): Request {
         if (closed || owner != Owner.FREE || pending != 0L ||
             remoteAudioStarted) return Request(Ask.BUSY)
-        if (nextRequest == Long.MAX_VALUE) throw TestPacketException()
+        if (nowMs < 0L || nextRequest == Long.MAX_VALUE) throw TestPacketException()
         id = ++nextRequest
         startedAtMs = nowMs
         return if (isHost) {
@@ -65,7 +65,7 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
 
     @Synchronized
     fun incoming(frame: DebugLanVoiceFloorCodec.Frame, nowMs: Long): Incoming {
-        if (closed) throw TestPacketException()
+        if (closed || nowMs < 0L || timedOut(nowMs)) throw TestPacketException()
         val kind = frame.kind
         val requestId = frame.requestId
         if (isHost) {
@@ -162,7 +162,7 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
             oldest.remove()
         }
         pending = 0L
-        startedAtMs = 0L
+        startedAtMs = null
         return DebugLanVoiceFloorCodec.Frame(
             DebugLanVoiceFloorCodec.Kind.CANCEL, abandonedId
         )
@@ -179,10 +179,13 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
     }
 
     @Synchronized
-    fun timedOut(nowMs: Long): Boolean =
-        !closed && startedAtMs > 0L &&
-            nowMs - startedAtMs > if (pending != 0L)
-                PENDING_TIMEOUT_MS else LEASE_TIMEOUT_MS
+    fun timedOut(nowMs: Long): Boolean {
+        if (closed) return false
+        val started = startedAtMs ?: return false
+        if (nowMs < started) return true
+        return nowMs - started > if (pending != 0L)
+            PENDING_TIMEOUT_MS else LEASE_TIMEOUT_MS
+    }
 
     @Synchronized
     fun close() {
@@ -196,6 +199,6 @@ internal class DebugLanVoiceFloor(private val isHost: Boolean) {
         remoteTurnConsumed = false
         pending = 0L
         id = 0L
-        startedAtMs = 0L
+        startedAtMs = null
     }
 }
