@@ -44,4 +44,22 @@ class DebugWifiDirectPermissionAttemptGateTest {
         assertEquals(DebugWifiDirectPermissionAttemptGate.Outcome.IGNORED,
             gate.complete(false, true))
     }
+
+    @Test fun cancelledPermissionResultMustDrainBeforeFreshRequestForEveryOutcome() {
+        for (granted in listOf(false, true)) for (foreground in listOf(false, true)) {
+            val gate = DebugWifiDirectPermissionAttemptGate()
+            assertTrue(begin(gate))
+            gate.cancel()
+            assertFalse(begin(gate))
+            assertEquals(DebugWifiDirectPermissionAttemptGate.Outcome.IGNORED,
+                gate.complete(granted, foreground))
+            assertFalse(gate.outstanding)
+            assertEquals(DebugWifiDirectPermissionAttemptGate.Outcome.IGNORED,
+                gate.complete(granted, true))
+            assertTrue(begin(gate))
+            assertEquals(DebugWifiDirectPermissionAttemptGate.Outcome.GRANTED,
+                gate.complete(true, true))
+            assertFalse(gate.outstanding)
+        }
+    }
 }
