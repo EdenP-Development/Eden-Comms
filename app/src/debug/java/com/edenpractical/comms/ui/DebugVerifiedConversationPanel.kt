@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import com.edenpractical.comms.appearance.supportingAccent
+import com.edenpractical.comms.appearance.LocalAppearance
+import com.edenpractical.comms.appearance.AppearancePreference
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +58,10 @@ internal fun DebugVerifiedConversationPanel(
     var selection by remember { mutableStateOf("text") }
     var showPrivacy by remember { mutableStateOf(false) }
     var showQa by remember { mutableStateOf(false) }
+    val selectedColors = if (LocalAppearance.current == AppearancePreference.EPS)
+        ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary)
+    else ButtonDefaults.buttonColors()
     val focusManager = LocalFocusManager.current
     val softwareKeyboard = LocalSoftwareKeyboardController.current
 
@@ -113,6 +121,7 @@ internal fun DebugVerifiedConversationPanel(
                 if (selection == "text") {
                     Button(
                         onClick = chooseText,
+                        colors = selectedColors,
                         modifier = Modifier.weight(1f).heightIn(min = 52.dp)
                             .semantics { stateDescription = "Text mode selected" }
                     ) { Text("TEXT") }
@@ -128,6 +137,7 @@ internal fun DebugVerifiedConversationPanel(
                 if (selection == "talk") {
                     Button(
                         onClick = chooseTalk,
+                        colors = selectedColors,
                         modifier = Modifier.weight(1f).heightIn(min = 52.dp)
                             .semantics { stateDescription = "Talk mode selected" }
                     ) { Text("TALK") }
@@ -153,6 +163,7 @@ internal fun DebugVerifiedConversationPanel(
             HorizontalDivider()
             OutlinedButton(
                 onClick = disconnect,
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
             ) { Text("DISCONNECT THIS TEST SESSION") }
 
