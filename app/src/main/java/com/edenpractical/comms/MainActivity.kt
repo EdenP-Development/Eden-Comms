@@ -508,7 +508,7 @@ private fun HomeScreen(
 ) {
     FieldSectionHeader("NEARBY", "Connect and communicate")
     Text(
-        "Session-only by default. Local encrypted history is optional after pairing.",
+        "Nearby text and voice, without an account. Session-only by default. Local encrypted history is optional after pairing.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -1129,6 +1129,25 @@ private fun HelpScreen(onPrivacy: () -> Unit) {
     StepLine("03", "Text or Talk, then disconnect",
         "Inside the approved test conversation, choose Text or live " +
             "hold-to-talk. Disconnect to close the local session.")
+    FieldHelp(
+        question = "Which connection should I choose?",
+        answer = "Start with Same Wi-Fi if both phones are on the same local network. " +
+            "Without a shared router, try Bluetooth or Wi-Fi Direct, depending on " +
+            "what both Android phones support. Choose the same method on both phones."
+    )
+    FieldHelp(
+        question = "What if a connection stops?",
+        answer = "Check the selected radio and Android permissions on both phones. " +
+            "End any remaining test session, follow group cleanup instructions if shown, " +
+            "and start a fresh QR exchange. Both people must approve again. " +
+            "The app does not reconnect automatically."
+    )
+    FieldHelp(
+        question = "Can I listen without microphone permission?",
+        answer = "Microphone permission is for speaking, not listening. Denying it " +
+            "does not disable text. A permission prompt or Android settings change " +
+            "may end the current test connection; pair again if needed."
+    )
     FieldHelp(
         question = "Do we need internet?",
         answer = "No account or mandatory cloud service is needed. " +
