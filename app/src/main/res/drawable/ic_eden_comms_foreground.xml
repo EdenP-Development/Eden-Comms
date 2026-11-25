@@ -6,7 +6,8 @@
     <group android:scaleX="0.062" android:scaleY="0.062" android:translateX="15.436" android:translateY="15.591000000000001">
         <path android:fillColor="#D6A044" android:fillType="evenOdd" android:pathData="M467,241 L793,241 L859,309 L510,309 L331,489 L331,684 L421,775 L336,775 L249,702 L249,462 Z" />
         <path android:fillColor="#8B42BF" android:fillType="evenOdd" android:pathData="M824,542 L918,542 L995,620 L995,799 L798,998 L432,998 L356,921 L762,921 L906,774 L906,625 Z" />
-        <path android:fillColor="#626565" android:fillType="evenOdd" android:pathData="M624,466 A42,42 0,1 1,624,550 A42,42 0,1 1,624,466 Z M600,538 L649,538 L766,858 L481,858 Z M624,559 L586,655 L662,655 Z M576,680 L624,726 L672,680 Z M565,705 L524,812 L608,740 Z M683,705 L724,812 L641,740 Z M624,757 L533,833 L714,833 Z" />
+        <path android:fillColor="#626565" android:pathData="M624,466 A42,42 0,1 1,624,550 A42,42 0,1 1,624,466 Z" />
+        <path android:fillColor="#626565" android:fillType="evenOdd" android:pathData="M600,538 L649,538 L766,858 L481,858 Z M624,559 L586,655 L662,655 Z M576,680 L624,726 L672,680 Z M565,705 L524,812 L608,740 Z M683,705 L724,812 L641,740 Z M624,757 L533,833 L714,833 Z" />
         <path android:fillColor="#E9E8E4" android:fillType="evenOdd" android:pathData="M511,388 L529,407 C467,461 466,555 529,609 L511,626 C439,564 439,450 511,388 Z M552,433 L570,451 C535,480 535,532 570,561 L552,580 C508,541 508,471 552,433 Z M739,388 L721,407 C783,461 784,555 721,609 L739,626 C811,564 811,450 739,388 Z M698,433 L680,451 C715,480 715,532 680,561 L698,580 C742,541 742,471 698,433 Z" />
     </group>
 </vector>
