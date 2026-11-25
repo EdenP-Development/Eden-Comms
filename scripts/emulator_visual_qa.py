@@ -181,10 +181,26 @@ def set_dark_appearance(dark):
         raise
     if (switch.attrib["checked"] == "true") != dark:
         l, t, r, b = map(int, BOUNDS.fullmatch(switch.attrib["bounds"]).groups())
-        adb("shell", "input", "tap", str((l+r)//2), str((t+b)//2))
-        time.sleep(.7)
-    if appearance_switch(dump_ui()).attrib["checked"] != str(dark).lower():
-        raise AssertionError("Appearance switch did not reach requested state")
+        # Prefer the labelled descendant's visible region: the ancestor may
+        # include clipped or noninteractive space. Never tap twice blindly.
+        point = find(switch, "Dark appearance")
+        tx, ty = point if point else ((l+r)//2, (t+b)//2)
+        adb("shell", "input", "tap", str(tx), str(ty))
+    deadline = time.monotonic() + 12
+    observed = None
+    while time.monotonic() < deadline:
+        try:
+            observed = appearance_switch(dump_ui()).attrib["checked"]
+            if observed == str(dark).lower():
+                return
+        except AssertionError:
+            pass  # Recomposition may temporarily replace the node.
+        time.sleep(.5)
+    print("Appearance transition diagnostic:", json.dumps({
+        "requested": dark, "observed": observed,
+        "initial": switch.attrib["checked"], "bounds": switch.attrib["bounds"]
+    }), flush=True)
+    raise AssertionError("Appearance switch did not reach requested state")
 
 
 def capture_appearance_matrix(output, report):
