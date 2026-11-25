@@ -138,6 +138,27 @@ def appearance_switch(root):
                 l, t, r, b = map(int, bounds.groups())
                 if r > l and b > t:
                     candidates.append(node)
+    if not candidates:
+        # Real Compose hierarchy observed in run 45575256247: named
+        # non-checkable child inside a clickable checkable ancestor.
+        for node in root.iter("node"):
+            a = node.attrib
+            if a.get("checkable") != "true" or a.get("clickable") != "true" or a.get("checked") not in ("true", "false"):
+                continue
+            bounds = BOUNDS.fullmatch(a.get("bounds", ""))
+            if not bounds:
+                continue
+            l, t, r, b = map(int, bounds.groups())
+            for child in node.iter("node"):
+                if child is node:
+                    continue
+                label = (child.attrib.get("text", "") + " " + child.attrib.get("content-desc", "")).casefold()
+                cb = BOUNDS.fullmatch(child.attrib.get("bounds", ""))
+                if "dark appearance" in label and cb:
+                    cl, ct, cr, cbottom = map(int, cb.groups())
+                    if l <= cl < cr <= r and t <= ct < cbottom <= b:
+                        candidates.append(node)
+                        break
     if len(candidates) != 1:
         raise AssertionError("Expected one named checkable appearance control")
     return candidates[0]

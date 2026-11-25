@@ -99,6 +99,8 @@ class IntegratedPreviewVisual(unittest.TestCase):
         spec.loader.exec_module(driver)
         root = ET.fromstring('<hierarchy><node class="android.view.View" content-desc="Dark appearance" checkable="true" checked="false" bounds="[10,10][60,60]"/><node class="android.widget.Switch" content-desc="Unrelated" checkable="true" checked="true" bounds="[10,70][60,120]"/></hierarchy>')
         self.assertEqual("false", driver.appearance_switch(root).attrib["checked"])
+        nested = ET.fromstring('<hierarchy><node class="android.view.View" checkable="true" checked="true" clickable="true" bounds="[55,254][1025,376]"><node content-desc="Dark appearance" checkable="false" bounds="[55,320][1025,376]"/></node></hierarchy>')
+        self.assertEqual("true", driver.appearance_switch(nested).attrib["checked"])
         with self.assertRaises(AssertionError):
             driver.appearance_switch(ET.fromstring('<hierarchy><node text="Dark appearance" checkable="false" bounds="[10,10][60,60]"/></hierarchy>'))
 
