@@ -38,7 +38,7 @@ val prepareEpsArtwork = tasks.register("prepareEpsArtwork") {
 }
 
 android {
-    sourceSets.getByName("main").res.srcDir(epsResources)
+    sourceSets.getByName("main").res.srcDir(epsResources.get().asFile)
 
     namespace = "com.edenpractical.comms"
     compileSdk {
