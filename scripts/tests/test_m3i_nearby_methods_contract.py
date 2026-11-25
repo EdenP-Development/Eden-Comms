@@ -23,10 +23,14 @@ class NearbyMethodSurfaceContractTest(unittest.TestCase):
 
     def test_home_connect_and_modes_go_to_one_user_method_chooser(self):
         self.assertEqual(2, self.main.count('onConnect = { navigate("connect") }'))
-        self.assertEqual(2, self.main.count('onMethods = { navigate("connect") }'))
+        self.assertNotIn('onMethods = { navigate("connect") }', self.main)
         self.assertEqual(2, self.main.count('onChatPreview = { navigate("connect") }'))
         self.assertEqual(2, self.main.count('onPtt = { navigate("connect") }'))
-        self.assertIn('Text("Choose how phones connect", color = supportingAccent())', self.main)
+        home = self.main.split("private fun HomeScreen(", 1)[1].split("private fun NearbyScreen(", 1)[0]
+        self.assertEqual(1, home.count('onClick = onConnect'))
+        self.assertIn('Text("CONNECT NEARBY"', home)
+        self.assertNotIn('Choose how phones connect', home)
+        self.assertLess(home.index('Text("CONNECT NEARBY"'), home.index('FieldHelp('))
         self.assertIn('"connect" -> NearbyScreen(', self.main)
         self.assertIn('"wifi" -> NearbyScreen(', self.main)
         self.assertNotIn('private fun LocalWifiScreen(', self.main)
