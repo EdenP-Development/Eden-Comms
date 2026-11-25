@@ -216,4 +216,31 @@ class DebugLanVoiceFloorTest {
             host.incoming(packet(DebugLanVoiceFloorCodec.Kind.RELEASE, 1), 20_000)
         }
     }
+
+    @Test fun lateGrantCannotRenewExpiredPendingRequestBeforeWatchdogRuns() {
+        val joiner = DebugLanVoiceFloor(false)
+        val req = joiner.requestLocal(0).packet!!
+        val late = DebugLanVoiceFloor.PENDING_TIMEOUT_MS + 1
+        assertTrue(joiner.timedOut(late))
+        assertThrows(TestPacketException::class.java) {
+            joiner.incoming(packet(DebugLanVoiceFloorCodec.Kind.GRANT, req.requestId), late)
+        }
+        assertFalse(joiner.maySendAudio())
+        joiner.close()
+    }
+
+    @Test fun zeroOriginHostLeaseAndClockRollbackAreNotUnlimited() {
+        val host = DebugLanVoiceFloor(true)
+        assertEquals(DebugLanVoiceFloor.Ask.GRANTED, host.requestLocal(0).status)
+        assertFalse(host.timedOut(DebugLanVoiceFloor.LEASE_TIMEOUT_MS))
+        assertTrue(host.timedOut(DebugLanVoiceFloor.LEASE_TIMEOUT_MS + 1))
+        host.close()
+        val joiner = DebugLanVoiceFloor(false)
+        val req = joiner.requestLocal(100).packet!!
+        assertTrue(joiner.timedOut(99))
+        assertThrows(TestPacketException::class.java) {
+            joiner.incoming(packet(DebugLanVoiceFloorCodec.Kind.GRANT, req.requestId), 99)
+        }
+        assertFalse(joiner.maySendAudio())
+    }
 }
