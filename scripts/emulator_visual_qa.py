@@ -123,25 +123,34 @@ def tap(label, *, scroll=False):
     time.sleep(.5)
 
 
+def appearance_switch(root):
+    # Compose may expose the toggle through a merged semantics node whose
+    # Android class is View rather than Switch. Require the explicit accessible
+    # name and real checkable state, not a platform widget class.
+    candidates = []
+    for node in root.iter("node"):
+        attrs = node.attrib
+        label = (attrs.get("text", "") + " " + attrs.get("content-desc", "")).casefold()
+        if ("dark appearance" in label and attrs.get("checkable") == "true"
+                and attrs.get("checked") in ("true", "false")):
+            bounds = BOUNDS.fullmatch(attrs.get("bounds", ""))
+            if bounds:
+                l, t, r, b = map(int, bounds.groups())
+                if r > l and b > t:
+                    candidates.append(node)
+    if len(candidates) != 1:
+        raise AssertionError("Expected one named checkable appearance control")
+    return candidates[0]
+
+
 def set_dark_appearance(dark):
     seek("Dark appearance", scroll=True)
-    switches = [node for node in dump_ui().iter("node")
-                if node.attrib.get("class") == "android.widget.Switch"
-                and node.attrib.get("checkable") == "true"]
-    if len(switches) != 1:
-        raise AssertionError("Expected one accessible appearance switch")
-    switch = switches[0]
-    if (switch.attrib.get("checked") == "true") != dark:
-        bounds = BOUNDS.fullmatch(switch.attrib.get("bounds", ""))
-        if not bounds:
-            raise AssertionError("Appearance switch has no visible bounds")
-        l, t, r, b = map(int, bounds.groups())
+    switch = appearance_switch(dump_ui())
+    if (switch.attrib["checked"] == "true") != dark:
+        l, t, r, b = map(int, BOUNDS.fullmatch(switch.attrib["bounds"]).groups())
         adb("shell", "input", "tap", str((l+r)//2), str((t+b)//2))
         time.sleep(.7)
-    checked = [node.attrib.get("checked") for node in dump_ui().iter("node")
-               if node.attrib.get("class") == "android.widget.Switch"
-               and node.attrib.get("checkable") == "true"]
-    if checked != [str(dark).lower()]:
+    if appearance_switch(dump_ui()).attrib["checked"] != str(dark).lower():
         raise AssertionError("Appearance switch did not reach requested state")
 
 
