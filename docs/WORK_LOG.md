@@ -4,6 +4,12 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EC-R2 — composer-first LAN privacy disclosure (proposed)
+
+EC-R1 PR #175 merged at be4237d6b98dcd4dac2c6f8c5baef4c50c317ce7 after CI #504 failed two obsolete diagnostics assertions and corrected CI #505 passed. Independent main Android CI 45533091385 and private signing 45533091311 both succeeded; [internal build 10004](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45533091311/artifacts/14984539400) expires December 2. Physical interaction not verified.
+
+This pass moves LAN optional disappearing-text and saved-history controls below the composer, collapsed by default, with current retention label visible. Hide/clear remain directly accessible; collapsing or hiding closes transient menus and history confirmation. Storage choices and existing callbacks unchanged; no authorization, protocol or production capability changes. Remember-peer placement and cross-transport voice guidance remain separate follow-up work. Source regressions added; exact-head CI pending. Rollback via reviewed revert. Physical matrix remains NOT RUN.
+
 ## EC-R1 — LAN conversation mode parity (proposed)
 
 Source audit found LAN combines text, privacy and voice on one scrolling surface while Bluetooth/P2P have Text/Talk tabs. This pass adds session-scoped Text default and explicit Talk mode, keyboard dismissal and synchronous cancellation of pending/active microphone when returning to Text. Disconnect remains outside both modes; draft and existing retention/approval behavior remain. No protocol or release changes. Source regression added; Android CI and physical interaction pending. Rollback via revert of this focused PR. Next inspect privacy visibility and voice status parity; real phone acceptance remains deferred to consolidated matrix.
