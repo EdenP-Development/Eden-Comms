@@ -11,3 +11,5 @@
 
 ## Next checkpoint
 Create cohesive visual design direction and product icon concepts before another consolidated implementation. Actual visual QA across all four modes, compact/large text/landscape, settings selection semantics and startup testing. No public beta until owner visual acceptance plus existing release gates. This is a visual review rejection/refinement, not a functional failure or security acceptance.
+
+Owner follow-up: C / Modular Comms is the selected icon direction. Final asset not approved. See EPS_VISUAL_REFINEMENT_PLAN.md.
