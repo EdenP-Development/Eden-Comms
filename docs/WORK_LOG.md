@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EPS v1.0 startup pilot — consolidated visual candidate (proposed)
+
+PR #185 merged at f9fe3f6748b2b0b63037b16daf1fef8b29b6363b after exact-head CI #529 passed. Direct GitHub binary connector rejected PNG; central repository is public. Use pinned reproducible Gradle build-time import with mandatory independent SHA-256 against approved receipt, generated drawable-nodpi resource, no runtime internet. First clean build requires source access; cached correct bytes are reused. Startup uses local bitmap, #111214, 250/1000/250 ms, tap and Back skip, disabled animations skip, ON_STOP closes and savedInstanceState suppresses rotation replay, no audio. Source guards added. No release flags or application identities changed. Exact-head CI and build-time byte verification pending; physical timing, contrast, lifecycle and visual acceptance NOT RUN. Consolidate signed internal candidate after successful merge and signing. No publication authorized.
+ 
 ## EPS v1.0 appearance pilot — shared palette (proposed)
 
 Owner brief recorded in EPS_V1_PILOT.md. Branch feature/eps-appearance-pilot adds local preference model, preserved original Field Green color scheme, EPS dark/light derived palettes, immediate Settings swatch selection and local persistence; main system bars follow selected background. Existing explicit dark preference resolves to Field Green; new install defaults EPS. Five nearby Compose activities use shared appearance wrapper. Local PTT non-Compose path not changed. Added migration unit tests. No transport, storage retention, package, signing or release capability changes. Exact-head CI, semantic contrast and actual visual checks pending. Startup exact artwork import and animation still pending; do not claim owner acceptance. Next verify this branch, then integrate pinned startup asset with independent byte check.
