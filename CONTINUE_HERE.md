@@ -1,5 +1,12 @@
 # Continue Eden Comms
 
+## Current checkpoint — EPS Visual Review 2 (2026-11-25)
+
+Owner physically reviewed internal 10015 (source c673600b0eff13134ee6546c4ab6d742f2fff190). EPS/Field Green light and dark screens observed; visual acceptance NOT granted. Owner selected concept C, Modular Comms, as the product-icon direction, not final artwork. Preserve fixed EPS publisher startup art, existing launcher until replacement accepted, app IDs/signing/data and security gates. See docs/EPS_VISUAL_REVIEW_1_FEEDBACK.md and docs/EPS_VISUAL_REFINEMENT_PLAN.md. Next VIS-01 semantic color roles and compact Home design, VIS-02 icon candidates; consolidate visual review rather than small APK churn.
+
+Verified baseline: PR #186 merged; CI #532, exact artwork SHA-256 d144934346d77a6e04c1475dae361fc57cb28a95d7033a799bf6e2f256548516, 426 Python checks passed. Main CI 45556205473, private signing 45556203782, disconnected Preview emulator 45556203668 all passed. [Internal 10015](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45556203782/artifacts/14994963791), [Preview 200022](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45556203668/artifacts/14996375061). Startup physical approval, persistence, accessibility, physical 54-case acceptance, independent security and release engineering remain open. No public release.
+
+
 ## Beta 1 readiness — LAN permission parity (proposed)
 
 PR #179 merged at 86e6159465448955c036e0e2310b8217acedfc98; main Android CI 45543701081 and internal signing 45543701160 passed. [Internal artifact](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45543701160/artifacts/14991150076), expires December 2. LAN branch rechecks microphone permission on both granted capture paths and at live PCM/tap burst admission, retaining the atomic cancellation gate. Updated legacy assertions and added source regressions. Exact-head CI pending. See [consolidated readiness checklist](docs/BETA_1_READINESS_CHECKLIST.md) for all engineering/product tasks, draft quick start and feedback template. Professional distribution preferred; no selection or publication yet. Physical 54-case matrix, independent security review and non-debug release engineering remain open. Next finish reliability audit and integrated quality review; no feature expansion. Rollback via reviewed revert.
