@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
+import com.edenpractical.comms.appearance.supportingAccent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,7 +51,7 @@ internal fun FieldHelp(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("?", fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary)
+                    color = supportingAccent())
                 Text(question, modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyMedium)
                 Text(if (expanded) "−" else "+")
@@ -106,7 +107,7 @@ internal fun FieldDisclosureCard(
                     }
                     Text(if (expanded) "−" else "+",
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary)
+                        color = supportingAccent())
                 }
             }
             if (expanded) {
