@@ -932,9 +932,7 @@ private fun SettingsScreen(
     }
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
     SectionLabel("APPLICATION")
-    NavigationRow("About Eden Comms", "Version and product information") {
-        showAbout = true
-    }
+    NavigationRow("About Eden Comms", "Version and product information", onClick = { showAbout = true })
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
     SectionLabel("ADVANCED")
     NavigationRow("Device and developer tools", "Identity and connection testing", onDeveloper)
