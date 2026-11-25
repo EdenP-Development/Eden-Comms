@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
 import com.edenpractical.comms.appearance.supportingAccent
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,6 +45,7 @@ internal fun FieldHelp(
         verticalArrangement = Arrangement.spacedBy(4.dp)) {
         TextButton(
             onClick = { expanded = !expanded },
+            colors = ButtonDefaults.textButtonColors(contentColor = supportingAccent()),
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 .semantics { stateDescription = if (expanded) "Expanded" else "Collapsed" }
         ) {
