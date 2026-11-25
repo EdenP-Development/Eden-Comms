@@ -28,6 +28,7 @@ import javax.net.ssl.SSLEngine
 import javax.net.ssl.X509KeyManager
 import org.junit.AfterClass
 import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
