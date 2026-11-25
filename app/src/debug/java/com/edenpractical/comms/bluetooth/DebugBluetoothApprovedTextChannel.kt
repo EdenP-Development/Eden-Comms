@@ -275,7 +275,7 @@ internal class DebugBluetoothApprovedTextChannel(
                                 }
                                 DebugBluetoothTextFrameCodec.Kind.ACK -> {
                                     val id = ledger.acceptAck(frame)
-                                    if (!closed) onEvent(Event.Acknowledged(id))
+                                    if (!closed && id != null) onEvent(Event.Acknowledged(id))
                                 }
                             }
                         }
@@ -337,6 +337,8 @@ internal class DebugBluetoothApprovedTextChannel(
                         if (!closed && pending.writtenText != null) {
                             val id = DebugBluetoothTextFrameCodec.decode(pending.bytes).messageId
                             onEvent(Event.Written(id, pending.writtenText))
+                            if (ledger.written(id) && !closed)
+                                onEvent(Event.Acknowledged(id))
                         }
                     }
                 } finally {
