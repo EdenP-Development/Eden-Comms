@@ -9,16 +9,16 @@ package com.edenpractical.comms.privacy
  */
 internal object ConversationPrivacyContent {
     const val currentTitle = "Message history"
-    const val currentState = "Session only • currently active"
+    const val currentState = "Session only • default"
     const val currentExplanation =
         "Test chat text stays in temporary app memory during the connection. " +
-        "The app does not intentionally save a conversation history. " +
+        "By default, the app does not intentionally save a conversation history. " +
         "Disconnecting or leaving the app clears the visible session text."
 
     const val futureHistoryTitle = "Encrypted history"
-    const val futureHistoryState = "Opt-in test • LAN debug only"
+    const val futureHistoryState = "Opt-in test • all three debug transports"
     const val futureHistoryExplanation =
-        "After genuine bilateral LAN approval, you can explicitly save NEW " +
+        "After genuine bilateral approval on Same Wi-Fi, Bluetooth or Wi-Fi Direct, you can explicitly save NEW " +
         "short test text in encrypted local device storage for 1 hour, 24 hours, " +
         "7, 14 or 30 days. Session-only is the default for every connection. " +
         "Viewing saved messages requires reconnecting to the verified peer, " +
@@ -26,15 +26,15 @@ internal object ConversationPrivacyContent {
         "security-reviewed, never saves voice, and is unavailable in release."
 
     const val futureTimerTitle = "Disappearing messages"
-    const val futureTimerState = "Available in nearby test chat"
+    const val futureTimerState = "Available in Same-Wi-Fi test chat"
     const val futureTimerExplanation =
-        "In an active test chat, you can choose Off, 1, 5 or 15 minutes. " +
+        "In an active Same-Wi-Fi test chat, you can choose Off, 1, 5 or 15 minutes. " +
         "The timer removes visible messages from this phone only; it does " +
         "not tell the other phone to delete anything or erase Android copies. " +
         "The choice resets when the connection ends and is never saved."
 
     const val futureTrustTitle = "Remember nearby devices"
-    const val futureTrustState = "Opt-in test • LAN debug only"
+    const val futureTrustState = "Opt-in test • all three debug transports"
     const val futureTrustExplanation =
         "After both phones genuinely verify and approve, you may explicitly " +
         "remember that phone's PUBLIC certificate fingerprint for 1–30 days " +
