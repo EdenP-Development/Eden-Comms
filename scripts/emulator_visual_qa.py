@@ -288,6 +288,12 @@ def run(apk, output):
             configure(size, density, font)
             launch()
             report["screens"].append(capture(output, "09-home-" + name, ["EDEN COMMS"]))
+            if name == "large-font":
+                tap("Settings", scroll=True)
+                seek("Dark appearance", scroll=True)
+                report["screens"].append(capture(output, "16-settings-large-font", ["Dark appearance"]))
+                seek("Conversation privacy", scroll=True)
+                report["screens"].append(capture(output, "17-privacy-large-font", ["Conversation privacy"]))
             if name == "compact":
                 tap("CONNECT NEARBY", scroll=True)
                 report["screens"].append(capture(output, "10-chooser-compact",
