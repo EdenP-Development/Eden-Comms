@@ -22,6 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -211,6 +214,8 @@ internal fun LocalPairingTestScreen(
     var qaPeerApprovalObserved by remember { mutableStateOf(false) }
     var qaLocalConfirmationWritten by remember { mutableStateOf(false) }
     var qaPeerConfirmationObserved by remember { mutableStateOf(false) }
+    val conversationFocus = LocalFocusManager.current
+    val conversationKeyboard = LocalSoftwareKeyboardController.current
     val latestProbe by rememberUpdatedState(probe)
     LaunchedEffect(stage) {
         // Observational UI only: do not pass peer identity, messages or pins
@@ -1681,6 +1686,41 @@ internal fun LocalPairingTestScreen(
                     ) { Text("Decline and disconnect") }
                 }
                 "demo" -> {
+                    // Session-scoped, never restored across disconnect or recreation.
+                    var talkSelected by remember(attemptVersion) { mutableStateOf(false) }
+                    val leaveTalk = {
+                        if (pendingFloorMode == "hold" || liveVoiceHandle != null) {
+                            cancelLiveVoiceCapture()
+                        } else {
+                            cancelVoiceCapture()
+                        }
+                    }
+                    // Existing session teardown owns stage exit and disposal.
+                    // Cancel synchronously on the Text action, not in an
+                    // effect that could target a later session's microphone.
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        val chooseText = {
+                            if (talkSelected) leaveTalk()
+                            talkSelected = false
+                        }
+                        val chooseTalk = {
+                            conversationFocus.clearFocus(force = true)
+                            conversationKeyboard?.hide()
+                            talkSelected = true
+                        }
+                        if (!talkSelected) {
+                            Button(onClick = chooseText, modifier = Modifier.weight(1f).heightIn(min = 52.dp)
+                                .semantics { stateDescription = "Text mode selected" }) { Text("TEXT") }
+                            OutlinedButton(onClick = chooseTalk, modifier = Modifier.weight(1f).heightIn(min = 52.dp)
+                                .semantics { stateDescription = "Talk mode not selected" }) { Text("TALK") }
+                        } else {
+                            OutlinedButton(onClick = chooseText, modifier = Modifier.weight(1f).heightIn(min = 52.dp)
+                                .semantics { stateDescription = "Text mode not selected" }) { Text("TEXT") }
+                            Button(onClick = chooseTalk, modifier = Modifier.weight(1f).heightIn(min = 52.dp)
+                                .semantics { stateDescription = "Talk mode selected" }) { Text("TALK") }
+                        }
+                    }
+                    if (!talkSelected) {
                     // Make actual development text the PRIMARY interaction.
                     // Fixed phrases, packet counts and TLS diagnostics remain
                     // available but don't bury the composer on small screens.
@@ -1754,6 +1794,7 @@ internal fun LocalPairingTestScreen(
                             onForgetAll = { forgetAllPeers() }
                         )
                     }
+                    } else {
                     // F4-C: touch-and-hold voice capture, release to send via
                     // the same approved LAN TLS session. Accessible two-tap
                     // control remains available, with no new radio or account.
@@ -1837,8 +1878,11 @@ internal fun LocalPairingTestScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    }
                     Button(
                         onClick = {
+                            conversationFocus.clearFocus(force = true)
+                            conversationKeyboard?.hide()
                             val ending = probe
                             qaFinish = LocalQaReport.Finish.USER_ENDED
                             probe = null
@@ -1876,7 +1920,7 @@ internal fun LocalPairingTestScreen(
                             else "Show preset phrases and connection details"
                         )
                     }
-                    if (showTestTools) {
+                    if (showTestTools && !talkSelected) {
                         Text(
                             "PRESET PHRASES / DIAGNOSTICS",
                             fontWeight = FontWeight.SemiBold,

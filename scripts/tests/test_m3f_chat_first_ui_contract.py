@@ -31,8 +31,8 @@ class ChatFirstUiContractTests(unittest.TestCase):
     def test_chat_precedes_collapsed_presets_and_debug_detail(self):
         active = self.pairing.split('"demo" -> {', 1)[1].split('"result" -> {', 1)[0]
         self.assertLess(active.index("DebugConversationPanel("),
-                        active.index("if (showTestTools) {"))
-        self.assertIn('if (showTestTools) {', active)
+                        active.index("if (showTestTools && !talkSelected) {"))
+        self.assertIn('if (showTestTools && !talkSelected) {', active)
         self.assertIn('TestPacketCodec.phrases.chunked(columns)', active)
         self.assertIn('probe?.sendDebugText(textDraft)', active)
         self.assertIn("debugText = debugText.finish()", active)
