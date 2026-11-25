@@ -7,7 +7,7 @@ UI = (Path(__file__).resolve().parents[2] / "app/src/main/java/com/edenpractical
 class HomeHelp(unittest.TestCase):
     def test_home_introduction_and_honest_state(self):
         home = UI.split("private fun HomeScreen(", 1)[1].split("private fun NearbyScreen(", 1)[0]
-        for s in ("Nearby text and voice, without an account", "Session-only by default. Local encrypted history is optional", 'ConnectionStatus("Not connected"', "CONNECT NEARBY", "Do not send secrets"):
+        for s in ("Nearby text and voice. No account.", "Session-only by default.", "Optional local encrypted history is available after pairing.", 'ConnectionStatus("Not connected"', "CONNECT NEARBY", "Do not send secrets"):
             self.assertIn(s, home)
 
     def test_help_explains_choice_recovery_and_permission(self):

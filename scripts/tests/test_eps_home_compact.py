@@ -16,3 +16,9 @@ class EpsHomeCompactTest(unittest.TestCase):
         self.assertIn("SCROLL FOR MORE", main)
         self.assertIn("ButtonDefaults.textButtonColors(contentColor = supportingAccent())",
                       (ROOT / "ui/FieldDisclosures.kt").read_text())
+
+    def test_review4_home_spacing(self):
+        main = (ROOT / "MainActivity.kt").read_text()
+        self.assertIn('if (page == "home") 8.dp', main)
+        self.assertIn("Session-only by default.", main)
+        self.assertIn("Optional local encrypted history is available after pairing.", main)

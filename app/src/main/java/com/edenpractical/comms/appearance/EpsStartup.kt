@@ -1,6 +1,10 @@
 package com.edenpractical.comms.appearance
 
 import android.animation.ValueAnimator
+import android.app.Activity
+import android.os.Build
+import androidx.core.view.WindowCompat
+import androidx.compose.ui.graphics.toArgb
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -48,6 +52,34 @@ internal fun EpsStartup(showInitially: Boolean, content: @Composable () -> Unit)
         }
         lifecycle.addObserver(observer)
         onDispose { lifecycle.removeObserver(observer) }
+    }
+    // Only the visible intro owns startup bar styling. Main content restores
+    // its selected theme through its existing SideEffect when mounted.
+    if (visible) {
+        DisposableEffect(context) {
+            val window = (context as? Activity)?.window
+            val controller = window?.let { WindowCompat.getInsetsController(it, it.decorView) }
+            val oldStatus = window?.statusBarColor
+            val oldNav = window?.navigationBarColor
+            val oldLightStatus = controller?.isAppearanceLightStatusBars
+            val oldLightNav = controller?.isAppearanceLightNavigationBars
+            val oldContrast = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                window?.isNavigationBarContrastEnforced else null
+            window?.statusBarColor = Color(0xFF111214).toArgb()
+            window?.navigationBarColor = Color(0xFF111214).toArgb()
+            controller?.isAppearanceLightStatusBars = false
+            controller?.isAppearanceLightNavigationBars = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                window?.isNavigationBarContrastEnforced = false
+            onDispose {
+                if (oldStatus != null) window?.statusBarColor = oldStatus
+                if (oldNav != null) window?.navigationBarColor = oldNav
+                if (oldLightStatus != null) controller?.isAppearanceLightStatusBars = oldLightStatus
+                if (oldLightNav != null) controller?.isAppearanceLightNavigationBars = oldLightNav
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && oldContrast != null)
+                    window?.isNavigationBarContrastEnforced = oldContrast
+            }
+        }
     }
     BackHandler(visible) { visible = false }
     LaunchedEffect(visible) {

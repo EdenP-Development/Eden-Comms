@@ -93,7 +93,7 @@ class M6CAccessibilityPolish(unittest.TestCase):
 
     def test_home_help_and_legacy_ptt_navigation_reflect_implemented_debug_core(self):
         for expected in (
-            "Session-only by default. Local encrypted history is optional",
+            "Session-only by default.", "Optional local encrypted history is available after pairing.",
             "Connect. Text or talk. Disconnect.",
             "No accounts, cloud relay or production-secure messaging.",
             "Switch(",

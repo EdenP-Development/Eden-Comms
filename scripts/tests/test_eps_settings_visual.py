@@ -12,3 +12,11 @@ class EpsSettingsVisualTest(unittest.TestCase):
                       "ConversationPrivacyContent.currentExplanation", "Conversation privacy",
                       "DebugPeerMemoryStore(settingsContext).forgetAll()", "showForgetAllPeers = true"):
             self.assertIn(token, settings)
+
+    def test_review4_single_history_help(self):
+        settings = MAIN.read_text().split("private fun SettingsScreen(", 1)[1].split("private fun PrivacyFutureStatus(", 1)[0]
+        self.assertEqual(settings.count("How message history works"), 1)
+        self.assertIn("Text(ConversationPrivacyContent.currentExplanation)", settings)
+        self.assertIn("Text(ContextualPrivacyHelp.SESSION_ONLY_BODY)", settings)
+        self.assertIn("showHistoryHelp = true", settings)
+        self.assertIn("onPrivacy()", settings)
