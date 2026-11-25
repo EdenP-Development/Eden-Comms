@@ -16,6 +16,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -148,9 +151,10 @@ class DebugWifiDirectPreflightActivity : ComponentActivity() {
             com.edenpractical.comms.appearance.NearbyAppearance {
                 Surface(Modifier.fillMaxSize()) {
                     Column(
-                        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
+                        Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding().verticalScroll(rememberScrollState()).padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
+                        com.edenpractical.comms.ui.FieldHeaderRule()
                         Text("Wi-Fi Direct • choose Host or Join",
                             style = MaterialTheme.typography.titleLarge)
                         Text("DEVELOPMENT ONLY • This setup check does not scan or connect. " +

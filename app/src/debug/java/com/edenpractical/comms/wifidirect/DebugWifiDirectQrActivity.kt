@@ -8,6 +8,9 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,9 +61,10 @@ class DebugWifiDirectQrActivity : ComponentActivity() {
                 Surface(Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier.fillMaxSize()
-                            .verticalScroll(rememberScrollState()).padding(20.dp),
+                            .statusBarsPadding().navigationBarsPadding().imePadding().verticalScroll(rememberScrollState()).padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        com.edenpractical.comms.ui.FieldHeaderRule()
                         Text("Wi-Fi Direct — in-person QR preparation",
                             style = MaterialTheme.typography.titleLarge)
                         Text("DEBUG ONLY • Public identity and fresh QR metadata. " +
