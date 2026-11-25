@@ -1,18 +1,18 @@
 # Internal test signing — two-secret migration
 
-Status: staged; private signer not verified. Issue #27 remains open.
+Status: two-secret migration merged; automatic owner-main signing proposed; private signer not verified. Issue #27 remains open.
 
 The existing original-package internal QA workflow is being standardized to two organization Actions secrets restricted to Eden-Comms:
 - EC_INTERNAL_KEYSTORE_BASE64
 - EC_INTERNAL_KEYSTORE_PASSWORD
 
-Use PKCS12 with alias eden-comms-internal-test and identical store/key passwords. The public certificate SHA-256 is pinned in signing/internal-test-cert-sha256.txt; UNCONFIGURED deliberately blocks signing. Never substitute a public Preview key or invent a fingerprint.
+Use PKCS12 with alias eden-comms-internal-test and identical store/key passwords. The public certificate SHA-256 is pinned in signing/internal-test-cert-sha256.txt; The workflow rejects missing, malformed or public Preview pins. Never substitute a public Preview key or invent a fingerprint.
 
 Before any setup, inspect organization, repository and internal-test environment secret names and existing private backups. Do not overwrite or rotate an existing signer; reconcile old aliases/passwords using the original key and verify its unchanged certificate. If no original private signer exists, establish a dedicated test identity only after owner confirmation of no previously distributed private-signed APK. Keep two independently recoverable encrypted backups outside GitHub and never commit or paste credentials into chat.
 
-Configure the two organization secrets manually with selected-repository access restricted to Eden-Comms. Check that no repository/environment secrets shadow them. The historical local five-secret uploader is disabled. Preserve the internal-test environment with exact main branch restriction and owner-only manual dispatch. Submit only the public fingerprint for reviewed pin configuration.
+Configure the two organization secrets manually with selected-repository access restricted to Eden-Comms. Check that no repository/environment secrets shadow them. The historical local five-secret uploader is disabled. Preserve the internal-test environment with exact main branch restriction. Owner main pushes automatically initiate internal QA; manual dispatch remains an optional recovery path. Existing environment approvals, if configured, are not bypassed. Submit only the public fingerprint for reviewed pin configuration.
 
-Do not dispatch until pin and custody checks are complete. Verify two fresh signed builds with matching signer, exact package, increasing versionCode and hashes; then test install-over and local identity/settings preservation on physical devices. Older disposable debug installs may be incompatible; never uninstall without informed consent. Preview remains separate and unchanged. Production release remains disabled.
+The owner reports the two organization secrets configured; independent backup recovery remains unverified. Automatic internal QA is not publication authorization. Verify two fresh signed builds with matching signer, exact package, increasing versionCode and hashes; then test install-over and local identity/settings preservation on physical devices. Older disposable debug installs may be incompatible; never uninstall without informed consent. Preview remains separate and unchanged. Production release remains disabled.
 
 ## Historical five-secret documentation (superseded; do not follow its setup instructions)
 
