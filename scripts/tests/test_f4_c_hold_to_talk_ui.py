@@ -47,7 +47,7 @@ class HoldToTalkSourceContract(unittest.TestCase):
             "micPermission.launch(Manifest.permission.RECORD_AUDIO)",
             "voiceAudio.startCapture(", "live.sendVoiceBurst(clip)",
             "voiceAudio.startLiveCapture(", "session.startLiveVoice()",
-            "onFrame = { pcm -> handle.offerPcm(pcm) }",
+            "onFrame = { pcm -> microphonePermitted() && handle.offerPcm(pcm) }",
             "voiceAudio.finishCapture()", "voiceAudio.cancelAll()",
             "DebugSessionEventAdmission.current(", "No usable microphone audio",
             "transmit short audio frames over"
