@@ -31,6 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.edenpractical.comms.appearance.AppearancePreference
 import com.edenpractical.comms.appearance.appearanceColors
+import com.edenpractical.comms.appearance.LocalAppearance
+import com.edenpractical.comms.appearance.supportingAccent
+import com.edenpractical.comms.appearance.actionFill
+import com.edenpractical.comms.appearance.actionContent
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -176,6 +180,7 @@ private fun EdenCommsApp() {
 
     val colors = appearanceColors(appearance, darkMode)
 
+    CompositionLocalProvider(LocalAppearance provides appearance) {
     MaterialTheme(colorScheme = colors) {
         if (confirmLeavePairing && page == "pairing-test") {
             AlertDialog(
@@ -411,6 +416,7 @@ private fun titleForPage(page: String): String = when (page) {
     "help" -> "How it works"
     "privacy" -> "Privacy & data"
     else -> "Eden Comms"
+    }
 }
 
 @Composable
@@ -446,7 +452,7 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        "EDEN PRACTICAL  /  COMMUNICATIONS",
+                        "EDEN PRACTICAL SOLUTIONS",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -502,8 +508,8 @@ private fun HomeScreen(
         modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
         shape = CutCornerShape(7.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = actionFill(),
+            contentColor = actionContent()
         )
     ) {
         Icon(
@@ -517,7 +523,7 @@ private fun HomeScreen(
     TextButton(
         onClick = onMethods,
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
-    ) { Text("Choose how phones connect") }
+    ) { Text("Choose how phones connect", color = supportingAccent()) }
 
     FieldHelp(
         question = "What can this preview do?",
@@ -1278,7 +1284,7 @@ private fun FieldSectionHeader(eyebrow: String, title: String?) {
         Spacer(
             modifier = Modifier.width(3.dp)
                 .height(if (title == null) 19.dp else 30.dp)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(supportingAccent())
         )
         Spacer(Modifier.width(10.dp))
         Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -1286,7 +1292,7 @@ private fun FieldSectionHeader(eyebrow: String, title: String?) {
                 eyebrow,
                 modifier = if (title == null) Modifier.semantics { heading() } else Modifier,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
+                color = supportingAccent(),
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.5.sp
             )
@@ -1325,7 +1331,7 @@ private fun CompactModeTile(
             Icon(
                 painter = painterResource(glyph),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = supportingAccent(),
                 modifier = Modifier.size(23.dp)
             )
             Text(
@@ -1529,7 +1535,7 @@ private fun NavigationRow(
             Icon(
                 painter = painterResource(glyph),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = supportingAccent(),
                 modifier = Modifier.size(22.dp)
             )
             Spacer(Modifier.width(12.dp))
