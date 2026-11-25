@@ -508,7 +508,7 @@ private fun HomeScreen(
 ) {
     FieldSectionHeader("NEARBY", "Connect and communicate")
     Text(
-        "Nearby text and voice, without an account. Messages stay session-only by default.",
+        "Nearby text and voice, without an account. Session-only by default. Local encrypted history is optional after pairing.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
