@@ -401,6 +401,7 @@ private fun EdenCommsApp() {
             }
         }
     }
+    }
 }
 
 private fun titleForPage(page: String): String = when (page) {
@@ -416,7 +417,6 @@ private fun titleForPage(page: String): String = when (page) {
     "help" -> "How it works"
     "privacy" -> "Privacy & data"
     else -> "Eden Comms"
-    }
 }
 
 @Composable
