@@ -14,6 +14,7 @@ DEBUG = ROOT / "app/src/debug/java/com/edenpractical/comms"
 class M6ETextComposerAckRecovery(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.bubble = (MAIN / "ui/ConversationVisuals.kt").read_text()
         cls.ui_copy = (DEBUG / "ui/DebugNearbyTextUiCopy.kt").read_text()
         cls.bt_ui = (DEBUG / "bluetooth/DebugBluetoothTextPanel.kt").read_text()
         cls.p2p_ui = (DEBUG / "wifidirect/DebugWifiDirectTextPanel.kt").read_text()
@@ -54,13 +55,16 @@ class M6ETextComposerAckRecovery(unittest.TestCase):
                 "if (lines.isNotEmpty() && followNewest)",
                 "scroll.animateScrollTo(scroll.maxValue)",
                 "Text(\"JUMP TO LATEST\")",
-                ".semantics(mergeDescendants = true) { }",
+                "ConversationBubble(",
                 "Modifier.semantics { heading() }",
             ):
                 self.assertIn(phrase, panel, phrase)
             self.assertNotIn("LazyColumn", panel)
             self.assertNotIn("SharedPreferences", panel)
             self.assertNotIn("openFileOutput(", panel)
+
+        self.assertIn(".semantics(mergeDescendants = true)", self.bubble)
+        self.assertIn("Text(observation", self.bubble)
 
     def test_queue_written_peer_ack_are_distinct(self):
         for phrase in (
@@ -90,7 +94,7 @@ class M6ETextComposerAckRecovery(unittest.TestCase):
         self.assertIn("sendFeedback = chatSendFeedback", self.bt_owner)
 
     def test_debug_presentation_must_not_gain_authorization_or_release_rights(self):
-        for panel in (self.bt_ui, self.p2p_ui, self.ui_copy):
+        for panel in (self.bt_ui, self.p2p_ui, self.ui_copy, self.bubble):
             for forbidden in (
                 "BluetoothSocket", "WifiP2pManager", "SSLEngine",
                 "approveForTest(", "startDiscovery(", "requestVoiceFloor(",
