@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## Beta 1 readiness — LAN permission parity (proposed)
+
+PR #179 merged at 86e6159465448955c036e0e2310b8217acedfc98; main Android CI 45543701081 and internal signing 45543701160 passed. [Internal artifact](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45543701160/artifacts/14991150076), expires December 2. LAN branch rechecks microphone permission on both granted capture paths and at live PCM/tap burst admission, retaining the atomic cancellation gate. Updated legacy assertions and added source regressions. Exact-head CI pending. See [consolidated readiness checklist](BETA_1_READINESS_CHECKLIST.md) for all engineering/product tasks, draft quick start and feedback template. Professional distribution preferred; no selection or publication yet. Physical 54-case matrix, independent security review and non-debug release engineering remain open. Next finish reliability audit and integrated quality review; no feature expansion. Rollback via reviewed revert.
+
 ## EC-R4 — nearby microphone permission boundary (proposed)
 
 Beta 1 plan #178 merged at f8d086b03dfff82a4dad0dc2e04365af3b53c3f0 after CI #513 passed. Owner clarified professional software storefront preferred over itch.io; no storefront selected and no publication authorized. Source inspection found nearby voice owner's continuation checks cover authenticated session/radio, but not microphone permission at asynchronous grant and frame admission. Add explicit Android permission rechecks at request, grant, capture and PCM submission; clear pressed state on rejected grant. Keep audio receive independent of mic permission. No protocol, key or production capability changes. Source tests added; CI and physical revocation test pending. Rollback via reviewed revert. Next: assess LAN late grants and callback cleanup, then integrated QA. Charter no-ship gates remain.
