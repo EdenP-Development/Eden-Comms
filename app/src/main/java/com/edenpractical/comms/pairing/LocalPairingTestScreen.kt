@@ -112,9 +112,14 @@ internal fun LocalPairingTestScreen(
     var tapSendGate by remember { mutableStateOf<DebugTapVoiceSendGate?>(null) }
     var showTapVoiceControls by remember { mutableStateOf(false) }
     var voiceNote by remember { mutableStateOf("No voice burst sent yet.") }
+    var micAllowed by remember(context) {
+        mutableStateOf(context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED)
+    }
     val micPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
+        micAllowed = granted
         voiceNote = if (granted) "Microphone allowed. Hold to talk again."
             else "Microphone denied. Voice remains off; text still works."
     }
@@ -1293,6 +1298,10 @@ internal fun LocalPairingTestScreen(
     val lifecycleOwner = context as? LifecycleOwner
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                micAllowed = context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
+                    PackageManager.PERMISSION_GRANTED
+            }
             if (event == Lifecycle.Event.ON_RESUME &&
                 stage in listOf("choose", "result")
             ) {
@@ -1816,8 +1825,10 @@ internal fun LocalPairingTestScreen(
                                 privacyHidden -> "VOICE MUTED ON THIS PHONE"
                                 peerTalking -> "RECEIVING • OTHER PHONE IS TALKING"
                                 pendingFloorMode != null -> "WAITING FOR RADIO CHANNEL • MIC OFF"
-                                talking -> "TRANSMITTING • LIVE TEST AUDIO"
+                                talking && liveVoiceHandle != null -> "TRANSMITTING • LIVE TEST AUDIO"
+                                talking -> "RECORDING • TAP MODE"
                                 voiceFinalizing -> "STOPPING TRANSMISSION…"
+                                !micAllowed -> "MICROPHONE PERMISSION NEEDED"
                                 else -> "READY TO TALK • TEST CONNECTION"
                             },
                             style = MaterialTheme.typography.labelLarge,
@@ -1829,8 +1840,16 @@ internal fun LocalPairingTestScreen(
                         // F4-D: real live PCM goes over the approved TLS
                         // session while held. A remote START temporarily
                         // disables a new hold, but is not floor arbitration.
+                        if (!micAllowed && !privacyHidden) {
+                            Button(
+                                onClick = { micPermission.launch(Manifest.permission.RECORD_AUDIO) },
+                                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                            ) { Text("ALLOW MICROPHONE FOR THIS TEST") }
+                            Text("The Android permission prompt may interrupt this test link.",
+                                style = MaterialTheme.typography.bodySmall)
+                        }
                         DebugHoldToTalkControl(
-                            enabled = !voiceFinalizing && !privacyHidden && !peerTalking &&
+                            enabled = micAllowed && !voiceFinalizing && !privacyHidden && !peerTalking &&
                                 pendingFloorMode != "tap",
                             recording = talking,
                             onPressStart = { startLiveVoiceCapture() },
@@ -1852,7 +1871,7 @@ internal fun LocalPairingTestScreen(
                                 onClick = { tapVoiceCapture() },
                                 // Keep Stop available if a tap-mode capture
                                 // and remote START race each other.
-                                enabled = !voiceFinalizing && !privacyHidden &&
+                                enabled = micAllowed && !voiceFinalizing && !privacyHidden &&
                                     (!peerTalking || talking || pendingFloorMode == "tap") &&
                                     pendingFloorMode != "hold",
                                 modifier = Modifier.fillMaxWidth().heightIn(min = 58.dp),

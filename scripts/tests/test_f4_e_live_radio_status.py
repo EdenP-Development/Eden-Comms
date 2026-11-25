@@ -35,7 +35,7 @@ class LiveRadioStatusContract(unittest.TestCase):
             "if (stage == \"demo\") peerTalking = false",
             "RECEIVING • OTHER PHONE IS TALKING",
             "TRANSMITTING • LIVE TEST AUDIO",
-            "enabled = !voiceFinalizing && !privacyHidden && !peerTalking",
+            "enabled = micAllowed && !voiceFinalizing && !privacyHidden && !peerTalking",
             '(!peerTalking || talking || pendingFloorMode == "tap")',
             "voiceAudio.cancelAll()",
             "peerTalking = false",

@@ -4,6 +4,10 @@ Updated: **November 24, 2026** (migration preflight; product code unchanged). Th
 substitute for GitHub's live status. On resuming, check **main SHA, open PRs
 and latest green Android CI** before modifying any files.
 
+## EC-R3 — explicit microphone permission and voice status (proposed)
+
+EC-R2 #176 merged at 4504e9cde0d981a44a23e47b1893642508f7ac34; independent main CI 45534129525 and signing 45534129376 passed. [Internal build 10005](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45534129376/artifacts/14986995638), expires December 2. EC-R3 adds explicit LAN microphone permission action and resume refresh, distinguishes tap recording from live sending, and exposes existing nearby pending-floor state to the Bluetooth/P2P status label. No change to authentication, wire formats, audio lifecycle or release flags. Nearby remote receiving state still conveyed by existing notice; dedicated receiving indicator deferred until event-lifecycle review. Source checks added; CI and physical QA pending. Rollback via reviewed revert.
+
 ## EC-R2 — composer-first LAN privacy disclosure (proposed)
 
 EC-R1 PR #175 merged at be4237d6b98dcd4dac2c6f8c5baef4c50c317ce7 after CI #504 failed two obsolete diagnostics assertions and corrected CI #505 passed. Independent main Android CI 45533091385 and private signing 45533091311 both succeeded; [internal build 10004](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45533091311/artifacts/14984539400) expires December 2. Physical interaction not verified.

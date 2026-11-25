@@ -70,6 +70,17 @@ internal fun DebugNearbyVoicePanel(owner: DebugNearbyVoiceOwner) {
                 "for private or emergency conversations.",
             style = MaterialTheme.typography.bodySmall
         )
+        Text(
+            when {
+                owner.capturing -> "TRANSMITTING • LIVE TEST AUDIO"
+                owner.awaitingFloor -> "WAITING FOR RADIO CHANNEL • MIC OFF"
+                owner.finalizing -> "STOPPING TRANSMISSION…"
+                !micAllowed -> "MICROPHONE PERMISSION NEEDED"
+                else -> "READY TO REQUEST TALK • TEST CONNECTION"
+            },
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            style = MaterialTheme.typography.labelLarge
+        )
         if (!micAllowed) {
             Button(
                 onClick = { permission.launch(Manifest.permission.RECORD_AUDIO) },
