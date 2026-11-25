@@ -1689,14 +1689,15 @@ internal fun LocalPairingTestScreen(
                     // Session-scoped, never restored across disconnect or recreation.
                     var talkSelected by remember(attemptVersion) { mutableStateOf(false) }
                     val leaveTalk = {
-                        cancelLiveVoiceCapture()
-                        cancelVoiceCapture()
+                        if (pendingFloorMode == "hold" || liveVoiceHandle != null) {
+                            cancelLiveVoiceCapture()
+                        } else {
+                            cancelVoiceCapture()
+                        }
                     }
-                    val latestLeaveTalk by rememberUpdatedState(leaveTalk)
-                    DisposableEffect(talkSelected, attemptVersion) {
-                        val wasTalk = talkSelected
-                        onDispose { if (wasTalk) latestLeaveTalk() }
-                    }
+                    // Existing session teardown owns stage exit and disposal.
+                    // Cancel synchronously on the Text action, not in an
+                    // effect that could target a later session's microphone.
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         val chooseText = {
                             if (talkSelected) leaveTalk()
