@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import com.edenpractical.comms.appearance.supportingAccent
+import com.edenpractical.comms.appearance.LocalAppearance
+import com.edenpractical.comms.appearance.AppearancePreference
+import com.edenpractical.comms.appearance.actionFill
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -43,10 +46,15 @@ internal fun FieldHeaderRule() {
         modifier = Modifier.fillMaxWidth().height(3.dp)
             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
     ) {
-        Box(
-            modifier = Modifier.width(80.dp).height(3.dp)
-                .background(supportingAccent())
-        )
+        Row {
+            Box(
+                modifier = Modifier.width(80.dp).height(3.dp)
+                    .background(supportingAccent())
+            )
+            if (LocalAppearance.current == AppearancePreference.EPS) {
+                Box(Modifier.width(32.dp).height(3.dp).background(actionFill()))
+            }
+        }
     }
 }
 
@@ -64,6 +72,7 @@ internal fun FieldFrame(
         modifier = modifier,
         shape = CutCornerShape(7.dp),
         color = MaterialTheme.colorScheme.surface,
+        shadowElevation = if (LocalAppearance.current == AppearancePreference.EPS) 2.dp else 0.dp,
         border = BorderStroke(
             width = 1.dp,
             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.52f)
