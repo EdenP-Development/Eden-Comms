@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -878,7 +879,9 @@ private fun SettingsScreen(
         }
     }
     Row(
-        modifier = Modifier.fillMaxWidth().heightIn(min = 60.dp),
+        modifier = Modifier.fillMaxWidth().heightIn(min = 60.dp)
+            .toggleable(value = darkMode, role = Role.Switch, onValueChange = onDarkModeChange)
+            .semantics { contentDescription = "Dark appearance" },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -895,8 +898,7 @@ private fun SettingsScreen(
         }
         Switch(
             checked = darkMode,
-            onCheckedChange = onDarkModeChange,
-            modifier = Modifier.semantics { contentDescription = "Dark appearance" },
+            onCheckedChange = null,
             colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colorScheme.surface,
                 checkedTrackColor = supportingAccent())
         )
