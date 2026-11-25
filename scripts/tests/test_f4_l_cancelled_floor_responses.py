@@ -22,7 +22,7 @@ class CancelledVoiceFloorResponseContract(unittest.TestCase):
             "oldest.remove()",
             "abandonedRequests.remove(requestId)",
             "abandonedRequests.clear()",
-            "if (closed) throw TestPacketException()",
+            "if (closed || nowMs < 0L || timedOut(nowMs)) throw TestPacketException()",
             "val permitted = owner == Owner.FREE",
             "fun maySendAudio()",
             "fun cancelPending()",
