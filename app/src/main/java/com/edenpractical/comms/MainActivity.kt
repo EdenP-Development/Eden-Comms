@@ -419,6 +419,8 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
         Row(
             modifier = Modifier.fillMaxWidth()
                 .heightIn(min = 64.dp)
+                .background(if (LocalAppearance.current == AppearancePreference.EPS)
+                    MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.background)
                 .padding(horizontal = 16.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -1362,6 +1364,7 @@ private fun CompactModeTile(
             .clickable(role = Role.Button, onClick = onClick),
         shape = CutCornerShape(6.dp),
         color = MaterialTheme.colorScheme.surface,
+        shadowElevation = if (LocalAppearance.current == AppearancePreference.EPS) 2.dp else 0.dp,
         border = androidx.compose.foundation.BorderStroke(
             1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.44f)
         )
