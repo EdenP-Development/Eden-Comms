@@ -67,7 +67,7 @@ class M3jDiscoveryBoundaryTest(unittest.TestCase):
         picker = self.screen.split("private fun NearbyScreen(", 1)[1].split(
             "private fun PushToTalkScreen()", 1
         )[0]
-        self.assertIn('FieldSectionHeader("CONNECT", "Choose how the phones connect")', picker)
+        self.assertIn('FieldSectionHeader("CONNECTION METHODS", "Choose how the phones connect")', picker)
         self.assertIn('title = "Why codes and approvals?"', picker)
         self.assertIn("FieldDisclosureCard(", picker)
         for field in ("trustStep", "privacyStep"):
