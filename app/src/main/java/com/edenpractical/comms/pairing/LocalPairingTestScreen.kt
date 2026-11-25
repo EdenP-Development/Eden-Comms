@@ -53,6 +53,9 @@ import com.edenpractical.comms.transport.WifiLinkContinuity
 import com.edenpractical.comms.transport.LocalIpv4Policy
 import com.edenpractical.comms.transport.WifiLanEndpoint
 import com.edenpractical.comms.ui.FieldFrame
+import com.edenpractical.comms.appearance.supportingAccent
+import com.edenpractical.comms.appearance.LocalAppearance
+import com.edenpractical.comms.appearance.AppearancePreference
 import com.edenpractical.comms.ui.FieldHelp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -1393,12 +1396,13 @@ internal fun LocalPairingTestScreen(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        FieldFrame(accent = true) {
+        FieldFrame(accent = false) {
             Text(
                 "LOCAL STATUS  •  " + PairingSessionUi.statusLabel(stage),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+                color = if (LocalAppearance.current == AppearancePreference.EPS)
+                    MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
             )
             val guidance = NearbyConnectionCues.forStage(
                 stage = stage,
@@ -1414,7 +1418,7 @@ internal fun LocalPairingTestScreen(
                     guidance.phase,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = supportingAccent()
                 )
                 if (stage != "demo") {
                     Text(guidance.heading,
@@ -1428,7 +1432,8 @@ internal fun LocalPairingTestScreen(
                 PairingTestUiCopy.progress(stage)?.let { progress ->
                     Text(progress, style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary)
+                        color = if (LocalAppearance.current == AppearancePreference.EPS)
+                    MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary)
                 }
             }
             Text(status, style = MaterialTheme.typography.bodyMedium,
