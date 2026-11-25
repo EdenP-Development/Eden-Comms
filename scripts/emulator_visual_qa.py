@@ -145,7 +145,19 @@ def appearance_switch(root):
 
 def set_dark_appearance(dark):
     seek("Dark appearance", scroll=True)
-    switch = appearance_switch(dump_ui())
+    # The heading may be visible while the toggle is clipped at the viewport edge.
+    swipe_up()
+    time.sleep(.5)
+    root = dump_ui()
+    try:
+        switch = appearance_switch(root)
+    except AssertionError:
+        # Isolated disconnected emulator: retain only Settings control metadata.
+        for node in root.iter("node"):
+            a = node.attrib
+            if a.get("checkable") == "true" or "appearance" in (a.get("text", "") + a.get("content-desc", "")).casefold():
+                print("Appearance diagnostic:", json.dumps({k: a.get(k, "") for k in ("class", "text", "content-desc", "checkable", "checked", "clickable", "bounds")}), flush=True)
+        raise
     if (switch.attrib["checked"] == "true") != dark:
         l, t, r, b = map(int, BOUNDS.fullmatch(switch.attrib["bounds"]).groups())
         adb("shell", "input", "tap", str((l+r)//2), str((t+b)//2))
