@@ -123,6 +123,49 @@ def tap(label, *, scroll=False):
     time.sleep(.5)
 
 
+def set_dark_appearance(dark):
+    seek("Dark appearance", scroll=True)
+    switches = [node for node in dump_ui().iter("node")
+                if node.attrib.get("class") == "android.widget.Switch"
+                and node.attrib.get("checkable") == "true"]
+    if len(switches) != 1:
+        raise AssertionError("Expected one accessible appearance switch")
+    switch = switches[0]
+    if (switch.attrib.get("checked") == "true") != dark:
+        bounds = BOUNDS.fullmatch(switch.attrib.get("bounds", ""))
+        if not bounds:
+            raise AssertionError("Appearance switch has no visible bounds")
+        l, t, r, b = map(int, bounds.groups())
+        adb("shell", "input", "tap", str((l+r)//2), str((t+b)//2))
+        time.sleep(.7)
+    checked = [node.attrib.get("checked") for node in dump_ui().iter("node")
+               if node.attrib.get("class") == "android.widget.Switch"
+               and node.attrib.get("checkable") == "true"]
+    if checked != [str(dark).lower()]:
+        raise AssertionError("Appearance switch did not reach requested state")
+
+
+def capture_appearance_matrix(output, report):
+    # Public UI controls only; no fabricated session or preference injection.
+    for palette, slug in (("EPS Signature", "eps"), ("Field Green", "field")):
+        for dark in (True, False):
+            launch()
+            tap("Settings", scroll=True)
+            tap(palette, scroll=True)
+            set_dark_appearance(dark)
+            suffix = slug + ("-dark" if dark else "-light")
+            report["screens"].append(capture(output, "13-settings-" + suffix, ["Dark appearance"]))
+            launch()
+            report["screens"].append(capture(output, "14-home-" + suffix, ["CONNECT NEARBY"]))
+            tap("CONNECT NEARBY")
+            report["screens"].append(capture(output, "15-chooser-" + suffix,
+                                             ["Choose how the phones connect"]))
+    launch()
+    tap("Settings", scroll=True)
+    tap("EPS Signature", scroll=True)
+    set_dark_appearance(True)
+
+
 def back():
     adb("shell", "input", "keyevent", "KEYCODE_BACK")
     time.sleep(.7)
@@ -236,6 +279,7 @@ def run(apk, output):
         report["screens"].append(capture(output, "08-empty-keyboard",
                                          ["Write a local preview"]))
         back()
+        capture_appearance_matrix(output, report)
         for name, size, density, font in (
             ("compact", "720x1280", 320, "1.0"),
             ("large-font", "720x1280", 320, "2.0"),
