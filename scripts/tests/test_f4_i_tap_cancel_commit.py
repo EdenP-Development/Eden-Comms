@@ -34,7 +34,7 @@ class TapSendCancellationContract(unittest.TestCase):
         self.assertIn("val sendGate = DebugTapVoiceSendGate()", ui)
         self.assertIn("tapSendGate = sendGate", ui)
         self.assertIn(
-            "sendGate.submitIfActive { live.sendVoiceBurst(clip) }", ui
+            "if (microphonePermitted()) live.sendVoiceBurst(clip)", ui
         )
         self.assertNotIn("val result = live.sendVoiceBurst(clip)", ui)
         self.assertIn("if (result != LanDemoSession.VoiceSendResult.QUEUED)", ui)
