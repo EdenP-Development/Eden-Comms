@@ -253,7 +253,6 @@ private fun EdenCommsApp() {
                             "home" -> HomeScreen(
                                 onPtt = { navigate("connect") },
                                 onConnect = { navigate("connect") },
-                                onMethods = { navigate("connect") },
                                 onChatPreview = { navigate("connect") },
                                 onSettings = { navigate("settings") },
                                 onHelp = { navigate("help") }
@@ -344,7 +343,6 @@ private fun EdenCommsApp() {
                             else -> HomeScreen(
                                 onPtt = { navigate("connect") },
                                 onConnect = { navigate("connect") },
-                                onMethods = { navigate("connect") },
                                 onChatPreview = { navigate("connect") },
                                 onSettings = { navigate("settings") },
                                 onHelp = { navigate("help") }
@@ -372,7 +370,7 @@ private fun EdenCommsApp() {
                                 },
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(bottom = 8.dp)
+                                    .padding(bottom = 2.dp)
                                     .background(
                                         MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
                                         cueShape
@@ -384,7 +382,7 @@ private fun EdenCommsApp() {
                                     )
                                     .heightIn(min = 48.dp),
                                 colors = ButtonDefaults.textButtonColors(
-                                    contentColor = MaterialTheme.colorScheme.primary
+                                    contentColor = supportingAccent()
                                 )
                             ) {
                                 Text(
@@ -489,13 +487,13 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
 @Composable
 private fun HomeScreen(
     onConnect: () -> Unit,
-    onMethods: () -> Unit,
     onChatPreview: () -> Unit,
     onPtt: () -> Unit,
     onSettings: () -> Unit,
     onHelp: () -> Unit
 ) {
-    FieldSectionHeader("NEARBY", "Connect and communicate")
+    // Keep the primary entry point above secondary explanations.
+    FieldSectionHeader("NEARBY", null)
     Text(
         "Nearby text and voice, without an account. Session-only by default. Local encrypted history is optional after pairing.",
         style = MaterialTheme.typography.bodySmall,
@@ -520,20 +518,6 @@ private fun HomeScreen(
         Spacer(Modifier.width(10.dp))
         Text("CONNECT NEARBY", fontWeight = FontWeight.Bold, letterSpacing = 0.3.sp)
     }
-    TextButton(
-        onClick = onMethods,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
-    ) { Text("Choose how phones connect", color = supportingAccent()) }
-
-    FieldHelp(
-        question = "What can this preview do?",
-        answer = "In a development build, choose Same Wi-Fi, Bluetooth or " +
-            "Wi-Fi Direct. Each uses its own foreground setup, fresh QR codes, " +
-            "verified TLS and both people's approvals before test text or " +
-            "live push-to-talk appears. No accounts or required cloud. " +
-            "The transports are not independently security reviewed. " +
-            "Do not send secrets or rely on them for emergencies."
-    )
     FieldSectionHeader("COMMUNICATION", null)
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         // Two narrow cards can crowd their text on compact and large-font phones.
@@ -583,6 +567,16 @@ private fun HomeScreen(
             }
         }
     }
+
+    FieldHelp(
+        question = "What can this preview do?",
+        answer = "In a development build, choose Same Wi-Fi, Bluetooth or " +
+            "Wi-Fi Direct. Each uses its own foreground setup, fresh QR codes, " +
+            "verified TLS and both people's approvals before test text or " +
+            "live push-to-talk appears. No accounts or required cloud. " +
+            "The transports are not independently security reviewed. " +
+            "Do not send secrets or rely on them for emergencies."
+    )
 
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.28f))
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
