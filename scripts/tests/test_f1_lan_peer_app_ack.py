@@ -50,6 +50,8 @@ class F1LanPeerAppAck(unittest.TestCase):
         self.assertLess(send.index("sendPacket(packet)"),
                         send.index("peerAckLedger.written(id)"))
         self.assertLess(send.index("Phase.TEXT_WRITTEN"),
+                        send.index("peerAckLedger.written(id)"))
+        self.assertLess(send.index("peerAckLedger.written(id)"),
                         send.index("Phase.TEXT_PEER_ACK"))
         self.assertIn("peerAckLedger.cancel(id)", send)
         self.assertIn("peerAckLedger.close()", self.session)
