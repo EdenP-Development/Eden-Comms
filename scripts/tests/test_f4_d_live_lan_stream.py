@@ -79,7 +79,7 @@ class LiveLANVoiceContract(unittest.TestCase):
             "onCancel = { cancelLiveVoiceCapture() }",
             "onAccessibilityClick = { tapVoiceCapture() }",
             "val startedSession = session.startLiveVoice()",
-            "onFrame = { pcm -> handle.offerPcm(pcm) }",
+            "onFrame = { pcm -> microphonePermitted() && handle.offerPcm(pcm) }",
             "connection.setLiveVoicePlayback { kind, pcm ->",
             "voiceAudio.acceptLiveFrame(kind, pcm)",
             "handle.finish()", "handle.cancel()",
