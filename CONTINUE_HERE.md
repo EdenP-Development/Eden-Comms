@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## Latest checkpoint — automatic private internal signing verified
+
+PRs #172 and #173 merged. Exact source 46a372e782212e70fc50f9e7038f2dbdcb3f62fe passed independent Android CI (run 45529175761) and automatic owner-main private signing (run 45529175721). All 412 Python tests passed. Private internal package com.edenpractical.comms, version 10001 / 0.2.12-internal-10001, certificate SHA-256 dad2159585f8bc804c47de056bf8a2c2f546ad25893cb64e0448eb0cf8676d06, APK SHA-256 5c32d58369f4a473c999f0e094d04d703dfbb188ca1f71fb8bf68eb46484aed3. [Signed artifact](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45529175721/artifacts/14983613375). Central registry updated. Two organization secrets reported configured by owner; real signing verified, independent backup recovery and physical upgrade unverified. No manual dispatch needed for owner main pushes. Public Preview stays separate. Production release flags remain false. Next: consolidate integrated feature/UI acceptance and prepare the single two-phone test matrix; avoid speculative micro-patches. Issue #27 remains open pending second compatible build and physical preservation. Older original-package disposable debug installs may be incompatible; do not uninstall without informed consent.
+
 **Latest verified technical receipt:** [EdenP post-transfer build/signing record](docs/EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md)
 — migrated repo `EdenP-Development/Eden-Comms`, current main
 `a0952f602fa8482ecdc84a8220d4f5a7673f64f5`,
