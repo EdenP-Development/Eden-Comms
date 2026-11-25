@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EC-R1 — LAN conversation mode parity (proposed)
+
+Source audit found LAN combines text, privacy and voice on one scrolling surface while Bluetooth/P2P have Text/Talk tabs. This pass adds session-scoped Text default and explicit Talk mode, keyboard dismissal and synchronous cancellation of pending/active microphone when returning to Text. Disconnect remains outside both modes; draft and existing retention/approval behavior remain. No protocol or release changes. Source regression added; Android CI and physical interaction pending. Rollback via revert of this focused PR. Next inspect privacy visibility and voice status parity; real phone acceptance remains deferred to consolidated matrix.
+
 ## 2026-11-24 — verified private signing and integrated QA readiness
 
 PR #172 standardized two organization secrets; CI #496 failed two stale source assertions, corrected in #497 (412/412). PR #173 enabled automatic owner-main signing while retaining protected environment, exact repo/ref/actor, certificate pin and no PR signing secrets. Both merged; product runtime unchanged.
