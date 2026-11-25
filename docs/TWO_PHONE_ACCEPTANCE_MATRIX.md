@@ -6,6 +6,14 @@ security. [Continue here](../CONTINUE_HERE.md) ·
 [Current handoff](CURRENT_HANDOFF.md) ·
 [Work log](WORK_LOG.md).
 
+## Candidate and installation preflight (November 24)
+
+Current reference candidate: [private internal QA 10002](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45529515834/artifacts/14983823881), source 20eac5ae75cab2c89ffc290517ec014b43f20293. Artifact expires December 2; use the newest independently verified candidate if it expires or source changes. Do not mix Preview and internal packages across acceptance evidence.
+
+Before the consolidated session, compare installed package, signer and version with the candidate. If a disposable original-package installation has a different signer, use the isolated Preview channel or obtain explicit informed consent for a clean install; never silently remove app data. For the upgrade case, install verified internal A (10001), opt into a local identity and change theme, then install B (10002) over A without uninstalling. Confirm settings and identity survive on each device; record only pass/fail and redacted reason. Do not log actual peer identities.
+
+Record each C01–C18 outcome independently for LAN, Bluetooth Classic and Wi-Fi Direct (54 cases). For a failure record candidate source/version, method, case, host/join role, Android major version, observed behavior and reproducibility, without messages, QR contents, audio or device identifiers. Prioritize authorization, microphone teardown, retention and disconnect failures before cosmetic issues. No result may be inferred from CI. This is preparation only; all physical cases remain NOT RUN.
+
 ## What to bring to the one consolidated test
 
 Two physical Android phones, each with the *same verified APK revision*.
