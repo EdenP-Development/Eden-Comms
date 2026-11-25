@@ -1,6 +1,8 @@
 """Integrated Preview: one real APK, current navigation and safe emulator evidence."""
 from pathlib import Path
 import unittest
+import importlib.util
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 APP = ROOT / "app/src/main/java/com/edenpractical/comms/MainActivity.kt"
@@ -90,6 +92,15 @@ class IntegratedPreviewVisual(unittest.TestCase):
                       'seek("Conversation privacy", scroll=True)'):
             self.assertIn(token, s)
         self.assertNotIn("run-as", s)
+
+    def test_appearance_switch_accepts_compose_semantics_not_widget_class(self):
+        spec = importlib.util.spec_from_file_location("visual_driver", DRIVER)
+        driver = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(driver)
+        root = ET.fromstring('<hierarchy><node class="android.view.View" content-desc="Dark appearance" checkable="true" checked="false" bounds="[10,10][60,60]"/><node class="android.widget.Switch" content-desc="Unrelated" checkable="true" checked="true" bounds="[10,70][60,120]"/></hierarchy>')
+        self.assertEqual("false", driver.appearance_switch(root).attrib["checked"])
+        with self.assertRaises(AssertionError):
+            driver.appearance_switch(ET.fromstring('<hierarchy><node text="Dark appearance" checkable="false" bounds="[10,10][60,60]"/></hierarchy>'))
 
     def test_all_three_real_connection_routes_are_used_without_test_fakes(self):
         s = APP.read_text()
