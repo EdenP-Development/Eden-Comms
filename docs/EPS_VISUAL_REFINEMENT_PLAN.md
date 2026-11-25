@@ -1,5 +1,8 @@
 # EPS visual refinement — before Beta 1
 
+## VIS-07 checkpoint (2026-11-25)
+VIS-06 merged at 2a862ae56a847f1c8eeb5e3692e0950909dab47b after CI #552. All first-pass Home, Settings, connection and conversation refinements are on main. Icon deferred by owner; concept C needs heavier, centered, dimensional artwork. VIS-07 expands disconnected emulator driver to four appearance combinations (Settings/Home/chooser captures), explicit dark switch state checks, and Settings/privacy reachability at 200% font. No fabricated connection, preference injection, microphone or QR activation. Static test and emulator execution pending; screenshots do not prove physical layout or security. No new APK approved. Next verify CI and integrated preview results, inspect screenshot evidence where available, repair failures, then signed internal Visual Review 2. Physical 54 cases and independent security gates remain open.
+
 Owner selected C / Modular Comms as the product icon direction on November 25, 2026. Angular interlocking C forms, communication/connection symbolism, restrained amber and violet, neutral foundation. Explore a simple silhouette that reads at launcher sizes, transparent in-app counterpart, adaptive Android foreground/background and monochrome variant. Do not confuse with the approved EPS publisher emblem. Concept direction approved; final artwork and replacement require physical visual acceptance. Keep existing launcher until then.
 
 | Milestone | Deliverable |
