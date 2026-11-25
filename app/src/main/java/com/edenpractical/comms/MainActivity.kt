@@ -360,7 +360,6 @@ private fun EdenCommsApp() {
                             // cue has its own measured layout height, so it
                             // cannot overlap Connect, Text, or any control.
                             // Hide it when Home already fits or user scrolls.
-                            val cueShape = RoundedCornerShape(24.dp)
                             TextButton(
                                 onClick = {
                                     scrollScope.launch {
@@ -373,15 +372,6 @@ private fun EdenCommsApp() {
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
                                     .padding(bottom = 2.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
-                                        cueShape
-                                    )
-                                    .border(
-                                        1.dp,
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                                        cueShape
-                                    )
                                     .heightIn(min = 48.dp),
                                 colors = ButtonDefaults.textButtonColors(
                                     contentColor = supportingAccent()
@@ -389,9 +379,8 @@ private fun EdenCommsApp() {
                             ) {
                                 Text(
                                     "↓  SCROLL FOR MORE",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    letterSpacing = 0.5.sp
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Medium
                                 )
                             }
                         }
@@ -534,6 +523,7 @@ private fun HomeScreen(
             ) {
                 CompactModeTile(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontal = true,
                     glyph = R.drawable.ic_eden_chat,
                     title = "Text",
                     detail = "Connect first • test text",
@@ -541,6 +531,7 @@ private fun HomeScreen(
                 )
                 CompactModeTile(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontal = true,
                     glyph = R.drawable.ic_eden_ptt,
                     title = "Voice / PTT",
                     detail = "Connect first • test talk",
@@ -1349,6 +1340,7 @@ private fun FieldSectionHeader(eyebrow: String, title: String?) {
 @Composable
 private fun CompactModeTile(
     modifier: Modifier,
+    horizontal: Boolean = false,
     glyph: Int,
     title: String,
     detail: String,
@@ -1356,7 +1348,7 @@ private fun CompactModeTile(
 ) {
     Surface(
         modifier = modifier
-            .heightIn(min = 88.dp)
+            .heightIn(min = if (horizontal) 64.dp else 88.dp)
             .clickable(role = Role.Button, onClick = onClick),
         shape = CutCornerShape(6.dp),
         color = MaterialTheme.colorScheme.surface,
@@ -1364,6 +1356,24 @@ private fun CompactModeTile(
             1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.44f)
         )
     ) {
+        if (horizontal) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(painter = painterResource(glyph), contentDescription = null,
+                    tint = supportingAccent(), modifier = Modifier.size(26.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(title, style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold)
+                    Text(detail, style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Text("›", color = supportingAccent(),
+                    style = MaterialTheme.typography.titleLarge)
+            }
+        } else {
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -1385,6 +1395,7 @@ private fun CompactModeTile(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
         }
     }
 }
