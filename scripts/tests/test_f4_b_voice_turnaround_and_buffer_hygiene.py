@@ -22,7 +22,7 @@ class F4BVoiceTurnaround(unittest.TestCase):
         self.assertIn("var voiceFinalizing by remember", ui)
         self.assertIn("voiceFinalizing = true", ui)
         self.assertIn("voiceFinalizing = false", ui)
-        self.assertIn("enabled = !voiceFinalizing", ui)
+        self.assertIn("enabled = micAllowed && !voiceFinalizing", ui)
         self.assertIn("voiceAudio.finishCapture()", ui)
         self.assertIn("onNoAudio = {", ui)
         self.assertIn("voiceAttempt, attemptVersion", ui)
