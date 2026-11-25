@@ -351,7 +351,7 @@ class DebugBluetoothDiscoveryActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         qrCoordinator.loadExistingIdentity()
         setContent {
-            MaterialTheme {
+            com.edenpractical.comms.appearance.NearbyAppearance {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier.fillMaxSize()

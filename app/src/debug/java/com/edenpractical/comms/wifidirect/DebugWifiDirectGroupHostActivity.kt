@@ -668,7 +668,7 @@ class DebugWifiDirectGroupHostActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         preparation.loadExistingIdentity()
         setContent {
-            MaterialTheme {
+            com.edenpractical.comms.appearance.NearbyAppearance {
                 Surface(Modifier.fillMaxSize()) {
                     Column(
                         Modifier.fillMaxSize()

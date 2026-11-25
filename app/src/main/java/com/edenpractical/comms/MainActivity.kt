@@ -29,6 +29,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.edenpractical.comms.appearance.AppearancePreference
+import com.edenpractical.comms.appearance.appearanceColors
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -69,13 +72,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // Grounded field-utility palette: neutral graphite with restrained olive accents.
-private val Graphite = Color(0xFF0D1112)
-private val GraphiteSurface = Color(0xFF161B1D)
-private val GraphiteRaised = Color(0xFF1F2628)
-private val SoftIvory = Color(0xFFE6E8E6)
-private val PaleSage = Color(0xFF8FAA6A)
-private val LightSurface = Color(0xFFFFFFFF)
-private val Ink = Color(0xFF232A25)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,6 +99,9 @@ private fun EdenCommsApp() {
     val preferences = remember(context) {
         context.getSharedPreferences("eden_comms_ui", Context.MODE_PRIVATE)
     }
+    var appearance by remember { mutableStateOf(AppearancePreference.resolve(
+        preferences.getString("appearance_palette", null), preferences.contains("dark_theme")
+    )) }
     var darkMode by remember { mutableStateOf(preferences.getBoolean("dark_theme", true)) }
     // Save a real screen history so system Back, gestures, and the in-app
     // Back arrow all unwind the same navigation route after rotation.
@@ -162,41 +161,15 @@ private fun EdenCommsApp() {
                 isAppearanceLightNavigationBars = !darkMode
             }
             val window = activity.window
-            window.statusBarColor = if (darkMode) android.graphics.Color.rgb(13, 17, 18)
-                else android.graphics.Color.rgb(245, 246, 242)
-            window.navigationBarColor = if (darkMode) android.graphics.Color.rgb(13, 17, 18)
-                else android.graphics.Color.rgb(245, 246, 242)
+            window.statusBarColor = appearanceColors(appearance, darkMode).background.toArgb()
+            window.navigationBarColor = appearanceColors(appearance, darkMode).background.toArgb()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 window.isNavigationBarContrastEnforced = false
             }
         }
     }
 
-    val colors = if (darkMode) {
-        darkColorScheme(
-            primary = PaleSage,
-            onPrimary = Graphite,
-            background = Graphite,
-            onBackground = SoftIvory,
-            surface = GraphiteSurface,
-            onSurface = SoftIvory,
-            surfaceVariant = GraphiteRaised,
-            onSurfaceVariant = Color(0xFFAFB7B1),
-            outline = Color(0xFF667269)
-        )
-    } else {
-        lightColorScheme(
-            primary = Color(0xFF536C4C),
-            onPrimary = Color.White,
-            background = Color(0xFFF5F6F2),
-            onBackground = Ink,
-            surface = LightSurface,
-            onSurface = Ink,
-            surfaceVariant = Color(0xFFECF0EA),
-            onSurfaceVariant = Color(0xFF58665C),
-            outline = Color(0xFFC5CEC5)
-        )
-    }
+    val colors = appearanceColors(appearance, darkMode)
 
     MaterialTheme(colorScheme = colors) {
         if (confirmLeavePairing && page == "pairing-test") {
@@ -310,10 +283,15 @@ private fun EdenCommsApp() {
                                 onWifiDirect = { launchDebugMethod(ConnectionMethod.WIFI_DIRECT) }
                             )
                             "settings" -> SettingsScreen(
+                                appearance = appearance,
+                                onAppearanceChange = {
+                                    appearance = it
+                                    preferences.edit().putString("appearance_palette", it.stored).apply()
+                                },
                                 darkMode = darkMode,
                                 onDarkModeChange = {
                                     darkMode = it
-                                    preferences.edit().putBoolean("dark_theme", it).apply()
+                                    preferences.edit().putString("appearance_palette", appearance.stored).putBoolean("dark_theme", it).apply()
                                 },
                                 onDeveloper = { navigate("developer") },
                                 onPrivacy = { navigate("privacy") }
@@ -835,6 +813,8 @@ private fun PushToTalkScreen() {
 
 @Composable
 private fun SettingsScreen(
+    appearance: AppearancePreference,
+    onAppearanceChange: (AppearancePreference) -> Unit,
     darkMode: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
     onDeveloper: () -> Unit,
@@ -848,6 +828,15 @@ private fun SettingsScreen(
     val settingsContext = LocalContext.current.applicationContext
     val settingsScope = rememberCoroutineScope()
     SectionLabel("APPEARANCE")
+    AppearancePreference.entries.forEach { option ->
+        val sample = appearanceColors(option, darkMode)
+        Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).clickable { onAppearanceChange(option) }, verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(selected = appearance == option, onClick = null)
+            Spacer(Modifier.width(12.dp))
+            Text(option.label, modifier = Modifier.weight(1f))
+            Box(Modifier.size(28.dp).background(sample.primary, CutCornerShape(4.dp)))
+        }
+    }
     Row(
         modifier = Modifier.fillMaxWidth().heightIn(min = 60.dp),
         verticalAlignment = Alignment.CenterVertically,

@@ -4,6 +4,10 @@ This log complements the engineering details in `docs/F*_*.md` and
 GitHub PR/CI history. New chats should read its **latest entry** and the
 [handoff](CURRENT_HANDOFF.md) first. Append, don't overwrite.
 
+## EPS v1.0 appearance pilot — shared palette (proposed)
+
+Owner brief recorded in EPS_V1_PILOT.md. Branch feature/eps-appearance-pilot adds local preference model, preserved original Field Green color scheme, EPS dark/light derived palettes, immediate Settings swatch selection and local persistence; main system bars follow selected background. Existing explicit dark preference resolves to Field Green; new install defaults EPS. Five nearby Compose activities use shared appearance wrapper. Local PTT non-Compose path not changed. Added migration unit tests. No transport, storage retention, package, signing or release capability changes. Exact-head CI, semantic contrast and actual visual checks pending. Startup exact artwork import and animation still pending; do not claim owner acceptance. Next verify this branch, then integrate pinned startup asset with independent byte check.
+
 ## EC-R5 — About and EPS attribution (proposed)
 
 PR #183 merged at 1c3cd2c49c89184bc48ef680c673024db63e48cc after exact-head CI #525 passed. Read central BRAND_IDENTITY.md, EPS v1.0 guide, ARTWORK_PIPELINE.md and RELEASE_CHECKLIST.md. Add small Settings > Application > About Eden Comms dialog with EPS text attribution, actual BuildConfig version and explicit development/security limitations. Preserve existing UI and no account/mandatory cloud positioning. No new logo, splash, theme, legal entity or release change. Central EPS guide now specifies Eden Comms as sole pilot, EPS Signature default for fresh installs, preserve explicit existing green/light-dark choices, exact runtime PNG pinned at ba9f28feac64d851b3b1df9d7dfd3a1e50416492 SHA-256 d144934346d77a6e04c1475dae361fc57cb28a95d7033a799bf6e2f256548516. Separate visual PR and independent byte verification required before bundling; owner device visual acceptance pending. Source regression added. Exact-head CI pending. Physical/security acceptance remains NOT RUN.

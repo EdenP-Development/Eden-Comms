@@ -145,7 +145,7 @@ class DebugWifiDirectPreflightActivity : ComponentActivity() {
         }
         refresh()
         setContent {
-            MaterialTheme {
+            com.edenpractical.comms.appearance.NearbyAppearance {
                 Surface(Modifier.fillMaxSize()) {
                     Column(
                         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
