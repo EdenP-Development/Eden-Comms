@@ -81,10 +81,14 @@ internal class DebugLanVoiceAudio(private val context: Context) {
                 own = source
                 if (source.state != AudioRecord.STATE_INITIALIZED) return@thread
                 synchronized(lock) {
-                    if (token != generation || !capturing) return@thread
+                    if (token != generation || !capturing ||
+                        context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
+                            PackageManager.PERMISSION_GRANTED) return@thread
                     recorder = source
+                    // Serialize hardware start with cancellation. A stopped
+                    // turn must not start recording after releasing the lock.
+                    source.startRecording()
                 }
-                source.startRecording()
                 val started = SystemClock.elapsedRealtime()
                 while (token == generation && capturing &&
                     used + chunk.size <= recording.size &&
@@ -141,8 +145,8 @@ internal class DebugLanVoiceAudio(private val context: Context) {
             // Already accepted/sent PCM still belongs to the in-flight turn.
             liveMicFrameGate?.stop()
             capturing = false
+            try { recorder?.stop() } catch (_: Exception) { }
         }
-        try { recorder?.stop() } catch (_: Exception) { }
     }
 
     /** Copy one bounded received clip before caller zeroes the source frame. */
@@ -256,10 +260,14 @@ internal class DebugLanVoiceAudio(private val context: Context) {
                 own = source
                 if (source.state != AudioRecord.STATE_INITIALIZED) return@thread
                 synchronized(lock) {
-                    if (token != generation || !capturing) return@thread
+                    if (token != generation || !capturing ||
+                        context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
+                            PackageManager.PERMISSION_GRANTED) return@thread
                     recorder = source
+                    // Serialize hardware start with cancellation. A stopped
+                    // turn must not start recording after releasing the lock.
+                    source.startRecording()
                 }
-                source.startRecording()
                 val started = SystemClock.elapsedRealtime()
                 val readBudget = DebugLiveMicReadBudget(started)
                 while (token == generation && capturing &&
@@ -426,11 +434,11 @@ internal class DebugLanVoiceAudio(private val context: Context) {
             generation += 1
             capturing = false
             playing = false
+            livePlayback?.cancel()
+            livePlayback = null
+            try { recorder?.stop() } catch (_: Exception) { }
+            try { track?.stop() } catch (_: Exception) { }
         }
-        livePlayback?.cancel()
-        livePlayback = null
-        try { recorder?.stop() } catch (_: Exception) { }
-        try { track?.stop() } catch (_: Exception) { }
         // Workers own final release/byte wiping; no callback survives token.
     }
 
