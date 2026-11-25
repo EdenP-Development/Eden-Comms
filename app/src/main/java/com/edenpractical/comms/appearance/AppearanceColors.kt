@@ -1,6 +1,8 @@
 package com.edenpractical.comms.appearance
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 private val Graphite = Color(0xFF0D1112)
 private val GraphiteSurface = Color(0xFF161B1D)
 private val GraphiteRaised = Color(0xFF1F2628)
@@ -54,3 +56,18 @@ internal fun appearanceColors(appearance: AppearancePreference, darkMode: Boolea
     }
 
 }
+
+// Brand roles only: never use these as a connection, approval or error state.
+internal val LocalAppearance = staticCompositionLocalOf { AppearancePreference.FIELD }
+
+@Composable
+internal fun supportingAccent(): Color = if (LocalAppearance.current == AppearancePreference.EPS)
+    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+
+@Composable
+internal fun actionFill(): Color = if (LocalAppearance.current == AppearancePreference.EPS)
+    Color(0xFFD6A044) else MaterialTheme.colorScheme.primary
+
+@Composable
+internal fun actionContent(): Color = if (LocalAppearance.current == AppearancePreference.EPS)
+    Color(0xFF111214) else MaterialTheme.colorScheme.onPrimary

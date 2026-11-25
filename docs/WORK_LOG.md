@@ -1,5 +1,14 @@
 # Eden Comms — rolling implementation work log
 
+## VIS-01 — active visual refinement checkpoint (2026-11-25)
+
+PR #187 merged at e1684a707a6269073fbf997868b45459380fcc1b; CI #534 passed. Owner screenshots from internal 10015 showed palette switching, but visual approval withheld: EPS appeared amber-only, light mode brown, old shield/attribution and tall layout need refinement. Owner selected Modular Comms concept C as icon direction only; final asset unapproved. Startup physical acceptance not established. Active branch feature/eps-vis01-color-roles adds shared supportingAccent/actionFill/actionContent roles, palette provider in main and five nearby Compose activities, violet supporting accents, gold/dark main Home action in both EPS modes, corrected EPS header attribution, selected contrast checks. Field Green palette retained; no communication authority changed. CI pending.
+
+Cross-project references inspected: SudokuTogether main GameTheme.kt (central typography, shapes, color roles), docs/GRIDMATES_BETA12_THEME_PILOT_REVIEW_2026-11-16.md (contrast matrix and independent state tokens), docs/GRIDMATES_BETA2_OWNER_PHONE_VISUAL_FEEDBACK_2026-11-17.md (physical feedback/approval boundaries), CompactPlayLayoutTest.kt and NearbyVisualAuditTest.kt (native deterministic presentation fixtures, 200% font/landscape). Adapt techniques, not game aesthetics. For Comms, fixtures must be test-only, synthetic, incapable of granting trust or transport admission; no production demo authorization. Existing disconnected emulator QA is not physical session evidence. Other repo discovery incomplete; no claim of inspection.
+
+Next: verify VIS-01, develop Modular Comms icon candidates and compact Home, Settings, pairing and conversation layouts; consolidate signed Visual Review 2. Preserve exact EPS publisher PNG and startup timings, app IDs/signing/local data, release flags. Physical 54-case and independent security gates remain open. No publication. See EPS_VISUAL_REFINEMENT_PLAN.md.
+
+
 ## Current checkpoint — EPS Visual Review 2 (2026-11-25)
 
 Owner physically reviewed internal 10015 (source c673600b0eff13134ee6546c4ab6d742f2fff190). EPS/Field Green light and dark screens observed; visual acceptance NOT granted. Owner selected concept C, Modular Comms, as the product-icon direction, not final artwork. Preserve fixed EPS publisher startup art, existing launcher until replacement accepted, app IDs/signing/data and security gates. See docs/EPS_VISUAL_REVIEW_1_FEEDBACK.md and docs/EPS_VISUAL_REFINEMENT_PLAN.md. Next VIS-01 semantic color roles and compact Home design, VIS-02 icon candidates; consolidate visual review rather than small APK churn.

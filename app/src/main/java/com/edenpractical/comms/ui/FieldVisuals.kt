@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
+import com.edenpractical.comms.appearance.supportingAccent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -44,7 +45,7 @@ internal fun FieldHeaderRule() {
     ) {
         Box(
             modifier = Modifier.width(80.dp).height(3.dp)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(supportingAccent())
         )
     }
 }
@@ -80,7 +81,7 @@ internal fun FieldFrame(
                 ) {
                     Box(
                         modifier = Modifier.width(40.dp).height(2.dp)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(supportingAccent())
                     )
                     Spacer(Modifier.width(6.dp))
                     Box(
