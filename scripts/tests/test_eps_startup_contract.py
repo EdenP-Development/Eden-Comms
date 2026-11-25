@@ -7,7 +7,7 @@ MAIN = ROOT / "app/src/main/java/com/edenpractical/comms"
 class EpsStartupContract(unittest.TestCase):
     def test_startup_contract(self):
         ui = (MAIN / "appearance/EpsStartup.kt").read_text()
-        for token in ("EPS_FADE_MS = 250", "EPS_HOLD_MS = 1000", "0xFF111214",
+        for token in ("EPS_FADE_MS = 250", "EPS_HOLD_MS = 2500", "0xFF111214",
                       "ContentScale.Fit", "BackHandler(visible)", "Skip startup",
                       "ValueAnimator.areAnimatorsEnabled()", "Lifecycle.Event.ON_STOP",
                       "R.drawable.eps_v1_runtime", "safeDrawingPadding()", "else content()"):
