@@ -1,9 +1,45 @@
+import java.security.MessageDigest
+import java.net.URI
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// EPS artwork is imported at BUILD time from the exact approved public commit.
+val epsResources = layout.buildDirectory.dir("generated/epsBranding/res")
+val epsArtwork = epsResources.map { it.file("drawable-nodpi/eps_v1_runtime.png") }
+val prepareEpsArtwork = tasks.register("prepareEpsArtwork") {
+    val expected = "d144934346d77a6e04c1475dae361fc57cb28a95d7033a799bf6e2f256548516"
+    val source = "https://raw.githubusercontent.com/EdenP-Development/Eden-Development-Standards/ba9f28feac64d851b3b1df9d7dfd3a1e50416492/branding/eps/v1.0/runtime-transparent.png"
+    inputs.property("approvedSha256", expected)
+    inputs.property("approvedSource", source)
+    outputs.file(epsArtwork)
+    // Always verify even when reusing a cached local copy.
+    outputs.upToDateWhen { false }
+    doLast {
+        val target = epsArtwork.get().asFile
+        fun digest(bytes: ByteArray) = MessageDigest.getInstance("SHA-256")
+            .digest(bytes).joinToString("") { "%02x".format(it.toInt() and 255) }
+        if (!target.isFile || digest(target.readBytes()) != expected) {
+            val connection = URI(source).toURL().openConnection()
+            connection.connectTimeout = 15000
+            connection.readTimeout = 30000
+            val bytes = connection.getInputStream().use { it.readNBytes(8 * 1024 * 1024 + 1) }
+            require(bytes.size <= 8 * 1024 * 1024 && digest(bytes) == expected) {
+                "EPS approved artwork verification failed"
+            }
+            target.parentFile.mkdirs()
+            target.writeBytes(bytes)
+        }
+        require(digest(target.readBytes()) == expected)
+        logger.lifecycle("EPS v1.0 artwork SHA-256 verified: " + expected)
+    }
+}
+
 android {
+    sourceSets.getByName("main").res.srcDir(epsResources.get().asFile)
+
     namespace = "com.edenpractical.comms"
     compileSdk {
         version = release(37) {
@@ -107,6 +143,8 @@ android {
         buildConfig = true
     }
 }
+
+tasks.named("preBuild").configure { dependsOn(prepareEpsArtwork) }
 
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2026.09.00")
