@@ -8,7 +8,7 @@ class EpsSettingsVisualTest(unittest.TestCase):
         settings = MAIN.read_text().split("private fun SettingsScreen(",1)[1].split("private fun PrivacyFutureStatus(",1)[0]
         for token in ("selectableGroup()", "role = Role.RadioButton", "onAppearanceChange(option)",
                       "RadioButton(selected = selected, onClick = null", "sample.secondary",
-                      "sample.surfaceVariant", "onCheckedChange = onDarkModeChange",
+                      "sample.surfaceVariant", "onValueChange = onDarkModeChange", "role = Role.Switch", "onCheckedChange = null",
                       "ConversationPrivacyContent.currentExplanation", "Conversation privacy",
                       "DebugPeerMemoryStore(settingsContext).forgetAll()", "showForgetAllPeers = true"):
             self.assertIn(token, settings)
