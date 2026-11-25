@@ -840,6 +840,7 @@ private fun SettingsScreen(
     onDeveloper: () -> Unit,
     onPrivacy: () -> Unit
 ) {
+    var showAbout by remember { mutableStateOf(false) }
     var showHistoryHelp by remember { mutableStateOf(false) }
     var showForgetAllPeers by remember { mutableStateOf(false) }
     var erasingPeerCache by remember { mutableStateOf(false) }
@@ -930,6 +931,9 @@ private fun SettingsScreen(
         }
     }
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
+    SectionLabel("APPLICATION")
+    NavigationRow("About Eden Comms", "Version and product information", onClick = { showAbout = true })
+    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.30f))
     SectionLabel("ADVANCED")
     NavigationRow("Device and developer tools", "Identity and connection testing", onDeveloper)
     Text(
@@ -937,6 +941,21 @@ private fun SettingsScreen(
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
+    if (showAbout) {
+        AlertDialog(
+            onDismissRequest = { showAbout = false },
+            title = { Text("About Eden Comms") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Eden Practical Solutions", fontWeight = FontWeight.SemiBold)
+                    Text("Version " + com.edenpractical.comms.pairing.BuildEvidenceReport.version(BuildConfig.VERSION_NAME))
+                    Text("Local-first nearby communication. No account or mandatory cloud service.")
+                    Text("Development build. Production messaging and voice remain disabled. Not independently security reviewed; do not use for sensitive or emergency conversations.")
+                }
+            },
+            confirmButton = { TextButton(onClick = { showAbout = false }) { Text("Close") } }
+        )
+    }
     if (showForgetAllPeers) {
         AlertDialog(
             onDismissRequest = { showForgetAllPeers = false },
