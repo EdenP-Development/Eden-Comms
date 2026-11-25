@@ -80,4 +80,56 @@ class DebugPeerAckLedgerTest {
         assertTrue(ledger.queue(2))
         assertEquals(DebugPeerAckLedger.Result.REJECT, ledger.acknowledge(2, false))
     }
+
+    @Test fun earlyAckCannotBecomeSuccessAfterCancellationOrClose() {
+        for (closeSession in listOf(false, true)) {
+            val ledger = DebugPeerAckLedger()
+            assertTrue(ledger.queue(1))
+            assertEquals(DebugPeerAckLedger.Result.WAITING_FOR_WRITE,
+                ledger.acknowledge(1, true))
+            if (closeSession) ledger.close() else ledger.cancel(1)
+            assertFalse(ledger.written(1))
+            assertEquals(DebugPeerAckLedger.Result.REJECT, ledger.acknowledge(1, true))
+            assertEquals(0, ledger.outstanding)
+            assertFalse(ledger.queue(1))
+        }
+    }
+
+    @Test fun independentOutstandingMessagesCanBeAcknowledgedOutOfOrder() {
+        val ledger = DebugPeerAckLedger(maxOutstanding = 3)
+        for (id in 1L..3L) assertTrue(ledger.queue(id))
+        assertFalse(ledger.written(1))
+        assertFalse(ledger.written(2))
+        assertEquals(DebugPeerAckLedger.Result.ACKNOWLEDGED, ledger.acknowledge(2, true))
+        assertEquals(DebugPeerAckLedger.Result.WAITING_FOR_WRITE, ledger.acknowledge(3, true))
+        assertEquals(DebugPeerAckLedger.Result.ACKNOWLEDGED, ledger.acknowledge(1, true))
+        assertTrue(ledger.written(3))
+        assertEquals(0, ledger.outstanding)
+        for (id in 1L..3L)
+            assertEquals(DebugPeerAckLedger.Result.REJECT, ledger.acknowledge(id, true))
+    }
+
+    @Test fun concurrentDuplicateReceiptsCanOnlyAcknowledgeOnce() {
+        val ledger = DebugPeerAckLedger()
+        assertTrue(ledger.queue(1))
+        assertFalse(ledger.written(1))
+        val start = CountDownLatch(1)
+        val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
+        try {
+            val results = (1..2).map {
+                pool.submit<DebugPeerAckLedger.Result> {
+                    check(start.await(3, TimeUnit.SECONDS))
+                    ledger.acknowledge(1, true)
+                }
+            }
+            start.countDown()
+            val observed = results.map { it.get(3, TimeUnit.SECONDS) }
+            assertEquals(1, observed.count { it == DebugPeerAckLedger.Result.ACKNOWLEDGED })
+            assertEquals(1, observed.count { it == DebugPeerAckLedger.Result.REJECT })
+            assertEquals(0, ledger.outstanding)
+        } finally {
+            start.countDown()
+            pool.shutdownNow()
+        }
+    }
 }
