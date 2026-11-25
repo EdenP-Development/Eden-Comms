@@ -21,6 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.edenpractical.comms.ui.FieldFrame
+import com.edenpractical.comms.appearance.supportingAccent
+import com.edenpractical.comms.appearance.actionFill
+import com.edenpractical.comms.appearance.actionContent
 import com.edenpractical.comms.ui.FieldHelp
 import com.edenpractical.comms.privacy.ConversationPrivacyContent
 import com.edenpractical.comms.privacy.LocalHistoryPolicy
@@ -229,7 +232,7 @@ internal fun DebugConversationPanel(
                                         .semantics(mergeDescendants = true) { },
                                     shape = CutCornerShape(8.dp),
                                     color = if (writtenHere)
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
+                                        supportingAccent().copy(alpha = 0.14f)
                                     else MaterialTheme.colorScheme.surface
                                 ) {
                                     Column(
@@ -257,7 +260,7 @@ internal fun DebugConversationPanel(
                                             Text(
                                                 DebugConversationUiCopy.peerAppAckLabel,
                                                 style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.primary
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
                                         }
                                     }
@@ -302,6 +305,7 @@ internal fun DebugConversationPanel(
             Button(
                 onClick = onSend,
                 enabled = DebugTextDraftPolicy.maySend(draft),
+                colors = ButtonDefaults.buttonColors(containerColor = actionFill(), contentColor = actionContent()),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                 shape = CutCornerShape(6.dp)
             ) {

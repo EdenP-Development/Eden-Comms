@@ -1,6 +1,17 @@
 package com.edenpractical.comms.pairing
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.layout.size
+import com.edenpractical.comms.R
+import com.edenpractical.comms.appearance.LocalAppearance
+import com.edenpractical.comms.appearance.AppearancePreference
+import com.edenpractical.comms.appearance.actionFill
+import com.edenpractical.comms.appearance.actionContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,13 +63,21 @@ internal fun DebugHoldToTalkControl(
     val currentCancel by rememberUpdatedState(onCancel)
     val currentAccessibility by rememberUpdatedState(onAccessibilityClick)
     val colors = MaterialTheme.colorScheme
+    val eps = LocalAppearance.current == AppearancePreference.EPS
+    val fill = if (!enabled && !recording) colors.surfaceVariant
+        else if (recording) colors.errorContainer
+        else if (eps) actionFill() else colors.primaryContainer
+    val ink = if (!enabled && !recording) colors.onSurfaceVariant
+        else if (recording) colors.onErrorContainer
+        else if (eps) actionContent() else colors.onPrimaryContainer
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 76.dp)
+            .heightIn(min = 100.dp)
             .clip(CutCornerShape(8.dp))
-            .background(if (recording) colors.tertiaryContainer else colors.primaryContainer)
+            .background(fill)
+            .border(1.dp, ink.copy(alpha = .35f), CutCornerShape(8.dp))
             .pointerInput(enabled) {
                 detectTapGestures(
                     onPress = {
@@ -91,12 +110,19 @@ internal fun DebugHoldToTalkControl(
             },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            if (recording) "RELEASE TO STOP" else "HOLD TO TALK",
+        Column(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
-            color = if (recording) colors.onTertiaryContainer else colors.onPrimaryContainer,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(painterResource(R.drawable.ic_eden_ptt), contentDescription = null,
+                tint = ink, modifier = Modifier.size(30.dp))
+            Text(
+                if (recording) "RELEASE TO STOP" else "HOLD TO TALK",
+                color = ink,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

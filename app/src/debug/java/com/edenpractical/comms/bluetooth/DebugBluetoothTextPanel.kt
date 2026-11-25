@@ -23,6 +23,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.edenpractical.comms.pairing.DebugTextDraftPolicy
 import com.edenpractical.comms.ui.DebugNearbyTextUiCopy
+import com.edenpractical.comms.ui.ConversationBubble
+import com.edenpractical.comms.appearance.actionFill
+import com.edenpractical.comms.appearance.actionContent
+import androidx.compose.material3.ButtonDefaults
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -93,20 +97,11 @@ internal fun DebugBluetoothTextPanel(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 lines.forEach { line ->
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                            .semantics(mergeDescendants = true) { },
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Text(
-                            (if (line.outgoing) "You • " else "Other phone • ") + line.text,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            DebugNearbyTextUiCopy.lineStatus(line.outgoing, line.acknowledged),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
+                    ConversationBubble(
+                        outgoing = line.outgoing,
+                        message = line.text,
+                        observation = DebugNearbyTextUiCopy.lineStatus(line.outgoing, line.acknowledged)
+                    )
                 }
             }
             if (!followNewest) {
@@ -143,6 +138,7 @@ internal fun DebugBluetoothTextPanel(
         Button(
             onClick = onSend,
             enabled = DebugNearbyTextUiCopy.canSubmit(draft),
+            colors = ButtonDefaults.buttonColors(containerColor = actionFill(), contentColor = actionContent()),
             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
         ) { Text("SEND TEST MESSAGE") }
         if (sendFeedback.isNotEmpty()) {
