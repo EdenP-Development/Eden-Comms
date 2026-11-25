@@ -1,6 +1,6 @@
 # Internal test signing — two-secret migration
 
-Status: two-secret migration merged; automatic owner-main signing proposed; private signer not verified. Issue #27 remains open.
+Status: automatic private internal signing verified for two consecutive builds (10001 and 10002); physical upgrade and owner backup recovery unverified. Issue #27 remains open. See [current handoff](CURRENT_HANDOFF.md).
 
 The existing original-package internal QA workflow is being standardized to two organization Actions secrets restricted to Eden-Comms:
 - EC_INTERNAL_KEYSTORE_BASE64
