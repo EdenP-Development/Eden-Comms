@@ -89,7 +89,12 @@ class MainActivity : ComponentActivity() {
             window.decorView.importantForContentCapture =
                 View.IMPORTANT_FOR_CONTENT_CAPTURE_NO_EXCLUDE_DESCENDANTS
         }
-        setContent { EdenCommsApp() }
+        val showStartup = savedInstanceState == null
+        setContent {
+            com.edenpractical.comms.appearance.EpsStartup(showStartup) {
+                EdenCommsApp()
+            }
+        }
     }
 }
 
