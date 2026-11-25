@@ -91,4 +91,26 @@ class DebugRfcommAttemptGateTest {
         assertFalse(ReleaseCapabilities.CAN_TRANSMIT_VOICE)
         assertTrue(state.stop(token, End.USER))
     }
+
+    @Test fun oldOpenedLinkCannotStopOrReviveFreshAttemptInEitherRole() {
+        for (oldRole in Role.entries) for (newRole in Role.entries) {
+            for (reason in End.entries) {
+                val gate = DebugRfcommAttemptGate()
+                val old = requireNotNull(gate.begin(oldRole, true, true))
+                assertTrue(gate.opened(old, true, true))
+                assertTrue(gate.stop(old, reason))
+                assertTrue(gate.reset())
+                val fresh = requireNotNull(gate.begin(newRole, true, true))
+                assertFalse(gate.opened(old, true, true))
+                assertFalse(gate.stop(old, End.FAILED))
+                assertFalse(gate.isLive(old))
+                assertTrue(gate.opened(fresh, true, true))
+                assertFalse(gate.stop(old, End.TIMEOUT))
+                assertTrue(gate.isLive(fresh))
+                assertEquals(newRole, gate.snapshot().role)
+                assertNull(gate.snapshot().reason)
+                assertTrue(gate.stop(fresh, End.USER))
+            }
+        }
+    }
 }
