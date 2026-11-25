@@ -250,7 +250,7 @@ private fun EdenCommsApp() {
                                 .weight(1f)
                                 .verticalScroll(pageScroll)
                                 .padding(horizontal = 20.dp, vertical = if (compact) 10.dp else 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(if (compact) 10.dp else 13.dp)
+                            verticalArrangement = Arrangement.spacedBy(if (page == "home") 8.dp else if (compact) 10.dp else 13.dp)
                         ) {
                         when (page) {
                             "home" -> HomeScreen(
@@ -489,7 +489,7 @@ private fun HomeScreen(
     // Keep the primary entry point above secondary explanations.
     FieldSectionHeader("NEARBY", null)
     Text(
-        "Nearby text and voice, without an account. Session-only by default. Local encrypted history is optional after pairing.",
+        "Nearby text and voice. No account. Session-only by default.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -570,7 +570,7 @@ private fun HomeScreen(
             "Wi-Fi Direct. Each uses its own foreground setup, fresh QR codes, " +
             "verified TLS and both people's approvals before test text or " +
             "live push-to-talk appears. No accounts or required cloud. " +
-            "The transports are not independently security reviewed. " +
+            "Optional local encrypted history is available after pairing. The transports are not independently security reviewed. " +
             "Do not send secrets or rely on them for emergencies."
     )
 
@@ -933,15 +933,11 @@ private fun SettingsScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            FieldHelp(
-                question = "How message history works",
-                answer = ConversationPrivacyContent.currentExplanation
-            )
             TextButton(
                 onClick = { showHistoryHelp = true },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
                 colors = ButtonDefaults.textButtonColors(contentColor = supportingAccent())
-            ) { Text("Learn more") }
+            ) { Text("How message history works") }
         }
     }
     FieldDisclosureCard(
@@ -1036,7 +1032,13 @@ private fun SettingsScreen(
         AlertDialog(
             onDismissRequest = { showHistoryHelp = false },
             title = { Text(ContextualPrivacyHelp.SESSION_ONLY_TITLE) },
-            text = { Text(ContextualPrivacyHelp.SESSION_ONLY_BODY) },
+            text = {
+                Column(Modifier.verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(ConversationPrivacyContent.currentExplanation)
+                    Text(ContextualPrivacyHelp.SESSION_ONLY_BODY)
+                }
+            },
             confirmButton = {
                 TextButton(onClick = {
                     showHistoryHelp = false
