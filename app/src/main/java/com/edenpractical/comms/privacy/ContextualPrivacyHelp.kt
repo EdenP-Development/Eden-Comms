@@ -17,10 +17,10 @@ internal object ContextualPrivacyHelp {
     const val SESSION_ONLY_BODY =
         "Today's development build can exchange short typed test messages over " +
         "a QR-pinned TLS connection only after both phones approve and confirm. " +
-        "It does not save a chat history. The current session-only mode keeps " +
+        "By default, it does not save a chat history. The current session-only mode keeps " +
         "conversation text in temporary app memory and clears the screen on " +
         "disconnect or background. An optional encrypted local history feature " +
-        "is planned but unavailable. Your Android Keystore device key may " +
+        "is available after verification in debug builds only, and unavailable in release. Your Android Keystore device key may " +
         "persist separately from chat content. Another person can still " +
         "record or photograph a conversation; local deletion cannot erase their copy. " +
         "Device memory, keyboards and screenshots may also retain text."

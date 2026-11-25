@@ -10,8 +10,10 @@ class ConversationPrivacyContentTest {
         assertTrue(ConversationPrivacyContent.currentExplanation.contains(
             "does not intentionally save a conversation history"))
         assertTrue(ConversationPrivacyContent.futureHistoryState.contains("Opt-in test"))
-        assertTrue(ConversationPrivacyContent.futureHistoryState.contains("LAN debug only"))
-        assertTrue(ConversationPrivacyContent.futureTimerState.contains("Available"))
+        assertTrue(ConversationPrivacyContent.futureHistoryState.contains("all three debug transports"))
+        assertTrue(ConversationPrivacyContent.futureTimerState.contains("Same-Wi-Fi"))
+        assertTrue(ConversationPrivacyContent.futureHistoryExplanation.contains("Same Wi-Fi, Bluetooth or Wi-Fi Direct"))
+        assertTrue(ConversationPrivacyContent.futureTrustState.contains("all three debug transports"))
         assertTrue(ConversationPrivacyContent.futureTimerExplanation.contains("this phone only"))
         assertTrue(ConversationPrivacyContent.futureTimerExplanation.contains("never saved"))
         assertTrue(ConversationPrivacyContent.futureTrustState.contains("Opt-in test"))

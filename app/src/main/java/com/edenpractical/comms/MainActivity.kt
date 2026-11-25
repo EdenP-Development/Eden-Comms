@@ -902,7 +902,7 @@ private fun SettingsScreen(
     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.20f))
     FieldDisclosureCard(
         title = "Conversation privacy",
-        summary = "Live LAN chat offers separate optional encrypted history and remembered public peer identity in DEBUG only. No auto-pairing.",
+        summary = "Verified test chat on all three connection methods offers separate optional encrypted history and remembered public peer identity in DEBUG only. No auto-pairing.",
         fullText = listOf(
             ConversationPrivacyContent.futureHistoryTitle + " — " +
                 ConversationPrivacyContent.futureHistoryState + "\n" +
