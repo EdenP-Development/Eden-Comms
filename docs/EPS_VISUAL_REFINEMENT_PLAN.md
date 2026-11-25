@@ -14,3 +14,6 @@ Owner selected C / Modular Comms as the product icon direction on November 25, 2
 | VIS-08 | Consolidated signed visual review APK; owner acceptance and central receipt |
 
 Preserve Field Green original palette, approved EPS startup bytes/timing unless separately reviewed, local data, application identity, signing and all release capability flags. No new communication features. Do not equate visual acceptance with security acceptance. Physical 54 cases and independent review remain mandatory; professional storefront deferred. Prioritize meaningful consolidated review builds.
+
+## Owner follow-up
+Defer VIS-02 final icon work until later; concept C remains directional only. Owner finds sketch flat, slim/basic and potentially off-center. Revisit optical balance, heavier silhouette, dimensional finish, restrained depth and small-size readability. Existing launcher remains unchanged. VIS-01 merged at b8ef17e0d332a79b01deec7867c38917969be0db after CI #537. VIS-03 first pass removes duplicate method entry (same route), moves supporting help below communication actions, reduces header/scroll footer bulk; CI pending. Preserve disclosures and 48dp targets.
