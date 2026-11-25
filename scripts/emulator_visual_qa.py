@@ -215,8 +215,23 @@ def back():
 
 def launch():
     adb("shell", "am", "force-stop", PACKAGE)
-    adb("shell", "am", "start", "-W", "-n", ACTIVITY, timeout=40)
-    seek("EDEN COMMS")
+    result = adb("shell", "am", "start", "-W", "-n", ACTIVITY, timeout=60)
+    if "Error:" in result or "Exception" in result:
+        raise AssertionError("Android rejected the requested activity launch")
+    try:
+        seek("EDEN COMMS", timeout=60)
+    except AssertionError:
+        # The failure occurred on the first cold launch, before any captures.
+        # Report only known UI labels and package ownership, not arbitrary logs.
+        root = dump_ui()
+        print("Cold launch diagnostic:", json.dumps({
+            "app_window": any(n.attrib.get("package") == PACKAGE for n in root.iter("node")),
+            "startup_visible": bool(find(root, "Eden Practical Solutions")),
+            "home_visible": bool(find(root, "EDEN COMMS")),
+            "connect_visible": bool(find(root, "CONNECT NEARBY")),
+            "launch_status_ok": "Status: ok" in result
+        }), flush=True)
+        raise
 
 
 def png_evidence(png):
