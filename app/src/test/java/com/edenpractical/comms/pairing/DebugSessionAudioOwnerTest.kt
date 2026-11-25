@@ -85,4 +85,40 @@ class DebugSessionAudioOwnerTest {
             pool.shutdownNow()
         }
     }
+
+    @Test fun concurrentCloseCallbacksStopCurrentAudioExactlyOnce() {
+        val owner = DebugSessionAudioOwner()
+        val token = Any()
+        owner.activate(token)
+        val start = CountDownLatch(1)
+        val stops = AtomicInteger()
+        val pool = Executors.newFixedThreadPool(2)
+        try {
+            val results = (1..2).map {
+                pool.submit<Boolean> {
+                    check(start.await(3, TimeUnit.SECONDS))
+                    owner.stopIfCurrent(token) { stops.incrementAndGet() }
+                }
+            }
+            start.countDown()
+            assertEquals(1, results.count { it.get(3, TimeUnit.SECONDS) })
+            assertEquals(1, stops.get())
+        } finally {
+            start.countDown()
+            pool.shutdownNow()
+        }
+    }
+
+    @Test fun failedCleanupCannotRestoreRevokedOwnership() {
+        val owner = DebugSessionAudioOwner()
+        val token = Any()
+        owner.activate(token)
+        assertThrows(IllegalStateException::class.java) {
+            owner.stopIfCurrent(token) { throw IllegalStateException("test cleanup failure") }
+        }
+        assertFalse(owner.stopIfCurrent(token) { fail("Old owner restored") })
+        val fresh = Any()
+        owner.activate(fresh)
+        assertTrue(owner.stopIfCurrent(fresh) {})
+    }
 }
