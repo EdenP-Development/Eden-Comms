@@ -80,6 +80,17 @@ class IntegratedPreviewVisual(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, s, forbidden)
 
+    def test_appearance_matrix_uses_public_controls(self):
+        s = DRIVER.read_text()
+        for token in ('("EPS Signature", "eps"), ("Field Green", "field")',
+                      "for dark in (True, False)", "set_dark_appearance(dark)",
+                      "capture_appearance_matrix(output, report)",
+                      "13-settings-", "14-home-", "15-chooser-",
+                      "16-settings-large-font", "17-privacy-large-font",
+                      'seek("Conversation privacy", scroll=True)'):
+            self.assertIn(token, s)
+        self.assertNotIn("run-as", s)
+
     def test_all_three_real_connection_routes_are_used_without_test_fakes(self):
         s = APP.read_text()
         for required in (

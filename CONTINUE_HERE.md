@@ -1,5 +1,8 @@
 # Continue Eden Comms
 
+## VIS-07 checkpoint (2026-11-25)
+VIS-06 merged at 2a862ae56a847f1c8eeb5e3692e0950909dab47b after CI #552. All first-pass Home, Settings, connection and conversation refinements are on main. Icon deferred by owner; concept C needs heavier, centered, dimensional artwork. VIS-07 expands disconnected emulator driver to four appearance combinations (Settings/Home/chooser captures), explicit dark switch state checks, and Settings/privacy reachability at 200% font. No fabricated connection, preference injection, microphone or QR activation. Static test and emulator execution pending; screenshots do not prove physical layout or security. No new APK approved. Next verify CI and integrated preview results, inspect screenshot evidence where available, repair failures, then signed internal Visual Review 2. Physical 54 cases and independent security gates remain open.
+
 ## VIS-01 — active visual refinement checkpoint (2026-11-25)
 
 PR #187 merged at e1684a707a6269073fbf997868b45459380fcc1b; CI #534 passed. Owner screenshots from internal 10015 showed palette switching, but visual approval withheld: EPS appeared amber-only, light mode brown, old shield/attribution and tall layout need refinement. Owner selected Modular Comms concept C as icon direction only; final asset unapproved. Startup physical acceptance not established. Active branch feature/eps-vis01-color-roles adds shared supportingAccent/actionFill/actionContent roles, palette provider in main and five nearby Compose activities, violet supporting accents, gold/dark main Home action in both EPS modes, corrected EPS header attribution, selected contrast checks. Field Green palette retained; no communication authority changed. CI pending.
