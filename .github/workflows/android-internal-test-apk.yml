@@ -1,8 +1,10 @@
 name: Internal signed test APK
 
-# Intentionally never runs on pull_request, pull_request_target, workflow_run or push.
-# The owner must manually start this on main, with repository-restricted organization secrets and protected environment.
+# Automatic internal QA only on trusted main pushes; never on PRs or forks.
+# Repository-restricted organization secrets and existing environment protection remain.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -14,7 +16,8 @@ concurrency:
 
 jobs:
   internal-test:
-    name: Manually sign verified development APK
+    name: Sign verified development APK
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main' && github.actor == 'PlayerEden'
     runs-on: ubuntu-latest
     environment: internal-test
     timeout-minutes: 40

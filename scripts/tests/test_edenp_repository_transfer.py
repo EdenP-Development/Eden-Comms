@@ -38,7 +38,9 @@ class EdenPRepositoryTransfer(unittest.TestCase):
         self.assertIn('test "$GITHUB_ACTOR" = "PlayerEden"', w)
         self.assertIn('test "$GITHUB_REF" = "refs/heads/main"', w)
         self.assertIn("  workflow_dispatch:", w)
-        for banned_trigger in ("  push:", "  pull_request:", "  pull_request_target:",
+        self.assertIn("  push:\n    branches: [main]", w)
+        self.assertIn("github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main' && github.actor == 'PlayerEden'", w)
+        for banned_trigger in ("  pull_request:", "  pull_request_target:",
                                "  workflow_run:", "  schedule:"):
             self.assertNotIn(banned_trigger, w)
         self.assertIn("environment: internal-test", w)
