@@ -362,6 +362,7 @@ class DebugBluetoothDiscoveryActivity : ComponentActivity() {
                             .padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
+                        com.edenpractical.comms.ui.FieldHeaderRule()
                         Text(
                             if (chatReady && linkPhase == DebugRfcommAttemptGate.Phase.LINK_OPEN)
                                 "Bluetooth conversation" else "Connect with Bluetooth",
@@ -414,7 +415,7 @@ class DebugBluetoothDiscoveryActivity : ComponentActivity() {
                         Text(
                             guide.phase,
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary
+                            color = com.edenpractical.comms.appearance.supportingAccent()
                         )
                         Text(
                             guide.instruction,
