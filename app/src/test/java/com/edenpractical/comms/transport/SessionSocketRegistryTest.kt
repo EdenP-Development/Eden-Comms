@@ -71,4 +71,79 @@ class SessionSocketRegistryTest {
             assertTrue("Socket leaked after cancellation", socket.isClosed)
         }
     }
+
+    @Test fun staleListenerReleaseCannotDisownCurrentListener() {
+        val registry = SessionSocketRegistry()
+        val previous = ServerSocket()
+        val current = ServerSocket()
+        try {
+            registry.ownServer(previous)
+            registry.ownServer(current)
+            registry.releaseServer(previous)
+            registry.close()
+            assertTrue(current.isClosed)
+        } finally {
+            registry.close()
+            previous.close()
+            current.close()
+        }
+    }
+
+    @Test fun closingRegistryUnblocksRealLoopbackAccept() {
+        val registry = SessionSocketRegistry()
+        val listener = ServerSocket(0, 1, java.net.InetAddress.getLoopbackAddress())
+        val ready = CountDownLatch(1)
+        val done = CountDownLatch(1)
+        val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
+        registry.ownServer(listener)
+        val worker = thread(isDaemon = true) {
+            try {
+                ready.countDown()
+                listener.accept().close()
+            } catch (_: SocketException) {
+                cancelled.set(true)
+            } finally { done.countDown() }
+        }
+        try {
+            assertTrue(ready.await(3, TimeUnit.SECONDS))
+            registry.close()
+            assertTrue("Accept did not unblock", done.await(3, TimeUnit.SECONDS))
+            assertTrue(cancelled.get())
+        } finally {
+            registry.close()
+            worker.join(1000)
+        }
+    }
+
+    @Test fun closingRegistryUnblocksRealLoopbackRead() {
+        val address = java.net.InetAddress.getLoopbackAddress()
+        ServerSocket(0, 1, address).use { listener ->
+            Socket(address, listener.localPort).use { client ->
+                listener.accept().use { peer ->
+                    val registry = SessionSocketRegistry()
+                    registry.ownSocket(client)
+                    val ready = CountDownLatch(1)
+                    val done = CountDownLatch(1)
+                    val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
+                    val worker = thread(isDaemon = true) {
+                        try {
+                            ready.countDown()
+                            client.getInputStream().read()
+                        } catch (_: SocketException) {
+                            cancelled.set(true)
+                        } finally { done.countDown() }
+                    }
+                    try {
+                        assertTrue(ready.await(3, TimeUnit.SECONDS))
+                        registry.close()
+                        assertTrue("Read did not unblock", done.await(3, TimeUnit.SECONDS))
+                        assertTrue(cancelled.get())
+                    } finally {
+                        registry.close()
+                        worker.join(1000)
+                    }
+                }
+            }
+        }
+    }
 }
