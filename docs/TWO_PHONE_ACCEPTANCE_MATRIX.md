@@ -6,11 +6,11 @@ security. [Continue here](../CONTINUE_HERE.md) ·
 [Current handoff](CURRENT_HANDOFF.md) ·
 [Work log](WORK_LOG.md).
 
-## Candidate and installation preflight (November 24)
+## Candidate and installation preflight (November 26)
 
-Current reference candidate: [private internal QA 10009](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45545690006/artifacts/14991567419), source 2a690fd160f5a2cf2fef8904052cf6c7672b48c9. Artifact expires December 2; use the newest independently verified candidate if it expires or source changes. Do not mix Preview and internal packages across acceptance evidence.
+Current reference candidate: [private internal QA 10048](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45779827314/artifacts/15098365262), source 5fb119d11dec4eccd0ce33646cf5beb1d185cf39. Artifact expires December 3, 2026. Package com.edenpractical.comms; version 0.2.12-internal-10048; APK SHA-256 733ef69fff28cf9b2877e50abe22d830cd5b575a873fe943d9801cfe9be1b6dc. Private signer matches 10047 and prior internal builds. Use newest independently verified candidate if expired; do not mix Preview and internal packages in acceptance evidence.
 
-Before the consolidated session, compare installed package, signer and version with the candidate. If a disposable original-package installation has a different signer, use the isolated Preview channel or obtain explicit informed consent for a clean install; never silently remove app data. For the upgrade case, install verified internal A (10008), opt into a local identity and change theme, then install B (10009) over A without uninstalling. Confirm settings and identity survive on each device; record only pass/fail and redacted reason. Do not log actual peer identities.
+Before testing, compare package, signer and version against CI evidence privately. Never silently uninstall or clear data. For install-over use [internal 10047](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45767568128/artifacts/15093145795) or an earlier verified same-signer internal build, opt into local identity and change theme, then install 10048 over it. Confirm settings and identity survive on both phones. If already on 10048, do not downgrade; record upgrade NOT RUN until a newer signed candidate is available. If signing differs, stop and resolve without data loss. Record redacted outcomes only.
 
 Record each C01–C18 outcome independently for LAN, Bluetooth Classic and Wi-Fi Direct (54 cases). For a failure record candidate source/version, method, case, host/join role, Android major version, observed behavior and reproducibility, without messages, QR contents, audio or device identifiers. Prioritize authorization, microphone teardown, retention and disconnect failures before cosmetic issues. No result may be inferred from CI. This is preparation only; all physical cases remain NOT RUN.
 
@@ -219,3 +219,7 @@ evidence. Repair in a focused PR, require Android/JVM/security CI, retest
 the failed case plus C04/C05/C08/C11/C12 and the original method's C07,
 and update the work log. Prefer reusing the same verified APK/version across
 both phones; do not mix debug and release package or signing identity.
+
+### EC-R6–R9 reliability addendum — NOT RUN
+
+Within the existing C07/C08/C09/C10/C11/C12/C16/C17 cases on each method, exercise rapid disconnect/reconnect, concurrent messages, peer ACK versus local write labeling, released or expired talk requests, microphone/speaker startup cancellation and repeated turns. Use harmless content. Verify no stale session can affect the new session, no automatic resend/reconnect, no unexpected microphone or speaker activity after cancellation, and no controls stuck busy. Note cancellation latency and OEM-specific behavior without claiming precise timing unless measured. Stop on unexpected microphone activity, approval bypass or retention; preserve redacted observations. JVM queue tests are not physical connection cycles. Review runtime resource usage separately if instrumentation is available. All 54 physical outcomes remain NOT RUN.
