@@ -9,6 +9,8 @@ name: Eden Comms - installable offline Preview APK
 # installable field-test artifact with F4-Q speaker observations and prior fixes.
 # This is a debug-only packaging checkpoint, NOT hardware/security acceptance.
 # Same Preview package and pinned public AOSP test signer; debug-only.
+# EC-R10: run the integrated disconnected emulator suite on the consolidated
+# EC-R6–R9 reliability source after this reviewed checkpoint merges.
 on:
   workflow_dispatch:
   push:
