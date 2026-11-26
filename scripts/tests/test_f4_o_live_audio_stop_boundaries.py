@@ -80,6 +80,20 @@ class F4OAudioStopBoundaries(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, boundary)
 
+    def test_hardware_start_is_serialized_with_cancellation(self):
+        audio = AUDIO.read_text()
+        for segment in (audio.split("fun startCapture(", 1)[1].split("fun finishCapture(", 1)[0],
+                        audio.split("fun startLiveCapture(", 1)[1].split("fun acceptLiveFrame(", 1)[0]):
+            start = segment.split("recorder = source", 1)[1]
+            self.assertLess(start.index("source.startRecording()"), start.index("}"))
+            self.assertIn("context.checkSelfPermission", segment.split("recorder = source", 1)[0])
+        static = audio.split("fun playReceived(", 1)[1].split("fun startLiveCapture(", 1)[0]
+        self.assertIn("synchronized(lock) {\n                    if (token != generation || !playing) return@thread\n                    speaker.play()", static)
+        live = audio.split("private fun startLivePlayback(", 1)[1].split("fun cancelAll(", 1)[0]
+        self.assertIn("synchronized(lock) {\n                                    if (state.token == generation && !state.cancelled && playing) {\n                                        speaker.play()", live)
+        self.assertIn("if (!started) break", live)
+        self.assertIn("if (state.cancelled || state.token != generation) break\n                            val written = speaker.write", live)
+
     def test_release_and_approval_boundaries_remain_disabled(self):
         flags = (MAIN / "model/ReleaseCapabilities.kt").read_text()
         for name in ("CAN_CONNECT", "CAN_SEND_MESSAGES", "CAN_TRANSMIT_VOICE"):
