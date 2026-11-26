@@ -89,6 +89,18 @@ class F4VNearbyFloorLiveVoice(unittest.TestCase):
             self.assertIn(text, self.panel)
         self.assertIn("ActivityResultContracts.RequestPermission()", self.panel)
 
+    def test_floor_enqueue_and_close_share_admission_lock(self):
+        enqueue = self.channel.split("private fun enqueueFloor(", 1)[1].split("private fun failClosed(", 1)[0]
+        self.assertIn("= synchronized(monitor)", enqueue)
+        self.assertLess(enqueue.index("if (closed) return@synchronized false"),
+                        enqueue.index("outbound.offer(Pending(bytes))"))
+        self.assertIn("bytes.fill(0)", enqueue)
+        close = self.channel.split("override fun close()", 1)[1]
+        self.assertIn("synchronized(monitor)", close)
+        self.assertLess(close.index("closed = true"), close.index("outbound.poll()"))
+        self.assertIn("item.bytes.fill(0)", close)
+        self.assertIn("item.voiceClip?.fill(0)", close)
+
     def test_role_binding_is_same_authenticated_qr_and_dual_confirm(self):
         self.assertIn("isHost = request.hostRole", self.rfcomm)
         self.assertIn("isHost = request.hostRole", self.p2p)

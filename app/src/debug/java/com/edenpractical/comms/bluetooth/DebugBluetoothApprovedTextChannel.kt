@@ -214,11 +214,14 @@ internal class DebugBluetoothApprovedTextChannel(
         true
     }
 
-    private fun enqueueFloor(control: DebugLanVoiceFloorCodec.Frame): Boolean {
+    private fun enqueueFloor(control: DebugLanVoiceFloorCodec.Frame): Boolean = synchronized(monitor) {
+        // Reader responses share the same admission lock as UI offers and close.
+        // Never leave a control frame in the queue after close has drained it.
+        if (closed) return@synchronized false
         val bytes = DebugLanVoiceFloorCodec.encode(control)
-        if (outbound.offer(Pending(bytes))) return true
+        if (outbound.offer(Pending(bytes))) return@synchronized true
         bytes.fill(0)
-        return false
+        false
     }
 
     private fun failClosed() {
