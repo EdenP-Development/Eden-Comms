@@ -186,9 +186,11 @@ internal class DebugLanVoiceAudio(private val context: Context) {
                     track = speaker
                 }
                 if (speaker.write(copy, 0, copy.size) != copy.size) return@thread
-                if (token != generation || !playing) return@thread
-                speaker.play()
-                started = true
+                synchronized(lock) {
+                    if (token != generation || !playing) return@thread
+                    speaker.play()
+                    started = true
+                }
                 if (token == generation && playing) {
                     // Only say the local AudioTrack actually started, never
                     // claim someone heard the audio on the other handset.
@@ -394,11 +396,18 @@ internal class DebugLanVoiceAudio(private val context: Context) {
                             // canceled stream is already known to this thread.
                             if (state.cancelled || state.token != generation) break
                             if (!started) {
-                                speaker.play()
-                                started = true
+                                synchronized(lock) {
+                                    if (state.token == generation && !state.cancelled && playing) {
+                                        speaker.play()
+                                        started = true
+                                    }
+                                }
+                                if (!started) break
                                 if (state.token == generation && !state.cancelled)
                                     try { onPlaybackStarted(true) } catch (_: Exception) { }
                             }
+                            // Recheck after startup notification, which can trigger cancellation.
+                            if (state.cancelled || state.token != generation) break
                             val written = speaker.write(chunk, 0, chunk.size)
                             if (written != chunk.size) break
                         } finally { chunk.fill(0) }
