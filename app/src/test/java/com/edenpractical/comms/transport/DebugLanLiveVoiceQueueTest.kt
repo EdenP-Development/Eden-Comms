@@ -75,4 +75,24 @@ class DebugLanLiveVoiceQueueTest {
         assembled.clear()
         queue.clear()
     }
+
+    @Test fun repeatedTurnsCannotRetainOrResurrectOldQueuedFrames() {
+        var previous: DebugLanLiveVoiceQueue? = null
+        repeat(100) { n ->
+            val queue = DebugLanLiveVoiceQueue()
+            assertTrue(queue.offer(pcm(n)))
+            previous?.let {
+                assertFalse(it.offer(pcm(99)))
+                it.cancel()
+                assertTrue(it.isFinishedAndEmpty())
+            }
+            val frame = queue.poll()!!
+            assertEquals(n.toByte(), frame[0])
+            frame.fill(0)
+            assertTrue(queue.offer(pcm(77)))
+            queue.cancel()
+            assertTrue(queue.isFinishedAndEmpty())
+            previous = queue
+        }
+    }
 }

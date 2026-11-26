@@ -40,6 +40,18 @@ class ActualLanVoiceBurstBoundary(unittest.TestCase):
                           "AudioTrack", "BluetoothSocket", "WifiP2pManager"):
             self.assertNotIn(forbidden, frame)
 
+    def test_queued_pcm_has_shutdown_cleanup_independent_of_worker_finally(self):
+        lan = (MAIN / "transport/LanDemoSession.kt").read_text()
+        self.assertIn("private val pendingVoiceClip = AtomicReference<ByteArray?>(null)", lan)
+        self.assertIn("pendingVoiceClip.set(clip)", lan)
+        self.assertIn("pendingVoiceClip.compareAndSet(clip, null)", lan)
+        close = lan.split("override fun close()", 1)[1]
+        self.assertIn("pendingVoiceClip.getAndSet(null)?.fill(0)", close)
+        self.assertIn("liveVoice?.cancel()", close)
+        self.assertLess(close.index("stopped.compareAndSet(false, true)"),
+                        close.index("pendingVoiceClip.getAndSet(null)?.fill(0)"))
+        self.assertIn("liveVoice = handle\n        if (stopped.get() || ending.get())", lan)
+
     def test_recording_is_local_short_lived_explicit_and_foreground(self):
         ui = (MAIN / "pairing/LocalPairingTestScreen.kt").read_text()
         audio = (MAIN / "pairing/DebugLanVoiceAudio.kt").read_text()
