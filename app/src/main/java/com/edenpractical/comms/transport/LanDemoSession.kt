@@ -130,6 +130,7 @@ internal class LanDemoSession(
     private val debugTextReceive = DebugTextReceiveGuard()
     private val incomingVoice = DebugLanVoiceAssembler()
     private val voiceQueued = AtomicBoolean(false)
+    private val pendingVoiceClip = AtomicReference<ByteArray?>(null)
     private val nextVoiceTurn = AtomicLong(1L)
     private val peerVoiceActive = AtomicBoolean(false)
     @Volatile private var voiceFloor: DebugLanVoiceFloor? = null
@@ -670,6 +671,13 @@ internal class LanDemoSession(
             return VoiceSendResult.INVALID_AUDIO
         }
         val clip = input.copyOf()
+        pendingVoiceClip.set(clip)
+        if (stopped.get() || ending.get()) {
+            pendingVoiceClip.compareAndSet(clip, null)
+            clip.fill(0)
+            voiceQueued.set(false)
+            return VoiceSendResult.NOT_CONNECTED
+        }
         return try {
             writer.execute {
                 try {
@@ -705,6 +713,7 @@ internal class LanDemoSession(
                     emitTerminal(Phase.ENDED, LanDemoStatus.EndCode.LINK_INTERRUPTED)
                     close()
                 } finally {
+                    pendingVoiceClip.compareAndSet(clip, null)
                     clip.fill(0)
                     releaseWrittenVoiceFloor()
                     voiceQueued.set(false)
@@ -712,6 +721,7 @@ internal class LanDemoSession(
             }
             VoiceSendResult.QUEUED
         } catch (_: RuntimeException) {
+            pendingVoiceClip.compareAndSet(clip, null)
             clip.fill(0)
             voiceQueued.set(false)
             VoiceSendResult.NOT_CONNECTED
@@ -766,6 +776,12 @@ internal class LanDemoSession(
         val queue = DebugLanLiveVoiceQueue()
         val handle = LiveVoiceHandle(queue)
         liveVoice = handle
+        if (stopped.get() || ending.get()) {
+            queue.clear()
+            if (liveVoice === handle) liveVoice = null
+            voiceQueued.set(false)
+            return LiveVoiceStart(VoiceSendResult.NOT_CONNECTED)
+        }
         return try {
             writer.execute {
                 var sent = 0
@@ -1231,6 +1247,7 @@ internal class LanDemoSession(
         cancellationTimer.shutdownNow()
         floorWriter.shutdownNow()
         writer.shutdownNow()
+        pendingVoiceClip.getAndSet(null)?.fill(0)
         worker.shutdownNow()
         // Unlike the UI's posted terminal event, this runs immediately on
         // the closing thread. It never sends audio, restarts a session or
