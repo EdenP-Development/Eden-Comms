@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I06C automatic execution correction (2026-11-27)
+
+PR #239 merged db0ac737453039eecc53abab42cd90d01157d909; CI #655 and private signing #68 passed. Owner prefers automated GitHub workflows, not manual dispatch. Add main-only push path filters for upgrade workflow and harness, preserving manual fallback, exact historical pins, read-only permissions and no private secrets. Merge after PR CI to trigger first actual test automatically. U01–U08 still 0/8; no runtime change. Historical artifacts expire Nov 30. Retire or refresh pinned test inputs deliberately after evidence capture; no substitution. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
+
 ## EC-I06B upgrade harness checkpoint (2026-11-27)
 
 EC-I05 evidence PR #238 merged 1bc792dd5f76c20c969bc680965d9c7464122d79; hub 8ae606de52f3ea97b60b6fe1ecfe21c28a245996. Branch test/ec-i06-preview-upgrade adds pinned 200040 to 200043 Preview upgrade harness, manual main-only workflow and mock/static tests. Original archive IDs 15180578055 (expires Nov 30 07:47 UTC) and 15183588854 (Nov 30 08:50 UTC); workflow verifies both ZIP hashes and exact APK hashes, SDK signer, package/version before install. Run promptly after merge; expired artifacts block rather than substitute. U01–U08 planned execution only, U09/U10 not implemented. No uninstall between versions, no personal devices, no session/history/identity preservation claim. Internal 10062 remains recommended, physical 0/54, NO-SHIP. Next verify PR CI then dispatch manual workflow if available.
