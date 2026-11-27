@@ -1,0 +1,58 @@
+{
+  "source_commit": "9ff0e1074e4b2c9034d48dd2df4b0609eaf33bd0",
+  "workflow_run": 46068175201,
+  "job": 140738446273,
+  "artifact_id": 15230984633,
+  "artifact_zip_sha256": "4c117eb1bff13495d81353913b668164b221318131703fbcbc7b7f4b7c663069",
+  "artifact_expires_utc": "2026-11-30T21:11:05Z",
+  "zip_integrity": "SHA-256 independently matched; CRC passed",
+  "result": "PASS",
+  "cases": [
+    {
+      "id": "U01",
+      "result": "PASS"
+    },
+    {
+      "id": "U02",
+      "result": "PASS"
+    },
+    {
+      "id": "U03",
+      "result": "PASS"
+    },
+    {
+      "id": "U04",
+      "result": "PASS"
+    },
+    {
+      "id": "U05",
+      "result": "PASS"
+    },
+    {
+      "id": "U06",
+      "result": "PASS"
+    },
+    {
+      "id": "U07",
+      "result": "PASS"
+    },
+    {
+      "id": "U08",
+      "result": "PASS"
+    },
+    {
+      "id": "U09",
+      "result": "PASS"
+    }
+  ],
+  "package": "com.edenpractical.comms.preview",
+  "previous": 200040,
+  "successor": 200043,
+  "scope": "appearance, disconnected Home and alternate-signer rejection only; no identity/history/physical acceptance",
+  "limitations": [
+    "Equal-version alternate signer; not a downgrade test",
+    "No prior active session established",
+    "Original-package physical upgrade and encrypted data preservation untested",
+    "Permanent owner custody pending"
+  ]
+}

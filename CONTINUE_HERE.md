@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I07 actual Android signer rejection passed (2026-11-27)
+
+Exact source 9ff0e1074e4b2c9034d48dd2df4b0609eaf33bd0; Android #661, private signing #71 and automatic upgrade QA #2 passed. Run 46068175201 job 140738446273 artifact 15230984633 independently downloaded and SHA-256/ZIP CRC verified; summary U01–U09 all PASS. Alternate temporary signer with same Preview package and equal version rejected with expected Android error; existing version and appearance storage survived restart. See docs/evidence/preview-200043-signer-rejection.json. No original-package physical or cryptographic identity/history acceptance; no previous active session established. Historical inputs expire Nov 30 07:47/08:50 UTC; do not silently substitute. Next EC-I08 inspect identity and encrypted data stores and design safe synthetic fixtures, refresh or retire historical workflow pins as appropriate. Internal 10062 remains recommended; physical 0/54; permanent owner custody and independent security pending. NO-SHIP.
+
 ## EC-I06D actual Preview upgrade passed (2026-11-27)
 
 Exact source 71a2a7bde282e4de846a350dde867073e2f36521; Android #657, private signing #69 and automatic upgrade QA #1 passed. Run 46054922380 job 140694960262 artifact 15225627950 independently downloaded and ZIP SHA-256/CRC checked; summary U01–U08 all PASS. Preview 200040 to 200043 in-place installation preserved appearance storage and cold restart; disconnected Home observed, no prior active session established. See docs/evidence/preview-200040-to-200043-upgrade.json. U09 incompatible signer and U10 identity/history remain untested. Original-package internal 10062 remains recommended, physical 0/54, permanent custody and independent security pending. NO-SHIP. Next verify evidence PR, then retire historical artifact auto-trigger deliberately before expiry or refresh with new pinned inputs. No manual owner action required.
