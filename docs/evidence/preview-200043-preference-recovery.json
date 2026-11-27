@@ -1,0 +1,53 @@
+{
+  "source_commit": "2d55ba08b297d81be4fb667cbaa6a23eb4c3fdff",
+  "preview_version_code": 200043,
+  "package": "com.edenpractical.comms.preview",
+  "workflow_run": 45968467151,
+  "recovery_job": 140403957404,
+  "artifact_id": 15184317086,
+  "zip_sha256": "fef25c1dd93da840ef3f59830a3083308ef479dbb3aaf33d19a5c901edd79d8c",
+  "zip_integrity": "passed locally",
+  "result": "PASS",
+  "cases": [
+    {
+      "name": "missing",
+      "result": "PASS",
+      "restart": true,
+      "unchanged": true
+    },
+    {
+      "name": "valid",
+      "result": "PASS",
+      "restart": true,
+      "unchanged": true
+    },
+    {
+      "name": "wrong-palette",
+      "result": "PASS",
+      "restart": true,
+      "unchanged": true
+    },
+    {
+      "name": "wrong-dark",
+      "result": "PASS",
+      "restart": true,
+      "unchanged": true
+    },
+    {
+      "name": "both-wrong",
+      "result": "PASS",
+      "restart": true,
+      "unchanged": true
+    },
+    {
+      "name": "explicit-recovery",
+      "result": "PASS"
+    }
+  ],
+  "scope": "synthetic appearance only; no physical or security acceptance",
+  "limitations": [
+    "MainActivity only; nearby activity not independently exercised",
+    "No real-device or upgrade preservation evidence",
+    "Permanent owner custody pending"
+  ]
+}
