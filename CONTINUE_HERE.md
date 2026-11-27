@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-B10–B11 checkpoint (2026-11-27)
+
+PR #228 merged 4b7cbc3beacef3240364ef3afce27a3d20cd4956 after CI #630. Professional storefront preparation complete as documentation only. See docs/BETA_1_RELEASE_AUTHORIZATION.md for explicit NO-SHIP disposition and execution backlog; EC-B11 preparation CI pending. Next focused runtime work: EDT-01 non-sensitive appearance wrong-type preference fix, with regression tests; preserve frozen internal 10049 and previous 10048 until a verified successor is selected. Archive bytes/owner recovery, physical 0/54, independent security, production packaging and actual support/privacy/storefront authorization remain open. No publication.
+
 ## EC-B09–B10 checkpoint (2026-11-27)
 
 PR #227 merged 0a1b3b2796696dbae160903409f31ac0282a7338 after CI #628; independent reviewer brief prepared only. EC-B10 professional distribution preparation in docs/PROFESSIONAL_STOREFRONT_READINESS.md; channel, pricing, legal publisher/contact and live policy verification deferred. Internal 10049 remains frozen, 10048 predecessor; physical 0/54, independent review, actual archive/owner signer recovery, release packaging and support/privacy activation remain open. Next EC-B11 exact-artifact authorization gate preparation; no publication or runtime changes.
