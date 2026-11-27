@@ -23,6 +23,11 @@ class PreferenceRecoveryTest(unittest.TestCase):
             self.assertEqual(module.parse_apk_badging(badging)["application_id"], module.PACKAGE)
         self.assertNotEqual(module.parse_apk_badging("package: name='com.edenpractical.comms' versionCode='11' versionName='debug'")["application_id"], module.PACKAGE)
         self.assertEqual(module.PREF, "shared_prefs/eden_comms_ui.xml")
+        self.assertFalse(module.package_installed("package:android\npackage:com.edenpractical.comms.preview.other\n"))
+        self.assertTrue(module.package_installed("package:android\npackage:com.edenpractical.comms.preview\n"))
+        for invalid in ("", "error: device offline", "package:android\nerror"):
+            with self.assertRaises(RuntimeError):
+                module.package_installed(invalid)
         self.assertEqual(len(module.CASES), 5)
         for name, body, palette, dark in module.CASES:
             root = ET.fromstring(module.fixture(body))
@@ -33,7 +38,7 @@ class PreferenceRecoveryTest(unittest.TestCase):
 
     def test_isolation_guards_and_independent_job(self):
         s = DRIVER.read_text()
-        for token in ("ui.require_emulator()", "parse_apk_badging(badging)", "Refusing non-Preview APK",
+        for token in ("ui.require_emulator()", "if preview_installed():", "if not preview_installed():", "parse_apk_badging(badging)", "Refusing non-Preview APK",
                       "Preview APK checksum mismatch", "Preview already installed",
                       'ui.adb("install", str(apk)', 'if read_prefs() != before:',
                       'if installed:', 'ui.adb("uninstall", PACKAGE)'):
