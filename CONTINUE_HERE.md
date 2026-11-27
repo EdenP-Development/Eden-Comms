@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I06D actual Preview upgrade passed (2026-11-27)
+
+Exact source 71a2a7bde282e4de846a350dde867073e2f36521; Android #657, private signing #69 and automatic upgrade QA #1 passed. Run 46054922380 job 140694960262 artifact 15225627950 independently downloaded and ZIP SHA-256/CRC checked; summary U01–U08 all PASS. Preview 200040 to 200043 in-place installation preserved appearance storage and cold restart; disconnected Home observed, no prior active session established. See docs/evidence/preview-200040-to-200043-upgrade.json. U09 incompatible signer and U10 identity/history remain untested. Original-package internal 10062 remains recommended, physical 0/54, permanent custody and independent security pending. NO-SHIP. Next verify evidence PR, then retire historical artifact auto-trigger deliberately before expiry or refresh with new pinned inputs. No manual owner action required.
+
 ## EC-I06C automatic execution correction (2026-11-27)
 
 PR #239 merged db0ac737453039eecc53abab42cd90d01157d909; CI #655 and private signing #68 passed. Owner prefers automated GitHub workflows, not manual dispatch. Add main-only push path filters for upgrade workflow and harness, preserving manual fallback, exact historical pins, read-only permissions and no private secrets. Merge after PR CI to trigger first actual test automatically. U01–U08 still 0/8; no runtime change. Historical artifacts expire Nov 30. Retire or refresh pinned test inputs deliberately after evidence capture; no substitution. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
