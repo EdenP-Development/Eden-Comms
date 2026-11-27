@@ -1,0 +1,54 @@
+{
+  "source_commit": "71a2a7bde282e4de846a350dde867073e2f36521",
+  "workflow_run": 46054922380,
+  "job": 140694960262,
+  "artifact_id": 15225627950,
+  "artifact_zip_sha256": "16195d2a45290bdc4e602ac05462cf2d2b05917415a61709e6a4d04d3b604efd",
+  "artifact_expires_utc": "2026-11-30T19:15:11Z",
+  "zip_integrity": "SHA-256 matched and CRC passed independently",
+  "result": "PASS",
+  "cases": [
+    {
+      "id": "U01",
+      "result": "PASS"
+    },
+    {
+      "id": "U02",
+      "result": "PASS"
+    },
+    {
+      "id": "U03",
+      "result": "PASS"
+    },
+    {
+      "id": "U04",
+      "result": "PASS"
+    },
+    {
+      "id": "U05",
+      "result": "PASS"
+    },
+    {
+      "id": "U06",
+      "result": "PASS"
+    },
+    {
+      "id": "U07",
+      "result": "PASS"
+    },
+    {
+      "id": "U08",
+      "result": "PASS"
+    }
+  ],
+  "package": "com.edenpractical.comms.preview",
+  "previous": 200040,
+  "successor": 200043,
+  "scope": "appearance and disconnected Home only; no identity/history/physical acceptance",
+  "limitations": [
+    "U09 incompatible signer rejection and U10 identity/history preservation not executed",
+    "Disconnected Home test did not establish prior active session",
+    "Original-package physical upgrade not tested",
+    "Permanent owner custody pending"
+  ]
+}
