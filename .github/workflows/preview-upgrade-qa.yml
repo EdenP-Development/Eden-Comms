@@ -1,6 +1,11 @@
 name: EC-I06 Preview upgrade QA
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/preview-upgrade-qa.yml'
+      - 'scripts/emulator_preview_upgrade.py'
 
 permissions:
   contents: read
