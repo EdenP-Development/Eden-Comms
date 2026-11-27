@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I08A encrypted upgrade contract (2026-11-27)
+
+EC-I07 PR #243 merged 008d72a18ecfd341a1b74790378948a59fb5b5c2; hub 596dbe2c83768c6271c662e344464bb6d3485bea. Audited actual AndroidKeystoreIdentity, debug and release history/peer stores and both policies. See docs/ENCRYPTED_UPGRADE_ACCEPTANCE.md for E01–E09 NOT RUN, semantic rather than ciphertext comparison, session-only default, independent destructive fixtures, test-only instrumentation and no release activation. Next inspect test/UI infrastructure and implement real identity continuity first; refresh/retire expiring historical workflow pins. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
+
 ## EC-I07 actual Android signer rejection passed (2026-11-27)
 
 Exact source 9ff0e1074e4b2c9034d48dd2df4b0609eaf33bd0; Android #661, private signing #71 and automatic upgrade QA #2 passed. Run 46068175201 job 140738446273 artifact 15230984633 independently downloaded and SHA-256/ZIP CRC verified; summary U01–U09 all PASS. Alternate temporary signer with same Preview package and equal version rejected with expected Android error; existing version and appearance storage survived restart. See docs/evidence/preview-200043-signer-rejection.json. No original-package physical or cryptographic identity/history acceptance; no previous active session established. Historical inputs expire Nov 30 07:47/08:50 UTC; do not silently substitute. Next EC-I08 inspect identity and encrypted data stores and design safe synthetic fixtures, refresh or retire historical workflow pins as appropriate. Internal 10062 remains recommended; physical 0/54; permanent owner custody and independent security pending. NO-SHIP.
