@@ -4,6 +4,9 @@ import argparse
 import json
 from pathlib import Path
 import shlex
+import hashlib
+import re
+import os
 import xml.etree.ElementTree as ET
 import emulator_visual_qa as ui
 
@@ -58,6 +61,17 @@ def observe(palette, dark):
 
 def run(apk, output):
     ui.require_emulator()
+    # Bind to the workflow-provided APK and checksum before installation.
+    # Verify package using trusted Android SDK aapt before installation.
+    sdk = Path(os.environ['ANDROID_HOME'])
+    aapt = sdk / 'build-tools/36.0.0/aapt'
+    import subprocess
+    badging = subprocess.run([str(aapt), 'dump', 'badging', str(apk)], check=True, capture_output=True, text=True).stdout
+    if not re.search(r"^package: name='com\\.edenpractical\\.comms\\.preview' ", badging, re.M):
+        raise RuntimeError('Refusing non-Preview APK')
+    expected = apk.with_name(apk.name + '.sha256').read_text().split()[0]
+    if not re.fullmatch(r'[0-9a-f]{64}', expected) or hashlib.sha256(apk.read_bytes()).hexdigest() != expected:
+        raise RuntimeError('Preview APK checksum mismatch')
     ui.PACKAGE = PACKAGE
     ui.ACTIVITY = PACKAGE + "/com.edenpractical.comms.MainActivity"
     # Require a fresh disposable install: never clear or replace an existing app.
