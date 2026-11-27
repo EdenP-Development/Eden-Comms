@@ -2,6 +2,7 @@
 import sys
 from pathlib import Path
 import unittest
+import subprocess
 from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -43,3 +44,20 @@ class PreviewUpgradeTest(unittest.TestCase):
         self.assertNotIn('"pm", "clear"', s)
         self.assertEqual(s.count('ui.adb("uninstall", PACKAGE)'), 1)
         self.assertGreater(s.index('ui.adb("uninstall", PACKAGE)'), s.index("finally:"))
+
+    def test_signature_rejection_requires_specific_android_error(self):
+        for diagnostic, accepted in (
+            ("Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: signatures do not match]", True),
+            ("Failure [INSTALL_FAILED_VERSION_DOWNGRADE]", False),
+            ("device offline", False),
+        ):
+            error = subprocess.CalledProcessError(1, ["adb"], output="", stderr=diagnostic)
+            with patch.object(upgrade.ui, "adb", side_effect=error):
+                if accepted:
+                    upgrade.require_signature_rejection(Path("negative.apk"))
+                else:
+                    with self.assertRaises(AssertionError):
+                        upgrade.require_signature_rejection(Path("negative.apk"))
+        with patch.object(upgrade.ui, "adb", return_value="Success"):
+            with self.assertRaises(AssertionError):
+                upgrade.require_signature_rejection(Path("negative.apk"))
