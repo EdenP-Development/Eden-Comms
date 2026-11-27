@@ -422,6 +422,9 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
         val titleLines = TopBarLayout.maxTitleLines(
             maxWidth.value, LocalDensity.current.fontScale
         )
+        val publisherLines = TopBarLayout.maxPublisherLines(
+            maxWidth.value, LocalDensity.current.fontScale
+        )
         Row(
             modifier = Modifier.fillMaxWidth()
                 .heightIn(min = 64.dp)
@@ -453,7 +456,7 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
                         "EDEN PRACTICAL SOLUTIONS",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = TopBarLayout.maxPublisherLines(maxWidth.value, LocalDensity.current.fontScale),
+                        maxLines = publisherLines,
                         softWrap = true,
                         overflow = TextOverflow.Ellipsis
                     )
