@@ -13,10 +13,12 @@ internal fun NearbyAppearance(content: @Composable () -> Unit) {
     val preferences = remember(context) {
         context.getSharedPreferences("eden_comms_ui", Context.MODE_PRIVATE)
     }
-    val palette = AppearancePreference.resolve(
-        preferences.getString("appearance_palette", null), preferences.contains("dark_theme")
+    val selection = AppearanceSelection.read(
+        { preferences.getString("appearance_palette", null) },
+        preferences.contains("dark_theme"),
+        { preferences.getBoolean("dark_theme", true) }
     )
-    CompositionLocalProvider(LocalAppearance provides palette) {
-        MaterialTheme(colorScheme = appearanceColors(palette, preferences.getBoolean("dark_theme", true)), content = content)
+    CompositionLocalProvider(LocalAppearance provides selection.palette) {
+        MaterialTheme(colorScheme = appearanceColors(selection.palette, selection.darkMode), content = content)
     }
 }
