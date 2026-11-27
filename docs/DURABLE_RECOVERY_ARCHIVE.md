@@ -19,3 +19,18 @@
 
 ## Status
 Metadata inventory complete; local downloads, independent ZIP/APK verification, actual durable storage, source/branding recovery, owner signer recovery and restore drill pending. Physical 0/54; independent security and release authorization remain open.
+
+## EC-I03 recovery results — 2026-11-27
+Seven exact original ZIPs downloaded through Actions; local SHA-256 compared to previously recorded Actions digests, ZIP CRC checked, five embedded APK hashes compared to prior CI receipts. All matched. Identity JSON read back; no independent apksigner/aapt available. All five APKs measured 17722719 bytes. Temporary working copies only; no durable owner storage, independent restore or signing-key recovery verified.
+
+| Artifact | ZIP bytes | SHA-256 (observed = expected) |
+|---|---:|---|
+| Internal 10048 | 16833427 | c9a3e1977a6c1dd1f696a550b87c37233544970658cb699a79479867ce35791d |
+| Internal 10049 | 16833640 | 57da6c481390825661508bedfe623cd50a734c337d0a79db3c78b03b0e051b3a |
+| Internal 10059 | 16836584 | e112ba75b0dcf7b300c9631afc87b50334203d900bcbfcc2938d46bbc535ebb5 |
+| Preview 200038 | 16833757 | 94fa25c12f0decd7a992ac4c3c0cb34375b3be858c41246bf63063ad82c8517f |
+| Preview 200039 | 16836791 | a441567606f8e713623c3c22d07fa40f49c80967f03b1799611717fe9046e6ce |
+| Visual 200038 (28 PNG) | 4568283 | 5f2a158c26e34c98d49889e2b9576d7a7d337bf1498b9b1384196347f7805c6c |
+| Visual 200039 (28 PNG) | 4542700 | 985c0a842672a2c6a9e6669ebefbaa87f6b2c3b06dc85b2487c1715bc5f15da1 |
+
+New artifact URLs/expiry and APK hashes in [10059 receipt](evidence/internal-10059-receipt.json). Preserve privately on two independent encrypted locations; rehash after transfer. Physical 0/54, qualitative visual review, source/branding restoration, independent security and release gates still open. No public distribution.
