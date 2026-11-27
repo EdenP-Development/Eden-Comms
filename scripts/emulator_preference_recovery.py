@@ -21,6 +21,17 @@ CASES = (
     ("both-wrong", '<int name="appearance_palette" value="7"/><string name="dark_theme">bad</string>', "Field Green", True),
 )
 
+def package_installed(listing):
+    # Use a successful package inventory, not pm path's absent-package exit code.
+    # A malformed inventory must never authorize a fresh installation.
+    rows = listing.splitlines()
+    if not rows or any(not re.fullmatch(r"package:[A-Za-z0-9_.]+", row) for row in rows):
+        raise RuntimeError("Unexpected Android package inventory")
+    return "package:" + PACKAGE in rows
+
+def preview_installed():
+    return package_installed(ui.adb("shell", "pm", "list", "packages"))
+
 def read_prefs():
     return ui.adb("shell", "run-as", PACKAGE, "cat", PREF)
 
@@ -76,7 +87,7 @@ def run(apk, output):
     ui.PACKAGE = PACKAGE
     ui.ACTIVITY = PACKAGE + "/com.edenpractical.comms.MainActivity"
     # Require a fresh disposable install: never clear or replace an existing app.
-    if ui.adb("shell", "pm", "path", PACKAGE).strip():
+    if preview_installed():
         raise RuntimeError("Preview already installed; use a fresh disposable emulator")
     output.mkdir(parents=True, exist_ok=True)
     report = {"package": PACKAGE, "result": "INCOMPLETE", "cases": [],
@@ -85,7 +96,7 @@ def run(apk, output):
     try:
         ui.adb("install", str(apk), timeout=90)
         installed = True
-        if not ui.adb("shell", "pm", "path", PACKAGE).strip():
+        if not preview_installed():
             raise AssertionError("Expected isolated Preview package absent")
         ui.configure()
         for name, body, palette, dark in CASES:
