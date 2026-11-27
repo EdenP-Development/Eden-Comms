@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I05C first emulator attempt (2026-11-27)
+
+Exact main 2f87849642aea34da34b623925c052eb4b1a8624: Android #647 and private signing #64 passed. Preview #41 build passed; recovery job 140389490277 failed closed before installation at APK identity preflight. Source regex had doubled escapes; reuse existing audit_apk_identity.parse_apk_badging and exact package comparison, with whitespace and original-package negative tests. No actual preference cases executed. Visual job was still running. Revised PR CI pending; no runtime or security capability changes; 10062 remains recommended, physical 0/54, NO-SHIP.
+
 ## EC-I05B regression checkpoint (2026-11-27)
 
 PR #235 CI #645 failed in Python repository-transfer contract: two protected Preview jobs expected, now three. Application unit/build stage passed. Updated contract to require exact job set and exact org/main guard per job, retaining public signer and no-secrets assertions. Revised CI pending; actual Android preference recovery not run. No runtime or security boundary change. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
