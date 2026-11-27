@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-B07–B09 checkpoint (2026-11-27)
+
+PR #225 merged 02b0fb0cff04078787c01a20676c88fa8ccaba17 (CI #624); PR #226 merged 3e67b46bd52aa27c1ea781ae255a9d0b03a9ad14 (CI #625). Hub registry c62e6210dd07e077ba731ee9b984cb28dbcefc90 and recovery guide 39bdd6c134d9a80a4468f62057fc31f80e7777be reconciled. See docs/DURABLE_RECOVERY_ARCHIVE.md, docs/TWO_PHONE_ACCEPTANCE_MATRIX.md, docs/INDEPENDENT_SECURITY_REVIEW_BRIEF.md. Internal 10049 frozen, predecessor 10048; physical 0/54, archive custody/byte checks, owner signer recovery, independent review and production release gates all pending. EC-B09 reviewer scope prepared only. Next verify CI and proceed to EC-B10 preparation without publishing or changing runtime.
+
 ## EC-B07 recovery checkpoint (2026-11-27)
 
 PR #224 merged d881a394f23eed2e13a95e5cefacb617ca071737 after CI #622. See docs/DURABLE_RECOVERY_ARCHIVE.md for verified live artifact inventory and owner recovery drill. Visual evidence expires Nov 28 09:30 UTC, Preview Nov 29, internal 10048/10049 Dec 3. Download privately before expiry. Archive custody, independent byte checks, source/branding restore and signer recovery NOT RUN; no runtime change or publication. Next complete durable archive evidence and EC-B08 physical matrix (0/54), then independent security and storefront/release gates.
