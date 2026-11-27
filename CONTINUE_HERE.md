@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-B09–B10 checkpoint (2026-11-27)
+
+PR #227 merged 0a1b3b2796696dbae160903409f31ac0282a7338 after CI #628; independent reviewer brief prepared only. EC-B10 professional distribution preparation in docs/PROFESSIONAL_STOREFRONT_READINESS.md; channel, pricing, legal publisher/contact and live policy verification deferred. Internal 10049 remains frozen, 10048 predecessor; physical 0/54, independent review, actual archive/owner signer recovery, release packaging and support/privacy activation remain open. Next EC-B11 exact-artifact authorization gate preparation; no publication or runtime changes.
+
 ## EC-B07–B09 checkpoint (2026-11-27)
 
 PR #225 merged 02b0fb0cff04078787c01a20676c88fa8ccaba17 (CI #624); PR #226 merged 3e67b46bd52aa27c1ea781ae255a9d0b03a9ad14 (CI #625). Hub registry c62e6210dd07e077ba731ee9b984cb28dbcefc90 and recovery guide 39bdd6c134d9a80a4468f62057fc31f80e7777be reconciled. See docs/DURABLE_RECOVERY_ARCHIVE.md, docs/TWO_PHONE_ACCEPTANCE_MATRIX.md, docs/INDEPENDENT_SECURITY_REVIEW_BRIEF.md. Internal 10049 frozen, predecessor 10048; physical 0/54, archive custody/byte checks, owner signer recovery, independent review and production release gates all pending. EC-B09 reviewer scope prepared only. Next verify CI and proceed to EC-B10 preparation without publishing or changing runtime.
