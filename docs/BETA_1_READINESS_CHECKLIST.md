@@ -1,5 +1,9 @@
 # Beta 1 readiness checklist
 
+## EC-B04 rights inventory checkpoint (2026-11-27)
+
+PR #221 merged c25dda7ca010aab80e6aa4e3c0fca4ff4e2907fe after CI #616. [Asset rights register](ASSET_RIGHTS_REGISTER.md) records EPS and product artwork, native icons, code and direct dependencies. Initial source inventory only; actual resolved SBOM, notices, creator/terms evidence, trademark review and exact release clearance pending. Next EC-B05 support/security reporting. No runtime or license changes.
+
 ## EC-R10 / EC-B01–B03 checkpoint (2026-11-27)
 
 EC-R10 merged #220 at 50b506a71548be32d3c82a513f7f3bef1e7b8b45; main Android 45791275292, private signing 45791275284 and integrated Preview 45791275281 passed. 442 Python checks and 28 disconnected screenshots. [Internal 10049](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45791275284/artifacts/15102478507) expires Dec 3; [Preview evidence](https://github.com/EdenP-Development/Eden-Comms/actions/runs/45791275281/artifacts/15103426213) expires Nov 28. See docs/evidence/internal-10049-receipt.json, docs/DATA_HANDLING_REGISTER.md, docs/drafts/EDEN_COMMS_PRIVACY_POLICY_WORKING_DRAFT.md. Hub PORT-10/BUS-03 templates applied; draft not published. Physical 0/54, owner signer recovery, actual upgrade, independent security, archive byte verification and release rights/data audit remain pending. Next EC-B04 asset/dependency rights inventory, EC-B05 support/privacy reporting, EC-B06 bounded toolkit review, EC-B07 recovery/archive, EC-B08 physical upgrade and acceptance, EC-B09 security review, EC-B10 storefront and EC-B11 exact-artifact authorization. No runtime changes or publication.
