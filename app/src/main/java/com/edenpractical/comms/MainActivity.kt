@@ -453,7 +453,8 @@ private fun TopBar(page: String, onBack: () -> Unit, sessionActive: Boolean = fa
                         "EDEN PRACTICAL SOLUTIONS",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
+                        maxLines = TopBarLayout.maxPublisherLines(maxWidth.value, LocalDensity.current.fontScale),
+                        softWrap = true,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
