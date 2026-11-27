@@ -29,11 +29,13 @@ class PreviewUpgradeTest(unittest.TestCase):
                     with self.assertRaises(RuntimeError):
                         upgrade.inspect_pinned(Path("unused"), 200040)
 
-    def test_manual_workflow_and_no_intermediate_reset(self):
+    def test_scoped_workflow_and_no_intermediate_reset(self):
         w = (ROOT / ".github/workflows/preview-upgrade-qa.yml").read_text()
         for token in ("workflow_dispatch:", "refs/heads/main", "actions: read", "15180578055", "15183588854", "sha256sum -c -", "emulator_preview_upgrade.py"):
             self.assertIn(token, w)
-        for token in ("  push:", "  pull_request:", "  schedule:", "secrets."):
+        self.assertIn("  push:\n    branches: [main]\n    paths:\n      - '.github/workflows/preview-upgrade-qa.yml'\n      - 'scripts/emulator_preview_upgrade.py'\n", w)
+        self.assertIn("github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'", w)
+        for token in ("  pull_request:", "  pull_request_target:", "  schedule:", "secrets."):
             self.assertNotIn(token, w)
         s = (ROOT / "scripts/emulator_preview_upgrade.py").read_text()
         for token in ("ui.require_emulator()", "recovery.preview_installed()", "compare_to_previous(new, old)", 'ui.adb("install", "-r", str(successor)', 'if owned:', 'ui.adb("uninstall", PACKAGE)'):
