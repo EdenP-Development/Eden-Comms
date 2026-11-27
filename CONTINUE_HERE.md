@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I05B regression checkpoint (2026-11-27)
+
+PR #235 CI #645 failed in Python repository-transfer contract: two protected Preview jobs expected, now three. Application unit/build stage passed. Updated contract to require exact job set and exact org/main guard per job, retaining public signer and no-secrets assertions. Revised CI pending; actual Android preference recovery not run. No runtime or security boundary change. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
+
 ## EC-I05A Android recovery harness (2026-11-27)
 
 PR #234 merged 0ca94f5a5904c2f4d6c08bcc028c447179baab1f after CI #643; central registry ded15d41128c2a47f19315df85b95c01efd44c14 reconciled. Branch test/ec-i05a-android-preference-recovery updates physical matrix to 10062/10059 and adds scripts/emulator_preference_recovery.py plus separate fresh Preview emulator job. Fixed package/path, emulator guard, APK package/hash preflight, refuse existing Preview, synthetic settings only; five scenarios twice cold launched and explicit recovery planned. Two Python contract tests added. CI and actual Android recovery execution pending; no runtime changes, no NearbyAppearance-specific UI coverage yet, no physical acceptance or candidate promotion. Next verify PR CI, then exact main Preview recovery job and summary; fix observed harness issues rather than alter app without evidence. Physical 0/54 and independent security remain open; NO-SHIP.
