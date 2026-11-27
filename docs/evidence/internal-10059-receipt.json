@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "app": "Eden Comms",
+  "channel": "original-package internal QA (debug, private signer)",
+  "source_commit": "68e81d53edc42117a93e1c7edd9d36f5a3cff915",
+  "package_id": "com.edenpractical.comms",
+  "version_code": 10059,
+  "version_name": "0.2.12-internal-10059",
+  "certificate_sha256": "dad2159585f8bc804c47de056bf8a2c2f546ad25893cb64e0448eb0cf8676d06",
+  "apk_sha256": "057f2161caacdf5f18732b1aa1bf67f968247f602e58ade40edb4aac88c84447",
+  "apk_size_bytes": null,
+  "artifact_url": "https://github.com/EdenP-Development/Eden-Comms/actions/runs/45955191768/artifacts/15178756017",
+  "artifact_zip_sha256": "e112ba75b0dcf7b300c9631afc87b50334203d900bcbfcc2938d46bbc535ebb5",
+  "artifact_expires_utc": "2026-12-04T06:59:22Z",
+  "previous_version_code": 10049,
+  "previous_apk_sha256": "978f72ddfa91cb86e43618d5d3950c515ca321a619c09438e4c3e6eb99434e4e",
+  "previous_receipt": "internal-10049-receipt.json",
+  "tests": [
+    {
+      "scope": "Exact main Android debug checks, 442 Python tests",
+      "result": "passed",
+      "run": 45955191784
+    },
+    {
+      "scope": "Private signing and 442 Python tests",
+      "result": "passed",
+      "run": 45955191768
+    },
+    {
+      "scope": "Separate Preview 200039, disconnected emulator 28 screenshots",
+      "result": "passed",
+      "run": 45955191761
+    }
+  ],
+  "preview": {
+    "package_id": "com.edenpractical.comms.preview",
+    "version_code": 200039,
+    "certificate_sha256": "a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc",
+    "apk_sha256": "240246b091190475858eb79e33608db8b30639e243d7ec274ed8d49b20cf964a",
+    "artifact": 15178531709,
+    "artifact_zip_sha256": "a441567606f8e713623c3c22d07fa40f49c80967f03b1799611717fe9046e6ce",
+    "expires_utc": "2026-11-30T06:59:20Z",
+    "visual_artifact": 15179285729,
+    "visual_zip_sha256": "985c0a842672a2c6a9e6669ebefbaa87f6b2c3b06dc85b2487c1715bc5f15da1",
+    "visual_expires_utc": "2026-11-29T07:06:23Z"
+  },
+  "evidence_scope": "Workflow job logs and artifact metadata, no independent byte verification",
+  "physical_install_over_verified": false,
+  "physical_cases_passed": 0,
+  "owner_approved": false,
+  "publication_status": "not_published",
+  "deferred_checks": [
+    "Independent archive bytes and signer recovery",
+    "Actual Android malformed preference injection",
+    "Physical acceptance and qualitative screenshot inspection",
+    "Independent security and production packaging"
+  ]
+}

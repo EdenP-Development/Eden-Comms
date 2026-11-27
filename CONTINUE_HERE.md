@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I02 successor checkpoint (2026-11-27)
+
+PR #230 merged 68e81d53edc42117a93e1c7edd9d36f5a3cff915 after CI #634. Main Android #635, private signing #59 and integrated Preview #39 passed; logs report 442 Python tests and 28 disconnected screenshots. See docs/evidence/internal-10059-receipt.json. Internal 10059 is recommended successor for controlled physical QA, same package/signer as 10049, higher version; preserve 10049 as upgrade predecessor and historical evidence. No actual install-over, malformed Android preference exercise, independent archive bytes or qualitative screenshot review yet. Physical 0/54; NO-SHIP. Next EC-I03 preserve original artifacts privately before expiration, reconcile physical matrix and central registry after receipt review. No production change or publication.
+
 ## EC-I01 implementation checkpoint (2026-11-27)
 
 EC-B11 PR #229 merged 0b793e1aa08c6a928d12a1ca51a14b8dcf28af9d after CI #632. All preparation checkpoints merged, NO-SHIP remains. EC-I01 branch fix/ec-i01-appearance-preference-types adds shared read-only AppearanceSelection fallback for the two UI preference reads in MainActivity and NearbyAppearance; catches only ClassCastException, preserves presence-based migration and valid values, no automatic writes or security changes. Seven JVM regression methods added; CI pending, actual Android malformed-preference tests not run. Frozen internal 10049 remains physical reference until verified successor selected. Next verify exact-head CI, inspect resulting signed/Preview evidence after merge, and preserve exact archives. Physical 0/54, signer recovery, independent security and production gates open.
