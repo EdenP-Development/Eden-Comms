@@ -16,10 +16,10 @@ Nearby one-to-one text and short PTT on same Wi-Fi, Bluetooth Classic and Wi-Fi 
 | Physical functionality | C01-C18 on each transport, both phones, swap roles where practical; record failures and retest fixes | NOT RUN |
 | Security/privacy | Independent protocol/crypto review, tampering and spoofing negatives, local network capture with WAN on/off, backup/restore and retention review; no open high/critical defects | NOT RUN / NO-SHIP |
 | Release engineering | Review non-debug beta variant, package/signing continuity, minimal permissions, dependency/license/SBOM, checksum, changelog, rollback, secure backup recovery | Open |
-| Publication | Owner approves exact tested release candidate and itch page, accurate limitations and supported devices, issue/report route | Not authorized |
+| Publication | Owner approves exact tested release candidate and selected professional distribution listing, accurate limitations and supported devices, issue/report route | Not authorized |
 
 Do not waive security gates by calling the app beta. Private/internal evaluation with harmless test content is separate from public distribution. If public functional beta is blocked, discuss a clearly disconnected public preview or continued controlled QA, not a disguised debug release.
 
 ## Workflow
 
-Finish EC-R4 and EC-R5 against real source. Freeze feature scope and consolidate one two-phone session using [acceptance matrix](TWO_PHONE_ACCEPTANCE_MATRIX.md); prioritize safety failures over cosmetics. Maintain [handoff](CURRENT_HANDOFF.md), [work log](WORK_LOG.md) and central registry. Record exact candidate SHA and actual evidence, not a speculative percentage or calendar promise. Prepare itch copy/assets only after scope and candidate are known. No automatic public publishing.
+EC-R6–R10 automated verification completed; see current handoff and internal 10049 receipt. Physical UX and reliability remain open. Freeze feature scope and consolidate one two-phone session using [acceptance matrix](TWO_PHONE_ACCEPTANCE_MATRIX.md); prioritize safety failures over cosmetics. Maintain [handoff](CURRENT_HANDOFF.md), [work log](WORK_LOG.md) and central registry. Record exact candidate SHA and actual evidence, not a speculative percentage or calendar promise. Prepare selected professional channel copy/assets only after scope and candidate are known; no storefront selected. No automatic public publishing.
