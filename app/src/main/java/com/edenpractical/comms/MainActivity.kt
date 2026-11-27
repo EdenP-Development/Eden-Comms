@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.edenpractical.comms.appearance.AppearancePreference
+import com.edenpractical.comms.appearance.AppearanceSelection
 import com.edenpractical.comms.appearance.appearanceColors
 import com.edenpractical.comms.appearance.LocalAppearance
 import com.edenpractical.comms.appearance.supportingAccent
@@ -111,10 +112,15 @@ private fun EdenCommsApp() {
     val preferences = remember(context) {
         context.getSharedPreferences("eden_comms_ui", Context.MODE_PRIVATE)
     }
-    var appearance by remember { mutableStateOf(AppearancePreference.resolve(
-        preferences.getString("appearance_palette", null), preferences.contains("dark_theme")
-    )) }
-    var darkMode by remember { mutableStateOf(preferences.getBoolean("dark_theme", true)) }
+    val initialAppearance = remember(preferences) {
+        AppearanceSelection.read(
+            { preferences.getString("appearance_palette", null) },
+            preferences.contains("dark_theme"),
+            { preferences.getBoolean("dark_theme", true) }
+        )
+    }
+    var appearance by remember { mutableStateOf(initialAppearance.palette) }
+    var darkMode by remember { mutableStateOf(initialAppearance.darkMode) }
     // Save a real screen history so system Back, gestures, and the in-app
     // Back arrow all unwind the same navigation route after rotation.
     var history by rememberSaveable { mutableStateOf(listOf("home")) }

@@ -10,3 +10,19 @@ internal enum class AppearancePreference(val stored: String, val label: String) 
                 ?: if (hasLegacyDarkChoice) FIELD else EPS
     }
 }
+
+// Only these non-sensitive UI reads may recover from an incorrect stored type.
+// The presence of a legacy dark choice remains independent of its value/type.
+internal data class AppearanceSelection(val palette: AppearancePreference, val darkMode: Boolean) {
+    companion object {
+        fun read(
+            readPalette: () -> String?,
+            hasLegacyDarkChoice: Boolean,
+            readDarkMode: () -> Boolean
+        ): AppearanceSelection {
+            val stored = try { readPalette() } catch (_: ClassCastException) { null }
+            val dark = try { readDarkMode() } catch (_: ClassCastException) { true }
+            return AppearanceSelection(AppearancePreference.resolve(stored, hasLegacyDarkChoice), dark)
+        }
+    }
+}

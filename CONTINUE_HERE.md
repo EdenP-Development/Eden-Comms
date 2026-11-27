@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I01 implementation checkpoint (2026-11-27)
+
+EC-B11 PR #229 merged 0b793e1aa08c6a928d12a1ca51a14b8dcf28af9d after CI #632. All preparation checkpoints merged, NO-SHIP remains. EC-I01 branch fix/ec-i01-appearance-preference-types adds shared read-only AppearanceSelection fallback for the two UI preference reads in MainActivity and NearbyAppearance; catches only ClassCastException, preserves presence-based migration and valid values, no automatic writes or security changes. Seven JVM regression methods added; CI pending, actual Android malformed-preference tests not run. Frozen internal 10049 remains physical reference until verified successor selected. Next verify exact-head CI, inspect resulting signed/Preview evidence after merge, and preserve exact archives. Physical 0/54, signer recovery, independent security and production gates open.
+
 ## EC-B10–B11 checkpoint (2026-11-27)
 
 PR #228 merged 4b7cbc3beacef3240364ef3afce27a3d20cd4956 after CI #630. Professional storefront preparation complete as documentation only. See docs/BETA_1_RELEASE_AUTHORIZATION.md for explicit NO-SHIP disposition and execution backlog; EC-B11 preparation CI pending. Next focused runtime work: EDT-01 non-sensitive appearance wrong-type preference fix, with regression tests; preserve frozen internal 10049 and previous 10048 until a verified successor is selected. Archive bytes/owner recovery, physical 0/54, independent security, production packaging and actual support/privacy/storefront authorization remain open. No publication.
