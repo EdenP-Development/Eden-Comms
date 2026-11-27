@@ -1,13 +1,10 @@
 # Eden Comms
 
-**Post-transfer verified source / APK evidence:**
-[Migration receipt](docs/EDENP_POST_TRANSFER_VERIFICATION_2026_11_24.md).
-The organization builds the **same** signed debug Preview APK
-(`com.edenpractical.comms.preview`), now version `200016`;
-private original-package signing has not been verified or changed.
-No public itch.io Eden Comms release has been asserted.
+**Current verified checkpoint (2026-11-27):** EC-R6–R10 automated reliability and consolidated QA passed. [Internal 10049 receipt](docs/evidence/internal-10049-receipt.json) records private signing and exact source; separate Preview 200038 passed 28 disconnected emulator captures. Physical 54-case acceptance, independent signer recovery, security review and production release gates remain open. No public functional beta authorized.
 
-**Repository transferred November 24, 2026:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms). Existing Android application IDs, keys, artwork, code history and product design are preserved. [Transfer audit and current handoff](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md). Private original-package signing is not yet credential-verified; the public-test Preview signer remains unchanged.
+**Repository transferred November 24, 2026:** [EdenP-Development/Eden-Comms](https://github.com/EdenP-Development/Eden-Comms). Application IDs, history and original internal signing identity preserved; private internal signing verified in CI, independent recovery unverified. See [transfer audit](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md) for historical evidence.
+
+[Tester help and confidential reporting readiness](docs/SUPPORT_AND_SECURITY_REPORTING.md) · [Data handling register](docs/DATA_HANDLING_REGISTER.md) · [Asset rights register](docs/ASSET_RIGHTS_REGISTER.md). These are internal records, not published support/privacy services.
 
 **EdenP Development integration:** [November 24 ownership/signing
 preflight](docs/EDENP_DEVELOPMENT_INTEGRATION_2026_11_24.md)
