@@ -9,6 +9,7 @@ import re
 import os
 import xml.etree.ElementTree as ET
 import emulator_visual_qa as ui
+from audit_apk_identity import parse_apk_badging
 
 PACKAGE = "com.edenpractical.comms.preview"
 PREF = "shared_prefs/eden_comms_ui.xml"
@@ -67,7 +68,7 @@ def run(apk, output):
     aapt = sdk / 'build-tools/36.0.0/aapt'
     import subprocess
     badging = subprocess.run([str(aapt), 'dump', 'badging', str(apk)], check=True, capture_output=True, text=True).stdout
-    if not re.search(r"^package: name='com\\.edenpractical\\.comms\\.preview' ", badging, re.M):
+    if parse_apk_badging(badging)['application_id'] != PACKAGE:
         raise RuntimeError('Refusing non-Preview APK')
     expected = apk.with_name(apk.name + '.sha256').read_text().split()[0]
     if not re.fullmatch(r'[0-9a-f]{64}', expected) or hashlib.sha256(apk.read_bytes()).hexdigest() != expected:
