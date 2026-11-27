@@ -1,0 +1,18 @@
+# EC-B09 — Independent security review brief
+2026-11-27. Preparation only. No reviewer commissioned, no independent tests executed, no certification. Normative requirements: [Privacy and Security Charter](PRIVACY_SECURITY_CHARTER.md). Exact development candidate: [internal 10049 receipt](evidence/internal-10049-receipt.json), source 50b506a71548be32d3c82a513f7f3bef1e7b8b45. Review final production artifact separately; debug acceptance cannot authorize production.
+
+| Workstream | Required independent evidence | Status |
+|---|---|---|
+| Cryptographic architecture | Review actual TLS 1.3 provider, bilateral QR pin binding, proof of possession, approvals, confirmation, replay, session/key lifecycle and downgrade resistance on all three transports; document deviations and dependency maintenance | NOT RUN |
+| Transport and network | Controlled two-device spoofing/MITM, tamper/replay and stale-session negative tests; authorized packet capture for LAN/Bluetooth/P2P, app-attributed DNS/socket checks with WAN on/off; distinguish OS traffic and observable metadata | NOT RUN |
+| Text and voice | Verify bounded framing, ACK semantics, queue teardown, floor ownership, permission revocation and cancellation; no unexpected capture/transmit or plaintext fallback | NOT RUN |
+| Storage and retention | Verify default session-only behavior, opt-in encrypted history and separate peer memory, max 30 days/no renewal, expiry before display, reset/deletion and clock behavior; no chat/keys in logs or backup/device transfer; test actual OEM restore | NOT RUN |
+| Display and permissions | Inspect notifications, recents, screen capture, clipboard, keyboard learning requests and contextual permissions; document residual OS/recipient risks and accessible controls | NOT RUN |
+| Build and supply chain | Exact artifact hashes/package/cert, source provenance, dependency SBOM and licenses, vulnerability review, signing custody and release manifest/flags; verify no debug admission paths in final production package | NOT RUN |
+| Claims and release | Compare actual findings with unpublished privacy draft, charter and storefront copy; explicit residual risks, no anonymity/guaranteed erasure claims, no critical/high unresolved findings | NOT RUN |
+
+## Reviewer handoff
+Provide authorized reviewer with exact source, private test artifact and independent expected receipt, threat model, data handling register, architecture/design decisions, test matrix, CI evidence, known limitations and archive guide. Use dedicated test devices, synthetic content and isolated controlled networks; do not request owner credentials, private keys, real conversations or raw peer identifiers. Keep sensitive findings/evidence in restricted channels; public tracking only sanitized issue/status. Scope, reviewer independence, authorization, methods, versions, observed results, severity, remediation and retest must be recorded. Separate source review, automated tests, physical acceptance and independent acceptance.
+
+## Acceptance
+Independent reviewer findings must identify exact tested source/artifact and conditions. Unknown or blocked checks remain open, not PASS. Stop distribution for charter NO-SHIP findings, including plaintext fallback, failed authentication, hidden traffic, unprotected backup or missing security evidence. Remediate in focused PRs, retest exact replacement artifact and update receipts; no public functional beta or production flag change based on this document. Physical matrix 0/54, archive and signer recovery pending. Appearance wrong-type preference gap remains a separate proposed runtime fix. No professional storefront selected or publication approved.
