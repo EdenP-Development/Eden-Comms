@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I05D fresh emulator guard checkpoint (2026-11-27)
+
+Exact main d1e5fbc7ff36e301680d725b46d6114ab4cceb62: Android #649 and private signing #65 passed; Preview #42 build and visual job passed, recovery job 140395192384 failed before install when absent-package pm path returned exit 1. Replace with successful full pm list packages inventory and exact Preview membership; empty/malformed inventory fails closed, command failures still propagate. Added regression assertions for absent, present, similar names and malformed inventory. Actual recovery 0/6, revised CI pending. No runtime change or promotion; internal 10062, physical 0/54, NO-SHIP.
+
 ## EC-I05C first emulator attempt (2026-11-27)
 
 Exact main 2f87849642aea34da34b623925c052eb4b1a8624: Android #647 and private signing #64 passed. Preview #41 build passed; recovery job 140389490277 failed closed before installation at APK identity preflight. Source regex had doubled escapes; reuse existing audit_apk_identity.parse_apk_badging and exact package comparison, with whitespace and original-package negative tests. No actual preference cases executed. Visual job was still running. Revised PR CI pending; no runtime or security capability changes; 10062 remains recommended, physical 0/54, NO-SHIP.
