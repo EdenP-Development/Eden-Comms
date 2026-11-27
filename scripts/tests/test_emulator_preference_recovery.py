@@ -18,6 +18,10 @@ class PreferenceRecoveryTest(unittest.TestCase):
         finally:
             sys.path.pop(0)
         self.assertEqual(module.PACKAGE, "com.edenpractical.comms.preview")
+        for gap in (" ", "  ", "\t"):
+            badging = gap.join(("package:", "name='com.edenpractical.comms.preview'", "versionCode='200041'", "versionName='0.2.12-preview-200041'"))
+            self.assertEqual(module.parse_apk_badging(badging)["application_id"], module.PACKAGE)
+        self.assertNotEqual(module.parse_apk_badging("package: name='com.edenpractical.comms' versionCode='11' versionName='debug'")["application_id"], module.PACKAGE)
         self.assertEqual(module.PREF, "shared_prefs/eden_comms_ui.xml")
         self.assertEqual(len(module.CASES), 5)
         for name, body, palette, dark in module.CASES:
@@ -29,7 +33,7 @@ class PreferenceRecoveryTest(unittest.TestCase):
 
     def test_isolation_guards_and_independent_job(self):
         s = DRIVER.read_text()
-        for token in ("ui.require_emulator()", "Refusing non-Preview APK",
+        for token in ("ui.require_emulator()", "parse_apk_badging(badging)", "Refusing non-Preview APK",
                       "Preview APK checksum mismatch", "Preview already installed",
                       'ui.adb("install", str(apk)', 'if read_prefs() != before:',
                       'if installed:', 'ui.adb("uninstall", PACKAGE)'):
