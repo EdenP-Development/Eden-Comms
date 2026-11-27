@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I03 recovery checkpoint (2026-11-27)
+
+PR #231 merged 0043cfd572db82d4b64276fac212a201589aefb0 after CI #636. Seven original ZIPs retrieved, 7/7 SHA-256 and CRC checks passed, 5/5 embedded APK SHA-256 matched, 56 screenshots recovered. See docs/DURABLE_RECOVERY_ARCHIVE.md for measured bytes and hashes. Temporary copies only; independent SDK signature, owner encrypted storage/restore and signer recovery pending. Physical matrix updated to 10059 candidate / 10049 predecessor; physical 0/54. Next verify PR CI, reconcile central registry and secure owner custody. No runtime or publication change.
+
 ## EC-I02 successor checkpoint (2026-11-27)
 
 PR #230 merged 68e81d53edc42117a93e1c7edd9d36f5a3cff915 after CI #634. Main Android #635, private signing #59 and integrated Preview #39 passed; logs report 442 Python tests and 28 disconnected screenshots. See docs/evidence/internal-10059-receipt.json. Internal 10059 is recommended successor for controlled physical QA, same package/signer as 10049, higher version; preserve 10049 as upgrade predecessor and historical evidence. No actual install-over, malformed Android preference exercise, independent archive bytes or qualitative screenshot review yet. Physical 0/54; NO-SHIP. Next EC-I03 preserve original artifacts privately before expiration, reconcile physical matrix and central registry after receipt review. No production change or publication.
