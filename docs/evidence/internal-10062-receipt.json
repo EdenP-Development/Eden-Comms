@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "app": "Eden Comms",
+  "channel": "original-package internal QA (debug, private signer)",
+  "source_commit": "39aef129c993810834528c7008c3efa3348a18f6",
+  "package_id": "com.edenpractical.comms",
+  "version_code": 10062,
+  "version_name": "0.2.12-internal-10062",
+  "certificate_sha256": "dad2159585f8bc804c47de056bf8a2c2f546ad25893cb64e0448eb0cf8676d06",
+  "apk_sha256": "b4482626502aef44856ba0a48a15d519999ec5bcfc8152204a207a16a232e0fa",
+  "apk_size_bytes": 17722719,
+  "artifact_url": "https://github.com/EdenP-Development/Eden-Comms/actions/runs/45960616086/artifacts/15180672752",
+  "artifact_zip_sha256": "8f09b0c4bcc05ae9d759e41f0052bce2de47729f9549a31610f2a64a5b7f1854",
+  "artifact_expires_utc": "2026-12-04T07:47:02Z",
+  "previous_version_code": 10059,
+  "previous_receipt": "internal-10059-receipt.json",
+  "previous_apk_sha256": "057f2161caacdf5f18732b1aa1bf67f968247f602e58ade40edb4aac88c84447",
+  "tests": [
+    {
+      "scope": "Exact main Android regression",
+      "result": "passed",
+      "run": 45960616229
+    },
+    {
+      "scope": "Private signing and 442 Python checks",
+      "result": "passed",
+      "run": 45960616086
+    },
+    {
+      "scope": "Separate Preview 200040, 28 disconnected emulator captures",
+      "result": "passed",
+      "run": 45960616047
+    }
+  ],
+  "preview": {
+    "package_id": "com.edenpractical.comms.preview",
+    "version_code": 200040,
+    "certificate_sha256": "a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc",
+    "apk_sha256": "8f9beac121cbc44d67f604a7b6d4ab01426f376cc34c2ef0baf1c290a80fa7a7",
+    "artifact": 15180578055,
+    "artifact_zip_sha256": "c30910f3889fea54c762648a761577cfece2ba00aa7e2c3e29bf40ab12fb4cb7",
+    "expires_utc": "2026-11-30T07:47:14Z",
+    "visual_artifact": 15181018245,
+    "visual_zip_sha256": "2e138c840af019a169fa21779228f4cc24e9a4e4f924da194b790a0057518c62",
+    "visual_expires_utc": "2026-11-29T07:53:59Z"
+  },
+  "evidence_scope": "CI logs, original ZIP SHA-256 and CRC independently checked for all three archives; both embedded APK SHA-256 matched. Four matched Home screenshots visually compared with 200039; enlarged publisher name wraps, primary connection control visible, no obvious compact/landscape/ordinary regression. Not full visual acceptance or independent SDK signing verification.",
+  "physical_install_over_verified": false,
+  "physical_cases_passed": 0,
+  "owner_approved": false,
+  "publication_status": "not_published"
+}
