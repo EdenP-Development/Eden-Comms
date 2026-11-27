@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I04B accessibility checkpoint (2026-11-27)
+
+EC-I03 PR #232 merged bede42511cd294a6549fadadfd59b665afa790cd (CI #638); hub registry 5d41f2d792a95bbd63acdf2b9fe4aa0a5d131aa3 reconciled. Prior qualitative contact-sheet review of Preview 200039 observed clipped publisher subtitle at enlarged text and limited landscape/keyboard viewport. Source inspection confirms publisher subtitle hard-coded one line; branch fix/ec-i04b-header-accessibility allows up to three lines under 400dp or font scale >=1.3, preserving ordinary wide headers. Two JVM regression methods added; CI and actual rendering pending. Main route already uses IME padding, weighted scrollable viewport and compact density; no speculative scrolling/keyboard change. Recheck actual compact/large-font/landscape screenshots and reachability before further fixes. Internal 10059 remains recommended physical candidate until successor verified. Physical 0/54, permanent custody, SDK signer check and independent security pending. No release.
+
 ## EC-I03 recovery checkpoint (2026-11-27)
 
 PR #231 merged 0043cfd572db82d4b64276fac212a201589aefb0 after CI #636. Seven original ZIPs retrieved, 7/7 SHA-256 and CRC checks passed, 5/5 embedded APK SHA-256 matched, 56 screenshots recovered. See docs/DURABLE_RECOVERY_ARCHIVE.md for measured bytes and hashes. Temporary copies only; independent SDK signature, owner encrypted storage/restore and signer recovery pending. Physical matrix updated to 10059 candidate / 10049 predecessor; physical 0/54. Next verify PR CI, reconcile central registry and secure owner custody. No runtime or publication change.
