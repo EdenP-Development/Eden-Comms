@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I05E actual Android recovery passed (2026-11-27)
+
+Exact source 2d55ba08b297d81be4fb667cbaa6a23eb4c3fdff; Android #651, private signing #66 and all Preview #43 jobs passed. Recovery job 140403957404 artifact 15184317086 downloaded; ZIP SHA-256 fef25c1dd93da840ef3f59830a3083308ef479dbb3aaf33d19a5c901edd79d8c and CRC independently matched. Actual summary 6/6 PASS: missing, valid, wrong-palette, wrong-dark, both-wrong, explicit-recovery. Five initial cases restart=true, unchanged=true. See docs/evidence/preview-200043-preference-recovery.json. MainActivity synthetic appearance only, not NearbyAppearance-specific or physical acceptance. Internal 10062 remains recommended, 10059 predecessor; no runtime changes. Next EC-I06 isolated Preview upgrade preservation design, exact prior/current package and signer preflight, no uninstall/downgrade. Physical 0/54, permanent custody, independent security pending. NO-SHIP.
+
 ## EC-I05D fresh emulator guard checkpoint (2026-11-27)
 
 Exact main d1e5fbc7ff36e301680d725b46d6114ab4cceb62: Android #649 and private signing #65 passed; Preview #42 build and visual job passed, recovery job 140395192384 failed before install when absent-package pm path returned exit 1. Replace with successful full pm list packages inventory and exact Preview membership; empty/malformed inventory fails closed, command failures still propagate. Added regression assertions for absent, present, similar names and malformed inventory. Actual recovery 0/6, revised CI pending. No runtime change or promotion; internal 10062, physical 0/54, NO-SHIP.
