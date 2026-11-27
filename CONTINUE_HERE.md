@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I04D integrated checkpoint (2026-11-27)
+
+PR #233 merged 39aef129c993810834528c7008c3efa3348a18f6 after CI #641. Exact-main Android #642, private signing #62 and Preview #40 passed; 442 Python tests and 28 disconnected captures. See docs/evidence/internal-10062-receipt.json. Three original ZIPs recovered; all SHA-256 and CRC matched, both APK hashes matched (17722719 bytes each). Four matched Home screenshots compared against Preview 200039: enlarged subtitle wraps fully onto two lines; compact, landscape and ordinary portrait show no obvious regression; Connect Nearby visible in all four. Close focused header correction at emulator scope; not full accessibility or physical approval. Recommend 10062 for consolidated controlled QA with 10059 upgrade predecessor, retain earlier archives. Reconcile matrix and central registry after receipt review. Next actual Android malformed preferences on disposable QA environment and two-phone acceptance; physical 0/54, permanent owner custody, SDK signer and independent security remain open. NO-SHIP.
+
 ## EC-I04C verification checkpoint (2026-11-27)
 
 PR #233 CI #640 failed at MainActivity.kt:456 because nested Compose layout scope hides implicit BoxWithConstraints.maxWidth. Corrected by computing publisherLines alongside titleLines in the outer BoxWithConstraints scope and passing the local value to Text. No layout threshold, navigation, security or signing changes. Exact revised head CI pending; do not merge until green. Internal 10059 remains verified candidate. Actual revised header rendering and physical 0/54 remain open.
