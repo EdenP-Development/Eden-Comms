@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-B07 recovery checkpoint (2026-11-27)
+
+PR #224 merged d881a394f23eed2e13a95e5cefacb617ca071737 after CI #622. See docs/DURABLE_RECOVERY_ARCHIVE.md for verified live artifact inventory and owner recovery drill. Visual evidence expires Nov 28 09:30 UTC, Preview Nov 29, internal 10048/10049 Dec 3. Download privately before expiry. Archive custody, independent byte checks, source/branding restore and signer recovery NOT RUN; no runtime change or publication. Next complete durable archive evidence and EC-B08 physical matrix (0/54), then independent security and storefront/release gates.
+
 ## EC-B04–B06 checkpoint (2026-11-27)
 
 PR #222 rights inventory merged 7df87cb26e21290172200b708af46eef480b5666 (CI #618); PR #223 support guide merged d0dc527361d12c4c622594838f5e1820227538ff (CI #620). See docs/ASSET_RIGHTS_REGISTER.md, docs/SUPPORT_AND_SECURITY_REPORTING.md and docs/SHARED_TOOLKIT_ADOPTION.md. Toolkit review identifies wrong-type non-sensitive appearance read gap; no runtime change in this documentation checkpoint. Next EC-B07 durable exact archive and owner signer recovery; verify actual APKs and scoped toolkit preflight where available. Internal 10049 remains physical candidate. All physical/security/rights/support activation gates remain open; no publishing.
