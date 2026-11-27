@@ -1,0 +1,62 @@
+name: EC-I06 Preview upgrade QA
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: eden-preview-upgrade-qa
+  cancel-in-progress: false
+
+jobs:
+  upgrade:
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Retrieve and verify exact historical Preview archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p upgrade-input/old upgrade-input/new
+          gh api repos/EdenP-Development/Eden-Comms/actions/artifacts/15180578055/zip > upgrade-input/old.zip
+          gh api repos/EdenP-Development/Eden-Comms/actions/artifacts/15183588854/zip > upgrade-input/new.zip
+          echo 'c30910f3889fea54c762648a761577cfece2ba00aa7e2c3e29bf40ab12fb4cb7  upgrade-input/old.zip' | sha256sum -c -
+          echo 'f6822c827c7550bee0564e47194e538523b1162c6c9775f4b26572ad336ebbba  upgrade-input/new.zip' | sha256sum -c -
+          unzip -j upgrade-input/old.zip 'eden-comms-preview-200040.apk' -d upgrade-input/old
+          unzip -j upgrade-input/new.zip 'eden-comms-preview-200043.apk' -d upgrade-input/new
+      - name: Install APK inspection tools
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
+          test -n "$SDKMANAGER"
+          "$SDKMANAGER" 'build-tools;36.0.0'
+      - name: Enable hardware accelerated emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Verify pinned in-place Preview upgrade
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -camera-back none -camera-front none
+          script: python3 scripts/emulator_preview_upgrade.py --previous upgrade-input/old/eden-comms-preview-200040.apk --successor upgrade-input/new/eden-comms-preview-200043.apk --out qa-results/preview-upgrade
+      - name: Publish sanitized upgrade evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-comms-preview-upgrade-${{ github.sha }}
+          path: qa-results/preview-upgrade/summary.json
+          if-no-files-found: warn
+          retention-days: 3

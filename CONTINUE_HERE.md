@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I06B upgrade harness checkpoint (2026-11-27)
+
+EC-I05 evidence PR #238 merged 1bc792dd5f76c20c969bc680965d9c7464122d79; hub 8ae606de52f3ea97b60b6fe1ecfe21c28a245996. Branch test/ec-i06-preview-upgrade adds pinned 200040 to 200043 Preview upgrade harness, manual main-only workflow and mock/static tests. Original archive IDs 15180578055 (expires Nov 30 07:47 UTC) and 15183588854 (Nov 30 08:50 UTC); workflow verifies both ZIP hashes and exact APK hashes, SDK signer, package/version before install. Run promptly after merge; expired artifacts block rather than substitute. U01–U08 planned execution only, U09/U10 not implemented. No uninstall between versions, no personal devices, no session/history/identity preservation claim. Internal 10062 remains recommended, physical 0/54, NO-SHIP. Next verify PR CI then dispatch manual workflow if available.
+
 ## EC-I05E actual Android recovery passed (2026-11-27)
 
 Exact source 2d55ba08b297d81be4fb667cbaa6a23eb4c3fdff; Android #651, private signing #66 and all Preview #43 jobs passed. Recovery job 140403957404 artifact 15184317086 downloaded; ZIP SHA-256 fef25c1dd93da840ef3f59830a3083308ef479dbb3aaf33d19a5c901edd79d8c and CRC independently matched. Actual summary 6/6 PASS: missing, valid, wrong-palette, wrong-dark, both-wrong, explicit-recovery. Five initial cases restart=true, unchanged=true. See docs/evidence/preview-200043-preference-recovery.json. MainActivity synthetic appearance only, not NearbyAppearance-specific or physical acceptance. Internal 10062 remains recommended, 10059 predecessor; no runtime changes. Next EC-I06 isolated Preview upgrade preservation design, exact prior/current package and signer preflight, no uninstall/downgrade. Physical 0/54, permanent custody, independent security pending. NO-SHIP.
