@@ -18,6 +18,7 @@ on:
     paths:
       - '.github/workflows/offline-preview-apk.yml'
       - 'scripts/emulator_visual_qa.py'
+      - 'scripts/emulator_preference_recovery.py'
       - 'app/src/main/res/drawable/ic_eden_comms*.xml'
       - 'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'
       # Owner-requested Home visual changes should produce a testable APK.
@@ -225,3 +226,48 @@ jobs:
             qa-results/integrated-preview/summary.json
           if-no-files-found: warn
           retention-days: 2
+
+  preference-recovery:
+    name: Exercise synthetic appearance preferences on fresh Android emulator
+    needs: build-preview
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: eden-comms-offline-preview-*-${{ github.sha }}
+          path: recovery-preview
+          merge-multiple: true
+      - name: Enable hardware accelerated emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install APK identity inspection tool
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
+          test -n "$SDKMANAGER"
+          "$SDKMANAGER" 'build-tools;36.0.0'
+      - name: Verify actual Android preference recovery
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -camera-back none -camera-front none
+          script: python3 scripts/emulator_preference_recovery.py --apk "$(find recovery-preview -maxdepth 1 -type f -name 'eden-comms-preview-*.apk' -print -quit)" --out qa-results/preference-recovery
+      - name: Publish synthetic recovery results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eden-comms-preference-recovery-${{ github.sha }}
+          path: qa-results/preference-recovery/summary.json
+          if-no-files-found: warn
+          retention-days: 3

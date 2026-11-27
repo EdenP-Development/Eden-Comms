@@ -19,9 +19,15 @@ def read(path: str) -> str:
 class EdenPRepositoryTransfer(unittest.TestCase):
     def test_preview_is_org_only_main_only_and_preserves_public_signer(self):
         w = read(".github/workflows/offline-preview-apk.yml")
-        self.assertEqual(w.count("github.repository == '" + ORG_REPO + "'"), 2)
+        jobs = w.split("\njobs:\n", 1)[1]
+        blocks = re.split(r"(?m)^  ([a-z][a-z0-9-]*):\s*$", jobs)
+        job_map = dict(zip(blocks[1::2], blocks[2::2]))
+        self.assertEqual(set(job_map), {"build-preview", "integrated-visual", "preference-recovery"})
+        guard = "    if: github.repository == '" + ORG_REPO + "' && github.ref == 'refs/heads/main'"
+        for name, block in job_map.items():
+            self.assertEqual(block.splitlines().count(guard), 1, name)
+        self.assertEqual(w.count("github.repository == '" + ORG_REPO + "'"), 3)
         self.assertNotIn("github.repository == '" + OLD_REPO + "'", w)
-        self.assertIn("github.ref == 'refs/heads/main'", w)
         self.assertIn("workflow_dispatch:", w)
         self.assertIn("branches: [main]", w)
         self.assertIn("public AOSP", w)
