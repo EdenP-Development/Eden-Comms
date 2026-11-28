@@ -16,6 +16,7 @@ class F5AOptInHistory(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.policy = (PRIVACY / "LocalHistoryPolicy.kt").read_text()
+        cls.selection = (PRIVACY / "SessionHistorySelection.kt").read_text()
         cls.envelope = (PRIVACY / "LocalHistoryEnvelope.kt").read_text()
         cls.impl = (DEBUG / "java/com/edenpractical/comms/privacy/DebugLocalHistoryStore.kt").read_text()
         cls.stub = (RELEASE / "java/com/edenpractical/comms/privacy/DebugLocalHistoryStore.kt").read_text()
@@ -80,21 +81,28 @@ class F5AOptInHistory(unittest.TestCase):
 
     def test_only_actual_confirmed_active_lan_text_callbacks_may_persist(self):
         approval = self.lan.index("LanDemoSession.Phase.APPROVAL_COMPLETE ->")
-        saved_pin = self.lan.index("activeHistoryPin = expected.copyOf()")
+        saved_pin = self.lan.index("historySelection = historySelection.activate(expected)")
         event = self.lan.index("LanDemoSession.Phase.TEXT_WRITTEN, LanDemoSession.Phase.TEXT_RECEIVED ->")
         save = self.lan.index("localHistoryStore.save(")
         self.assertLess(approval, saved_pin)
         self.assertLess(saved_pin, event)
         self.assertLess(event, save)
-        for x in ("historyDurationMs by remember", "LocalHistoryPolicy.SESSION_ONLY",
-                  "historyDurationMs != LocalHistoryPolicy.SESSION_ONLY",
-                  "disappearAfterMs == DebugLocalDisappearingPolicy.OFF",
-                  "beforeHistory !== debugText", "activeHistoryPin?.fill(0)",
-                  "historyDurationMs = LocalHistoryPolicy.SESSION_ONLY",
+        for x in ("var historySelection by remember { mutableStateOf(SessionHistorySelection.fresh()) }",
+                  "historySelection.maySave(disappearAfterMs != DebugLocalDisappearingPolicy.OFF)",
+                  "beforeHistory !== debugText", "historySelection = historySelection.reset()",
+                  "historySelection = historySelection.choose(LocalHistoryPolicy.SESSION_ONLY)",
                   "onHistoryDurationChange = { changeLocalHistoryDuration(it) }",
                   "onHistoryRead = { readLocalHistory() }",
                   "onHistoryErase = { eraseLocalHistory() }"):
             self.assertIn(x, self.lan)
+        self.assertGreaterEqual(self.lan.count("historySelection = historySelection.reset()"), 2)
+        for x in ("SessionHistorySelection(null, LocalHistoryPolicy.SESSION_ONLY)",
+                  "SessionHistorySelection(verifiedPin.copyOf(), LocalHistoryPolicy.SESSION_ONLY)",
+                  "require(pin != null && LocalHistoryPolicy.supported(appliedDurationMs))",
+                  "pin != null && durationMs != LocalHistoryPolicy.SESSION_ONLY && !disappearingEnabled",
+                  "fun reset(): SessionHistorySelection = fresh()"):
+            self.assertIn(x, self.selection)
+        self.assertLess(self.lan.index("historySelection.maySave("), save)
 
     def test_verified_ui_explicit_user_choice_and_delete_with_disclosure(self):
         for x in ("Save messages on this phone", "LocalHistoryPolicy.label(historyDurationMs)",
