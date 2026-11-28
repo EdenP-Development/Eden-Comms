@@ -1,6 +1,6 @@
 package com.edenpractical.comms.privacy
 
-import android.content.ContextWrapper
+import android.content.Context
 import com.edenpractical.comms.BuildConfig
 import org.junit.Assert.*
 import org.junit.Test
@@ -11,9 +11,14 @@ class ReleaseStorageBoundaryTest {
     private val peer = ByteArray(32) { (it + 65).toByte() }
     private val now = 1_800_000_000_000L
 
-    private fun context(): ContextWrapper {
+    private fun context(): Context {
         assertFalse("Must run against release variant", BuildConfig.DEBUG)
-        return ContextWrapper(null)
+        // Allocate an Android mockable-jar instance without invoking its stub constructor.
+        // Any attempted Android method call still fails under the default JVM test policy.
+        val field = sun.misc.Unsafe::class.java.getDeclaredField("theUnsafe")
+        field.isAccessible = true
+        val allocator = field.get(null) as sun.misc.Unsafe
+        return allocator.allocateInstance(android.content.ContextWrapper::class.java) as Context
     }
 
     @Test fun historyRejectsEveryRetentionAndDirection() {
