@@ -16,7 +16,7 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 | ID | Required observation | Status |
 |---|---|---|
 | E01 | Fresh isolated Preview identity created by explicit consent; synthetic challenge signed and verified | PARTIAL: direct test consent and signing passed; UI consent not tested |
-| E02 | In-place same-signer version increase preserves public certificate fingerprint and usable key; no regeneration | NOT RUN |
+| E02 | In-place same-signer version increase preserves public certificate fingerprint and usable key; no regeneration | PASS: isolated same-source 200001→200002 |
 | E03 | Synthetic opted-in history retained with same content, direction, source ID, creation and expiry | NOT RUN |
 | E04 | Synthetic remembered peer retained with same original expiry and own identity | NOT RUN |
 | E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | NOT RUN |
@@ -35,4 +35,8 @@ No app runtime or release feature changes authorized by this contract.
 
 ## EC-I08C actual evidence
 
-Run [46099579809](https://github.com/EdenP-Development/Eden-Comms/actions/runs/46099579809), job 140838738160, exact source b3f22416d0ed9e433f5969480b174d8534dc1bfb: successful log lines seedIdentity: PASS and verifyIdentity: PASS. Same APK across process restarts, not upgrade. EC-I08D builds two same-source versions 200001/200002 using one disposable runner signer, verifies both and separate test APK before install, then verifies identity after in-place update and restart. No historical artifact dependency or release signer; only nonsensitive receipt uploaded. E02 pending actual execution.
+Run [46099579809](https://github.com/EdenP-Development/Eden-Comms/actions/runs/46099579809), job 140838738160, exact source b3f22416d0ed9e433f5969480b174d8534dc1bfb: successful log lines seedIdentity: PASS and verifyIdentity: PASS. Same APK across process restarts, not upgrade. EC-I08D builds two same-source versions 200001/200002 using one disposable runner signer, verifies both and separate test APK before install, then verifies identity after in-place update and restart. No historical artifact dependency or release signer; only nonsensitive receipt uploaded. E02 passed: see receipt below.
+
+## EC-I08D actual acceptance
+
+[Verified receipt](evidence/identity-upgrade-200001-200002.json): run 46101049677, job 140843329337, all four cases passed. Original ZIP SHA-256 and CRC checked, receipt inspected; APK bytes not included. EC-I08E adds synthetic history seed, read before upgrade, read after upgrade and restart, and exact expiry boundary tests. No claim of live session consent or peer re-verification. E03/E05 remain pending execution; E01 partial.

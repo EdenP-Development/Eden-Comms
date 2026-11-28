@@ -1,0 +1,25 @@
+{
+  "source_commit": "3022dbf1e4a0cd9faffdcb2cabfd3903369aa6a6",
+  "package": "com.edenpractical.comms.preview",
+  "signer_sha256": "d6f1b07a98e9dcc4f7bc3ac0f5a244af2c527931d13f948ca8a55882aee41eaa",
+  "predecessor_version": 200001,
+  "successor_version": 200002,
+  "apk_sha256": {
+    "predecessor.apk": "e907436cfe2cb48ed821df1de72778c528ea9cc155fcb1465c8eb1238ea82d7c",
+    "instrumentation.apk": "cc48c1e4d3020122f25c318c035edd083a18730dabc0aec1aae4bbd65119e601",
+    "successor.apk": "1db42d089b53e0410727b56683fbde351ad015c14b1651b7f5d3a99326eb7da7"
+  },
+  "result": "PASS",
+  "cases": {
+    "seed": "PASS",
+    "restart": "PASS",
+    "upgrade": "PASS",
+    "post_upgrade_restart": "PASS"
+  },
+  "scope": "Same source version increment; synthetic consent; no UI or physical acceptance",
+  "workflow_run": 46101049677,
+  "job": 140843329337,
+  "artifact_id": 15245104484,
+  "artifact_zip_sha256": "7688ea0ba6d9a398b84e83cbe97db0e5d5e2023384a1dd41036277047b40f038",
+  "archive_integrity": "Downloaded ZIP SHA-256 matched, CRC passed, JSON inspected; APK hashes are runner-reported, APK bytes not included"
+}

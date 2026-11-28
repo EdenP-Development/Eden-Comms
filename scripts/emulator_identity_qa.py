@@ -75,11 +75,16 @@ def main():
             owned.append(package)
         installed_version(200001)
         run_method("seedIdentity")
+        run_method("seedHistory")
         run_method("verifyIdentity")
+        run_method("verifyHistory")
         ui.adb("install", "-r", str(successor), timeout=90)
         installed_version(200002)
         run_method("verifyIdentity")
+        run_method("verifyHistory")
         run_method("verifyIdentity")
+        run_method("verifyHistory")
+        run_method("verifyHistoryExpiry")
     finally:
         for package in reversed(owned):
             ui.adb("uninstall", package)
@@ -92,8 +97,11 @@ def main():
         "apk_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                        for p in (app, test, successor)},
         "result": "PASS",
-        "cases": {"seed": "PASS", "restart": "PASS", "upgrade": "PASS", "post_upgrade_restart": "PASS"},
-        "scope": "Same source version increment; synthetic consent; no UI or physical acceptance",
+        "cases": {"seed": "PASS", "restart": "PASS", "upgrade": "PASS", "post_upgrade_restart": "PASS",
+                  "history_seed": "PASS", "history_pre_upgrade": "PASS",
+                  "history_upgrade": "PASS", "history_restart": "PASS",
+                  "history_expiry": "PASS"},
+        "scope": "Same source version increment; synthetic store-level fixtures; no UI or physical acceptance",
     }
     out = Path("qa-results/identity-upgrade.json")
     out.parent.mkdir(parents=True, exist_ok=True)
