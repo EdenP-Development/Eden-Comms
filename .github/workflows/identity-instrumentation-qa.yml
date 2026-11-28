@@ -28,7 +28,9 @@ jobs:
       - name: Install SDK
         run: |
           set -euo pipefail
-          sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0'
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)"
+          test -n "$SDKMANAGER"
+          "$SDKMANAGER" 'platforms;android-37.0' 'build-tools;36.0.0'
       - name: Build isolated app and separate test APK using same disposable runner signer
         run: |
           set -euo pipefail
