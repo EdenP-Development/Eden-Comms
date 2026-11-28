@@ -84,3 +84,7 @@ Exact main 4e712bd989f7c937ab9be4437ccf8c8d0b154548: CI #693 run 46116989169 pas
 ## EC-I09D source guard correction
 
 CI #696 run 46123077173 job 140911584580 compiled debug and passed JVM task and signing smoke, then failed the existing source guard (legacy inline retention variable assertions). Release checks skipped. Update the guard to require actual UI use of fresh/activate/choose/reset/maySave and the component's default, valid selection and suppression rules; keep all other storage and release checks. No further runtime changes. Retest pending.
+
+## EC-I09D.2 regression assertion correction
+
+CI #697 run 46123381782 passed the revised security shell guard but Python F5-A source regression errored on the removed activeHistoryPin name (451 run, one error). Preserve approval/activation/event/save ordering, callback admission, explicit choice, reset and disappearing suppression assertions against the actual integrated component and UI. No runtime change in this correction. Retest pending.
