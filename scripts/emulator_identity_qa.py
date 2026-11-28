@@ -12,14 +12,29 @@ CLASS = "com.edenpractical.comms.security.IdentityContinuityTest"
 def signer(apk):
     return parse_signer_fingerprint(tool_output([sdk_tool("apksigner"), "verify", "--print-certs", str(apk)]))
 
+def verify_test_manifest(badging, manifest):
+    # Instrumentation APKs do not necessarily declare an app versionName.
+    packages = re.findall(r"(?m)^package:\s+name='([^']+)'", badging)
+    if packages != [TEST_PACKAGE]:
+        raise RuntimeError("Unexpected instrumentation APK package")
+    # aapt xmltree exposes targetPackage as a manifest attribute.
+    targets = re.findall(r'(?m)^\s*A: android:targetPackage(?:\(0x[0-9a-fA-F]+\))?="([^"]+)"', manifest)
+    runners = re.findall(r'(?m)^\s*A: android:name(?:\(0x[0-9a-fA-F]+\))?="(androidx\.test\.runner\.AndroidJUnitRunner)"', manifest)
+    if targets != [PACKAGE] or runners != ["androidx.test.runner.AndroidJUnitRunner"]:
+        raise RuntimeError("Unexpected instrumentation target or runner")
+
 def main():
     ui.require_emulator()
     app = Path("app/build/outputs/apk/debug/app-debug.apk")
     test = Path("app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk")
-    for apk, expected in ((app, PACKAGE), (test, TEST_PACKAGE)):
-        identity = parse_apk_badging(tool_output([sdk_tool("aapt"), "dump", "badging", str(apk)]))
-        if identity["application_id"] != expected:
-            raise RuntimeError("Unexpected APK package")
+    aapt = sdk_tool("aapt")
+    identity = parse_apk_badging(tool_output([aapt, "dump", "badging", str(app)]))
+    if identity["application_id"] != PACKAGE or identity["version_code"] != 200001:
+        raise RuntimeError("Unexpected application APK identity")
+    verify_test_manifest(
+        tool_output([aapt, "dump", "badging", str(test)]),
+        tool_output([aapt, "dump", "xmltree", str(test), "AndroidManifest.xml"]),
+    )
     if signer(app) != signer(test):
         raise RuntimeError("Instrumentation signer mismatch")
     inventory = ui.adb("shell", "pm", "list", "packages")
