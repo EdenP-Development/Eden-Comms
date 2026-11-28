@@ -231,6 +231,82 @@ class IdentityContinuityTest {
         check(store.forgetAll())
     }
 
+
+    // Existing encrypted records are deliberately present. These tests exercise
+    // independent in-memory models, not a live TLS adapter or consent UI.
+    private fun retainedFixture(): ByteArray {
+        val ctx = guardedContext()
+        val own = ownPin()
+        val now = epoch + 60_000L
+        check(DebugLocalHistoryStore(ctx).read(peer, now).size == 2)
+        check(DebugPeerMemoryStore(ctx).rememberedUntil(own, peer, now) == epoch + day)
+        return own
+    }
+
+    @Test fun verifyRetainedDataDoesNotAuthorizeModel() {
+        val own = retainedFixture()
+        val gate = com.edenpractical.comms.transport.DebugApprovalGate()
+        val policy = ProductionSessionAuthorization()
+        val phase = ProductionSessionAuthorization.Phase.AWAITING_AUTHENTICATED_CHANNEL
+        check(!gate.maySendPreset() && !gate.mayWriteConfirmation())
+        check(!policy.approvalModelComplete)
+        checkNotNull(policy.begin(own, peer))
+        check(policy.phase == phase)
+        check(!policy.approvalModelComplete)
+        check(!policy.maySendProductionText && !policy.mayTransmitProductionVoice)
+    }
+
+    @Test fun verifyFreshAttemptRejectsOldModelApproval() {
+        val own = retainedFixture()
+        val policy = ProductionSessionAuthorization()
+        val transcript = ByteArray(32) { 41 }
+        val first = checkNotNull(policy.begin(own, peer))
+        check(policy.onAuthenticatedChannel(first, peer, transcript))
+        check(policy.localApproved(first, transcript))
+        check(policy.onAuthenticatedRemoteApproval(first, transcript))
+        check(policy.approvalModelComplete)
+        check(!policy.maySendProductionText && !policy.mayTransmitProductionVoice)
+        policy.transportLost(first)
+        val next = checkNotNull(policy.begin(own, peer))
+        check(first != next)
+        check(!policy.onAuthenticatedChannel(first, peer, transcript))
+        check(!policy.localApproved(first, transcript))
+        check(!policy.onAuthenticatedRemoteApproval(first, transcript))
+        policy.transportLost(first)
+        val freshTranscript = ByteArray(32) { 42 }
+        check(policy.onAuthenticatedChannel(next, peer, freshTranscript))
+        check(policy.localApproved(next, freshTranscript))
+        check(!policy.approvalModelComplete)
+        check(!policy.onAuthenticatedRemoteApproval(first, transcript))
+        check(!policy.approvalModelComplete)
+        check(policy.onAuthenticatedRemoteApproval(next, freshTranscript))
+        check(policy.approvalModelComplete)
+        check(!policy.maySendProductionText && !policy.mayTransmitProductionVoice)
+        policy.endSession()
+        check(!policy.approvalModelComplete)
+    }
+
+    @Test fun verifyDeclineAndDifferentPeerModel() {
+        val own = retainedFixture()
+        val gate = com.edenpractical.comms.transport.DebugApprovalGate()
+        gate.localWritten()
+        gate.decline()
+        gate.peerObserved()
+        gate.localConfirmationWritten()
+        gate.peerConfirmationObserved()
+        check(!gate.maySendPreset())
+        gate.close()
+        check(!gate.maySendPreset())
+        val fresh = com.edenpractical.comms.transport.DebugApprovalGate()
+        check(!fresh.maySendPreset())
+        val policy = ProductionSessionAuthorization()
+        val attempt = checkNotNull(policy.begin(own, secondPeer))
+        check(!policy.onAuthenticatedChannel(attempt, peer, ByteArray(32) { 43 }))
+        check(policy.phase == ProductionSessionAuthorization.Phase.BLOCKED)
+        check(!policy.approvalModelComplete)
+        check(!policy.maySendProductionText && !policy.mayTransmitProductionVoice)
+    }
+
     @Test fun seedIdentity() {
         val context = guardedContext()
         val marker = File(context.noBackupFilesDir, "eden-qa-identity-fingerprint")
