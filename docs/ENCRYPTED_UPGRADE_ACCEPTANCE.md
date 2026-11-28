@@ -17,9 +17,9 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 |---|---|---|
 | E01 | Fresh isolated Preview identity created by explicit consent; synthetic challenge signed and verified | PARTIAL: direct test consent and signing passed; UI consent not tested |
 | E02 | In-place same-signer version increase preserves public certificate fingerprint and usable key; no regeneration | PASS: isolated same-source 200001→200002 |
-| E03 | Synthetic opted-in history retained with same content, direction, source ID, creation and expiry | NOT RUN |
+| E03 | Synthetic opted-in history retained with same content, direction, source ID, creation and expiry | PASS: isolated direct store fixture |
 | E04 | Synthetic remembered peer retained with same original expiry and own identity | NOT RUN |
-| E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | NOT RUN |
+| E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | PARTIAL: history passed; peer pending |
 | E06 | Session-only default on a new session; retained history does not restore retention selection | NOT RUN |
 | E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | NOT RUN |
 | E08 | No raw keys, plaintext, peer fingerprints or sensitive payloads in artifacts; boolean results only | NOT RUN |
@@ -39,4 +39,8 @@ Run [46099579809](https://github.com/EdenP-Development/Eden-Comms/actions/runs/4
 
 ## EC-I08D actual acceptance
 
-[Verified receipt](evidence/identity-upgrade-200001-200002.json): run 46101049677, job 140843329337, all four cases passed. Original ZIP SHA-256 and CRC checked, receipt inspected; APK bytes not included. EC-I08E adds synthetic history seed, read before upgrade, read after upgrade and restart, and exact expiry boundary tests. No claim of live session consent or peer re-verification. E03/E05 remain pending execution; E01 partial.
+[Verified receipt](evidence/identity-upgrade-200001-200002.json): run 46101049677, job 140843329337, all four cases passed. Original ZIP SHA-256 and CRC checked, receipt inspected; APK bytes not included. EC-I08E adds synthetic history seed, read before upgrade, read after upgrade and restart, and exact expiry boundary tests. No claim of live session consent or peer re-verification. E03 passed and E05 partial: see next checkpoint; E01 partial.
+
+## EC-I08E actual acceptance
+
+[Run evidence](evidence/identity-history-upgrade-run-46102155887.json): exact source d3093e11822dae0d4fe5cc5c1e202c0df35e155c, workflow 46102155887 job 140846787378, all nine log-reported stages passed. Artifact digest recorded from GitHub metadata; ZIP contents not independently inspected for this checkpoint. E03 passed within direct synthetic debug store scope; E05 partial (history expiration); E07 partial coverage (wrong peer lookup only). EC-I08F adds six peer-memory stages, actual local public identity binding, original expiry, no renewal, independent wrong-own-identity purge after expiry. E04 and expanded E05/E07 pending actual execution. No live authorization or production acceptance.

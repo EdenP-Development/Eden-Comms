@@ -76,8 +76,10 @@ def main():
         installed_version(200001)
         run_method("seedIdentity")
         run_method("seedHistory")
+        run_method("seedPeerMemory")
         run_method("verifyIdentity")
         run_method("verifyHistory")
+        run_method("verifyPeerMemory")
         ui.adb("install", "-r", str(successor), timeout=90)
         installed_version(200002)
         run_method("verifyIdentity")
@@ -85,6 +87,8 @@ def main():
         run_method("verifyIdentity")
         run_method("verifyHistory")
         run_method("verifyHistoryExpiry")
+        run_method("verifyPeerMemoryExpiry")
+        run_method("verifyPeerMemoryWrongIdentity")
     finally:
         for package in reversed(owned):
             ui.adb("uninstall", package)
@@ -100,7 +104,10 @@ def main():
         "cases": {"seed": "PASS", "restart": "PASS", "upgrade": "PASS", "post_upgrade_restart": "PASS",
                   "history_seed": "PASS", "history_pre_upgrade": "PASS",
                   "history_upgrade": "PASS", "history_restart": "PASS",
-                  "history_expiry": "PASS"},
+                  "history_expiry": "PASS",
+                  "peer_seed": "PASS", "peer_pre_upgrade": "PASS",
+                  "peer_upgrade": "PASS", "peer_restart": "PASS",
+                  "peer_expiry": "PASS", "peer_wrong_identity": "PASS"},
         "scope": "Same source version increment; synthetic store-level fixtures; no UI or physical acceptance",
     }
     out = Path("qa-results/identity-upgrade.json")

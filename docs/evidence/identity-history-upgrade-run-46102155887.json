@@ -1,0 +1,49 @@
+{
+  "source_commit": "d3093e11822dae0d4fe5cc5c1e202c0df35e155c",
+  "workflow_run": 46102155887,
+  "job": 140846787378,
+  "artifact_id": 15246581296,
+  "artifact_zip_sha256": "c1fd6484c4cf83eff1189844629f0e4f2ed63908377b37363a1b07da19e5d3d3",
+  "artifact_expires_utc": "2026-12-05T03:22:46Z",
+  "evidence_basis": "GitHub successful job and nine PASS log lines; artifact metadata from GitHub; ZIP contents not independently inspected in this turn",
+  "result": "PASS",
+  "cases": [
+    {
+      "id": "seed",
+      "result": "PASS"
+    },
+    {
+      "id": "history_seed",
+      "result": "PASS"
+    },
+    {
+      "id": "restart",
+      "result": "PASS"
+    },
+    {
+      "id": "history_pre_upgrade",
+      "result": "PASS"
+    },
+    {
+      "id": "upgrade",
+      "result": "PASS"
+    },
+    {
+      "id": "history_upgrade",
+      "result": "PASS"
+    },
+    {
+      "id": "post_upgrade_restart",
+      "result": "PASS"
+    },
+    {
+      "id": "history_restart",
+      "result": "PASS"
+    },
+    {
+      "id": "history_expiry",
+      "result": "PASS"
+    }
+  ],
+  "scope": "Same-source isolated debug Preview 200001 to 200002; direct synthetic store fixture; no live consent or production acceptance"
+}
