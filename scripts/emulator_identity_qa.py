@@ -38,6 +38,7 @@ POST_UPGRADE = (
     ("peer_corruption", "verifyPeerCorruption"),
     ("peer_missing_key", "verifyPeerMissingKey"),
     ("retention_storage_selection", "verifyRetentionSelectionWithEncryptedStore"),
+    ("shared_stream_consent", "verifySharedStreamConsent"),
     ("identity_after_storage_failures", "verifyIdentity"),
 )
 REQUIRED_CASES = frozenset({
@@ -48,7 +49,7 @@ REQUIRED_CASES = frozenset({
     "history_missing_key", "peer_corruption", "peer_missing_key",
     "identity_after_storage_failures",
     "session_retained_data", "session_fresh_attempt", "session_decline_peer",
-    "retention_storage_selection",
+    "retention_storage_selection", "shared_stream_consent",
 })
 
 def signer(apk):
@@ -141,7 +142,7 @@ def main():
                        for p in (app, test, successor)},
         "result": "PASS",
         "cases": cases,
-        "scope": "Same source version increment; synthetic store, retention component and independent authorization model fixtures; no live transport, UI or physical acceptance",
+        "scope": "Same source version increment; synthetic store, retention component and independent authorization model fixtures; loopback shared TLS stream protocol; no radio, UI or physical acceptance",
     }
     out = Path("qa-results/identity-upgrade.json")
     out.parent.mkdir(parents=True, exist_ok=True)
