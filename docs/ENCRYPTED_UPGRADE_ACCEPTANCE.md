@@ -21,7 +21,7 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 | E04 | Synthetic remembered peer retained with same original expiry and own identity | PASS: isolated direct store fixture |
 | E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | PASS: isolated direct store fixtures |
 | E06 | Session-only default on a new session; retained history does not restore retention selection | NOT RUN |
-| E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | PARTIAL: wrong peer and wrong own pin passed; missing-key and corruption pending |
+| E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | PASS: isolated direct negative fixtures |
 | E08 | No raw keys, plaintext, peer fingerprints or sensitive payloads in artifacts; boolean results only | NOT RUN |
 | E09 | Release stubs remain disabled and no QA entrypoint in production APK | NOT RUN |
 
@@ -52,3 +52,7 @@ Run 46103430210 job 140850768313, source 8436b4814cc2b9ef772b7461fcd5d49b70556be
 ## EC-I08F.1 corrected acceptance
 
 [Run evidence](evidence/identity-history-peer-run-46106176532.json): exact source 6a470a416865c5e8044f032514b1fa8dfbadc10b, run 46106176532 job 140859324394, all 15 distinct case IDs present in successful logs, including peer_upgrade and peer_restart. Supersedes incomplete run #6. E04/E05 pass within isolated direct debug store scope. E07 partial. EC-I08G adds four independent destructive fixtures after normal expiry/purge and a final identity signing proof. Tests flip ciphertext bytes or remove only the named debug storage AES alias, verify no disclosure or silent key recreation on read, and verify explicit new writes after missing-key loss. Never delete identity keys. Actual execution pending. No live consent or production acceptance.
+
+## EC-I08G actual acceptance
+
+[Evidence](evidence/encrypted-storage-run-46107109353.json): all twenty distinct case IDs passed in job 140862207612. E07 passed in isolated synthetic debug fixtures. Artifact digest from GitHub metadata; no independent ZIP inspection. EC-I08H adds unsigned release build and static manifest/DEX audit in regression CI; only report uploaded. Release stub behavior and complete E09 acceptance still require additional evidence. No capability activation or distribution.
