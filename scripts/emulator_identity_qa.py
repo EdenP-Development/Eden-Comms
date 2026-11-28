@@ -77,12 +77,25 @@ def installed_version(expected):
     if versions != {str(expected)}:
         raise RuntimeError("Unexpected installed version")
 
+def safe_stream_failure(result):
+    # No raw instrumentation output, exception message, pin, key or transcript.
+    phases = "identity|peer_identity|approve_pair|decline_pair"
+    stages = "START|TLS_PIN|QR_CHALLENGES|EXPORTER|COMMITMENT|HUMAN_CONFIRMATIONS"
+    kinds = "SSL|SOCKET_TIMEOUT|WORKER_TIMEOUT|IO|STATE|ARGUMENT|SECURITY|OTHER"
+    pattern = rf"\bEC_QA_STREAM ({phases}) ({stages}) ({stages}) ({kinds})(?=\s|$)"
+    matches = set(re.findall(pattern, result))
+    return " ".join(next(iter(matches))) if len(matches) == 1 else None
+
 def run_method(method):
     result = ui.adb("shell", "am", "instrument", "-w", "-r",
                     "-e", "edenDisposableQa", "true",
                     "-e", "class", CLASS + "#" + method,
                     TEST_PACKAGE + "/androidx.test.runner.AndroidJUnitRunner", timeout=120)
     if not re.search(r"(?m)^OK \(1 test\)\s*$", result) or "FAILURES!!!" in result:
+        if method == "verifySharedStreamConsent":
+            category = safe_stream_failure(result)
+            if category:
+                print("EC_QA_STREAM " + category)
         raise RuntimeError("Instrumentation did not report exactly one passing test: " + method)
     print(method + ": PASS")
     ui.adb("shell", "am", "force-stop", PACKAGE)

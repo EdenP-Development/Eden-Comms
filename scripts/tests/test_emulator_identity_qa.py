@@ -46,3 +46,10 @@ class InstrumentationIdentityTest(unittest.TestCase):
             ('shared_stream_consent', 'verifySharedStreamConsent'),
             ('identity_after_storage_failures', 'verifyIdentity'),
         ))
+
+    def test_safe_stream_failure_allowlist(self):
+        self.assertEqual(qa.safe_stream_failure("secret\nEC_QA_STREAM approve_pair TLS_PIN START SSL\nprivate"),
+                         "approve_pair TLS_PIN START SSL")
+        self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair PRIVATE START SSL"))
+        self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair START START SSLsecret"))
+        self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair START START SSL\nEC_QA_STREAM decline_pair START START IO"))
