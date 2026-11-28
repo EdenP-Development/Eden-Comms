@@ -88,3 +88,7 @@ CI #696 run 46123077173 job 140911584580 compiled debug and passed JVM task and 
 ## EC-I09D.2 regression assertion correction
 
 CI #697 run 46123381782 passed the revised security shell guard but Python F5-A source regression errored on the removed activeHistoryPin name (451 run, one error). Preserve approval/activation/event/save ordering, callback admission, explicit choice, reset and disappearing suppression assertions against the actual integrated component and UI. No runtime change in this correction. Retest pending.
+
+## EC-I09E — integrated retention and encrypted storage
+
+Exact main 58fee0db51f5415a77a7b2612dda0e2ec7b4f79c Android CI #699 and private signing #86 completed successfully. Add one guarded Android instrumentation method using the same SessionHistorySelection component as the pairing screen plus actual DebugLocalHistoryStore. Independent synthetic fixture after prior destructive tests, before final identity proof. Checks session-only save refusal, successful explicit retention change, new record expiry, unchanged old expiry on lengthening, disappearing suppression through mirrored callback gate, disconnect/same-peer/different-peer reset, and distinction between fresh session-only default (preserves prior records) and explicit off (purges peer history). 24 required stages; execution pending. No actual UI callback or live consent claim. E06 remains partial, E08 open. No runtime changes.
