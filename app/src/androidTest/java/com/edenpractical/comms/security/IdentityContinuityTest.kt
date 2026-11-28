@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test
 import com.edenpractical.comms.privacy.DebugLocalHistoryStore
 import com.edenpractical.comms.privacy.LocalHistoryPolicy
+import com.edenpractical.comms.privacy.SessionHistorySelection
 import com.edenpractical.comms.privacy.DebugPeerMemoryStore
 import com.edenpractical.comms.privacy.PeerMemoryPolicy
 import java.io.File
@@ -305,6 +306,56 @@ class IdentityContinuityTest {
         check(policy.phase == ProductionSessionAuthorization.Phase.BLOCKED)
         check(!policy.approvalModelComplete)
         check(!policy.maySendProductionText && !policy.mayTransmitProductionVoice)
+    }
+
+
+    // Isolated fixture after the original storage failure cases: no changes
+    // to the earlier upgrade/expiry fixtures and no live consent UI claim.
+    @Test fun verifyRetentionSelectionWithEncryptedStore() {
+        val context = guardedContext()
+        val store = DebugLocalHistoryStore(context)
+        val now = epoch + 6 * day
+        check(!historyPath(context).exists())
+        val direction = LocalHistoryPolicy.Direction.WRITTEN_HERE
+        check(store.save(peer, direction, 91L, fixture, LocalHistoryPolicy.ONE_DAY, now))
+        val original = store.read(peer, now).single()
+        var selection = SessionHistorySelection.fresh().activate(peer)
+        check(selection.durationMs == LocalHistoryPolicy.SESSION_ONLY)
+        // Mirror the pairing callback's selection gate, not the callback itself.
+        fun persistIfAllowed(id: Long, disappearing: Boolean): Boolean {
+            val pin = selection.peerPin() ?: return false
+            if (!selection.maySave(disappearing)) return false
+            return store.save(pin, direction, id, fixture, selection.durationMs, now)
+        }
+        check(!persistIfAllowed(92L, false))
+        check(!store.save(peer, direction, 92L, fixture, selection.durationMs, now))
+        check(store.read(peer, now) == listOf(original))
+        check(store.changeRetention(peer, LocalHistoryPolicy.THIRTY_DAYS, now))
+        selection = selection.choose(LocalHistoryPolicy.THIRTY_DAYS)
+        check(persistIfAllowed(93L, false))
+        check(!persistIfAllowed(94L, true))
+        val retained = store.read(peer, now)
+        check(retained.size == 2 && retained[0] == original)
+        check(retained[1].sourceId == 93L)
+        check(retained[1].expiresAtMs == now + LocalHistoryPolicy.THIRTY_DAYS)
+        selection = selection.reset()
+        check(selection.peerPin() == null && !persistIfAllowed(95L, false))
+        selection = selection.activate(peer)
+        check(selection.durationMs == LocalHistoryPolicy.SESSION_ONLY)
+        check(!persistIfAllowed(96L, false))
+        check(store.read(peer, now) == retained)
+        selection = selection.activate(secondPeer)
+        check(selection.durationMs == LocalHistoryPolicy.SESSION_ONLY)
+        check(!persistIfAllowed(97L, false))
+        check(store.read(secondPeer, now).isEmpty())
+        check(store.read(peer, now) == retained)
+        // Explicit off is different from a fresh session's default: it purges.
+        selection = selection.activate(peer)
+        check(store.changeRetention(peer, LocalHistoryPolicy.SESSION_ONLY, now))
+        selection = selection.choose(LocalHistoryPolicy.SESSION_ONLY)
+        check(!persistIfAllowed(98L, false))
+        check(store.read(peer, now).isEmpty())
+        check(!historyPath(context).exists())
     }
 
     @Test fun seedIdentity() {
