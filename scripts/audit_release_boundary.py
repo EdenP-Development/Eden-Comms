@@ -15,7 +15,7 @@ FORBIDDEN = (
     b"eden_comms_peer_memory_debug_v1",
     b"IdentityContinuityTest",
     b"edenDisposableQa",
- )
+)
 DEBUG_ACTIVITIES = (
     b"DebugBluetoothDiscoveryActivity",
     b"DebugWifiDirectPreflightActivity",
@@ -51,7 +51,7 @@ def inspect_manifest(badging, tree, expected):
 def defined_classes(blob):
     # DEX class_defs reference type_ids, which reference string_ids.
     # Only class definitions are authoritative here, not arbitrary strings.
-    require(len(blob) >= 112 and blob.startswith(b"dex\\n"), "Invalid DEX header")
+    require(len(blob) >= 112 and blob.startswith(b"dex\n"), "Invalid DEX header")
     def u32(offset):
         return struct.unpack_from("<I", blob, offset)[0]
     require(u32(32) == len(blob) and u32(36) == 112 and u32(40) == 0x12345678,
@@ -80,7 +80,7 @@ def defined_classes(blob):
                 break
         else:
             raise ValueError("Invalid descriptor length")
-        end = blob.find(b"\\x00", pos)
+        end = blob.find(b"\x00", pos)
         require(end >= pos, "Unterminated descriptor")
         result.append(blob[pos:end])
     return result
