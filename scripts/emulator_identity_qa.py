@@ -12,6 +12,32 @@ PACKAGE = recovery.PACKAGE
 TEST_PACKAGE = PACKAGE + ".test"
 CLASS = "com.edenpractical.comms.security.IdentityContinuityTest"
 
+PRE_UPGRADE = (
+    ("seed", "seedIdentity"),
+    ("history_seed", "seedHistory"),
+    ("peer_seed", "seedPeerMemory"),
+    ("restart", "verifyIdentity"),
+    ("history_pre_upgrade", "verifyHistory"),
+    ("peer_pre_upgrade", "verifyPeerMemory"),
+)
+POST_UPGRADE = (
+    ("upgrade", "verifyIdentity"),
+    ("history_upgrade", "verifyHistory"),
+    ("peer_upgrade", "verifyPeerMemory"),
+    ("post_upgrade_restart", "verifyIdentity"),
+    ("history_restart", "verifyHistory"),
+    ("peer_restart", "verifyPeerMemory"),
+    ("history_expiry", "verifyHistoryExpiry"),
+    ("peer_expiry", "verifyPeerMemoryExpiry"),
+    ("peer_wrong_identity", "verifyPeerMemoryWrongIdentity"),
+)
+REQUIRED_CASES = frozenset({
+    "seed", "history_seed", "peer_seed", "restart", "history_pre_upgrade",
+    "peer_pre_upgrade", "upgrade", "history_upgrade", "peer_upgrade",
+    "post_upgrade_restart", "history_restart", "peer_restart", "history_expiry",
+    "peer_expiry", "peer_wrong_identity",
+})
+
 def signer(apk):
     return parse_signer_fingerprint(tool_output([sdk_tool("apksigner"), "verify", "--print-certs", str(apk)]))
 
@@ -69,29 +95,29 @@ def main():
     if recovery.package_installed(inventory) or "package:" + TEST_PACKAGE in inventory.splitlines():
         raise RuntimeError("Existing test installation forbidden")
     owned = []
+    cases = {}
+    def execute(case, method):
+        if case in cases:
+            raise RuntimeError("Duplicate acceptance case")
+        run_method(method)
+        cases[case] = "PASS"
+        print(case + ": PASS")
     try:
         for apk, package in ((app, PACKAGE), (test, TEST_PACKAGE)):
             ui.adb("install", str(apk), timeout=90)
             owned.append(package)
         installed_version(200001)
-        run_method("seedIdentity")
-        run_method("seedHistory")
-        run_method("seedPeerMemory")
-        run_method("verifyIdentity")
-        run_method("verifyHistory")
-        run_method("verifyPeerMemory")
+        for case, method in PRE_UPGRADE:
+            execute(case, method)
         ui.adb("install", "-r", str(successor), timeout=90)
         installed_version(200002)
-        run_method("verifyIdentity")
-        run_method("verifyHistory")
-        run_method("verifyIdentity")
-        run_method("verifyHistory")
-        run_method("verifyHistoryExpiry")
-        run_method("verifyPeerMemoryExpiry")
-        run_method("verifyPeerMemoryWrongIdentity")
+        for case, method in POST_UPGRADE:
+            execute(case, method)
     finally:
         for package in reversed(owned):
             ui.adb("uninstall", package)
+    if set(cases) != REQUIRED_CASES:
+        raise RuntimeError("Incomplete acceptance execution")
     receipt = {
         "source_commit": source,
         "package": PACKAGE,
@@ -101,13 +127,7 @@ def main():
         "apk_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                        for p in (app, test, successor)},
         "result": "PASS",
-        "cases": {"seed": "PASS", "restart": "PASS", "upgrade": "PASS", "post_upgrade_restart": "PASS",
-                  "history_seed": "PASS", "history_pre_upgrade": "PASS",
-                  "history_upgrade": "PASS", "history_restart": "PASS",
-                  "history_expiry": "PASS",
-                  "peer_seed": "PASS", "peer_pre_upgrade": "PASS",
-                  "peer_upgrade": "PASS", "peer_restart": "PASS",
-                  "peer_expiry": "PASS", "peer_wrong_identity": "PASS"},
+        "cases": cases,
         "scope": "Same source version increment; synthetic store-level fixtures; no UI or physical acceptance",
     }
     out = Path("qa-results/identity-upgrade.json")
