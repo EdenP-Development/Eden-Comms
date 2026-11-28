@@ -66,6 +66,25 @@ internal object DebugTlsEngineHandshake {
     }
 
     /**
+     * A provider may complete a handshake state transition without emitting
+     * wire bytes. Accept only a bounded, observable change away from NEED_WRAP.
+     * Never count an empty transition as a packet or as peer authentication.
+     */
+    fun requireWrapProgress(result: SSLEngineResult, actualBytes: Int,
+                            current: SSLEngineResult.HandshakeStatus) {
+        if (result.status != SSLEngineResult.Status.OK ||
+            result.bytesConsumed() != 0 ||
+            result.bytesProduced() != actualBytes ||
+            actualBytes !in 0..MAX_ENGINE_PACKET ||
+            (actualBytes == 0 && (
+                result.handshakeStatus == SSLEngineResult.HandshakeStatus.NEED_WRAP ||
+                current == SSLEngineResult.HandshakeStatus.NEED_WRAP ||
+                result.handshakeStatus == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
+            ))
+        ) throw SSLException("Unexpected TLS handshake wrap")
+    }
+
+    /**
      * Perform only the initial handshake; NEVER send user text/voice or read
      * decrypted app payloads. The caller must verify TLSv1.3 and exact peer
      * certificate fingerprint after this returns, then close the transport.
@@ -100,10 +119,8 @@ internal object DebugTlsEngineHandshake {
                     val outputRecord = ByteBuffer.allocate(packetCapacity)
                     try {
                         val result = engine.wrap(EMPTY.duplicate(), outputRecord)
-                        if (result.status != SSLEngineResult.Status.OK ||
-                            result.bytesConsumed() != 0 ||
-                            result.bytesProduced() !in 1..MAX_ENGINE_PACKET
-                        ) throw SSLException("Unexpected TLS handshake wrap")
+                        requireWrapProgress(result, outputRecord.position(), engine.handshakeStatus)
+                        if (result.bytesProduced() > 0) {
                         outputRecord.flip()
                         val packet = ByteArray(outputRecord.remaining())
                         try {
@@ -116,6 +133,7 @@ internal object DebugTlsEngineHandshake {
                             packet.fill(0)
                         }
                         packetsSeen++
+                        }
                         if (result.handshakeStatus ==
                             SSLEngineResult.HandshakeStatus.FINISHED
                         ) finished = true
