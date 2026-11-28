@@ -67,6 +67,10 @@ jobs:
         run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - name: Audit packaged APK privacy/dependency surface
         run: python3 scripts/audit_play_surface.py --apk app/build/outputs/apk/debug/app-debug.apk --output-dir app/build/play-evidence
+      - name: Build unsigned release for boundary inspection only
+        run: gradle --no-daemon :app:assembleRelease "-PedenSourceRevision=$GITHUB_SHA"
+      - name: Inspect non-debug release APK boundary
+        run: python3 scripts/audit_release_boundary.py --apk app/build/outputs/apk/release/app-release-unsigned.apk --output app/build/play-evidence/release-boundary.json
       - name: Capture resolved release runtime dependencies
         run: gradle --no-daemon :app:dependencies --configuration releaseRuntimeClasspath > app/build/play-evidence/releaseRuntimeClasspath.txt
       - name: Verify APK package, version and signer evidence
@@ -88,5 +92,6 @@ jobs:
             app/build/play-evidence/apk-identity.json
             app/build/play-evidence/apk-identity.md
             app/build/play-evidence/releaseRuntimeClasspath.txt
+            app/build/play-evidence/release-boundary.json
           if-no-files-found: error
           retention-days: 3
