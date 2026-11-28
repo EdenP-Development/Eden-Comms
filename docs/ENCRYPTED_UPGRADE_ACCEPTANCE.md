@@ -18,10 +18,10 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 | E01 | Fresh isolated Preview identity created by explicit consent; synthetic challenge signed and verified | PARTIAL: direct test consent and signing passed; UI consent not tested |
 | E02 | In-place same-signer version increase preserves public certificate fingerprint and usable key; no regeneration | PASS: isolated same-source 200001→200002 |
 | E03 | Synthetic opted-in history retained with same content, direction, source ID, creation and expiry | PASS: isolated direct store fixture |
-| E04 | Synthetic remembered peer retained with same original expiry and own identity | NOT RUN |
-| E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | PARTIAL: history passed; peer pending |
+| E04 | Synthetic remembered peer retained with same original expiry and own identity | PASS: isolated direct store fixture |
+| E05 | Expired history and peer records not exposed after upgrade; no read-driven renewal | PASS: isolated direct store fixtures |
 | E06 | Session-only default on a new session; retained history does not restore retention selection | NOT RUN |
-| E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | NOT RUN |
+| E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | PARTIAL: wrong peer and wrong own pin passed; missing-key and corruption pending |
 | E08 | No raw keys, plaintext, peer fingerprints or sensitive payloads in artifacts; boolean results only | NOT RUN |
 | E09 | Release stubs remain disabled and no QA entrypoint in production APK | NOT RUN |
 
@@ -48,3 +48,7 @@ Run [46099579809](https://github.com/EdenP-Development/Eden-Comms/actions/runs/4
 ## EC-I08F execution discrepancy and correction
 
 Run 46103430210 job 140850768313, source 8436b4814cc2b9ef772b7461fcd5d49b70556be0, succeeded but logs show only 13 of 15 planned method invocations. Source inspection confirms peer_upgrade and peer_restart were never called; static receipt incorrectly marked both PASS. Do not use that receipt as full acceptance. Four peer stages actually passed (seed, pre-upgrade, expiry, wrong-own-pin); all nine prior identity/history stages reran successfully. E04 remains pending direct post-upgrade reads; E05 peer expiry observed, E07 wrong-own-pin observed, other destructive cases pending. Corrected harness records only successful executions under distinct case IDs and refuses incomplete case sets. No runtime change. Repeat full suite before new destructive fixtures.
+
+## EC-I08F.1 corrected acceptance
+
+[Run evidence](evidence/identity-history-peer-run-46106176532.json): exact source 6a470a416865c5e8044f032514b1fa8dfbadc10b, run 46106176532 job 140859324394, all 15 distinct case IDs present in successful logs, including peer_upgrade and peer_restart. Supersedes incomplete run #6. E04/E05 pass within isolated direct debug store scope. E07 partial. EC-I08G adds four independent destructive fixtures after normal expiry/purge and a final identity signing proof. Tests flip ciphertext bytes or remove only the named debug storage AES alias, verify no disclosure or silent key recreation on read, and verify explicit new writes after missing-key loss. Never delete identity keys. Actual execution pending. No live consent or production acceptance.

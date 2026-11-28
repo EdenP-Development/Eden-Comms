@@ -30,12 +30,19 @@ POST_UPGRADE = (
     ("history_expiry", "verifyHistoryExpiry"),
     ("peer_expiry", "verifyPeerMemoryExpiry"),
     ("peer_wrong_identity", "verifyPeerMemoryWrongIdentity"),
+    ("history_corruption", "verifyHistoryCorruption"),
+    ("history_missing_key", "verifyHistoryMissingKey"),
+    ("peer_corruption", "verifyPeerCorruption"),
+    ("peer_missing_key", "verifyPeerMissingKey"),
+    ("identity_after_storage_failures", "verifyIdentity"),
 )
 REQUIRED_CASES = frozenset({
     "seed", "history_seed", "peer_seed", "restart", "history_pre_upgrade",
     "peer_pre_upgrade", "upgrade", "history_upgrade", "peer_upgrade",
     "post_upgrade_restart", "history_restart", "peer_restart", "history_expiry",
-    "peer_expiry", "peer_wrong_identity",
+    "peer_expiry", "peer_wrong_identity", "history_corruption",
+    "history_missing_key", "peer_corruption", "peer_missing_key",
+    "identity_after_storage_failures",
 })
 
 def signer(apk):
