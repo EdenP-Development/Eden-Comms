@@ -4,6 +4,7 @@ import json
 import os
 import re
 import zipfile
+import struct
 from pathlib import Path
 from audit_apk_identity import parse_apk_badging, source_identity, sdk_tool, tool_output, sha256
 
@@ -14,6 +15,8 @@ FORBIDDEN = (
     b"eden_comms_peer_memory_debug_v1",
     b"IdentityContinuityTest",
     b"edenDisposableQa",
+ )
+DEBUG_ACTIVITIES = (
     b"DebugBluetoothDiscoveryActivity",
     b"DebugWifiDirectPreflightActivity",
     b"DebugWifiDirectDiscoveryActivity",
@@ -42,15 +45,55 @@ def inspect_manifest(badging, tree, expected):
         require(re.search(r"(?m)^\s*A: android:" + name + r"(?:\(0x[0-9a-fA-F]+\))?=@", tree), "Missing backup rule reference: " + name)
     for permission in FORBIDDEN_PERMISSIONS:
         require("android.permission." + permission not in badging, "Debug permission: " + permission)
-    for token in FORBIDDEN:
+    for token in FORBIDDEN + DEBUG_ACTIVITIES:
         require(token.decode() not in tree, "Debug manifest token")
+
+def defined_classes(blob):
+    # DEX class_defs reference type_ids, which reference string_ids.
+    # Only class definitions are authoritative here, not arbitrary strings.
+    require(len(blob) >= 112 and blob.startswith(b"dex\\n"), "Invalid DEX header")
+    def u32(offset):
+        return struct.unpack_from("<I", blob, offset)[0]
+    require(u32(32) == len(blob) and u32(36) == 112 and u32(40) == 0x12345678,
+            "Unsupported DEX format")
+    def table(offset, stride):
+        count, start = u32(offset), u32(offset + 4)
+        require(start <= len(blob) and count <= (len(blob) - start) // stride,
+                "Invalid DEX table")
+        return count, start
+    sc, so = table(56, 4)
+    tc, to = table(64, 4)
+    cc, co = table(96, 32)
+    result = []
+    for i in range(cc):
+        ti = u32(co + i * 32)
+        require(ti < tc, "Invalid class type index")
+        si = u32(to + ti * 4)
+        require(si < sc, "Invalid descriptor string index")
+        pos = u32(so + si * 4)
+        # Skip bounded ULEB128 UTF-16 length; descriptors are ASCII here.
+        for _ in range(5):
+            require(pos < len(blob), "Invalid descriptor offset")
+            byte = blob[pos]
+            pos += 1
+            if byte < 128:
+                break
+        else:
+            raise ValueError("Invalid descriptor length")
+        end = blob.find(b"\\x00", pos)
+        require(end >= pos, "Unterminated descriptor")
+        result.append(blob[pos:end])
+    return result
 
 def inspect_dex(blobs):
     require(bool(blobs), "No packaged DEX")
     for blob in blobs:
-        require(blob.startswith(b"dex\n"), "Invalid DEX header")
+        classes = defined_classes(blob)
         for token in FORBIDDEN:
             require(token not in blob, "Forbidden packaged token: " + token.decode())
+        for descriptor in classes:
+            for name in DEBUG_ACTIVITIES:
+                require(name not in descriptor, "Forbidden defined activity: " + name.decode())
 
 def main():
     parser = argparse.ArgumentParser()
