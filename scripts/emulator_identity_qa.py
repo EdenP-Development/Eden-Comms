@@ -1,6 +1,9 @@
-"""Fresh emulator only; no APK upgrade claim in this initial smoke test."""
+"""Fresh emulator only; same-source, same-signer version increase."""
 from pathlib import Path
 import re
+import hashlib
+import json
+import os
 import emulator_visual_qa as ui
 import emulator_preference_recovery as recovery
 from audit_apk_identity import parse_apk_badging, parse_signer_fingerprint, sdk_tool, tool_output
@@ -23,20 +26,45 @@ def verify_test_manifest(badging, manifest):
     if targets != [PACKAGE] or runners != ["androidx.test.runner.AndroidJUnitRunner"]:
         raise RuntimeError("Unexpected instrumentation target or runner")
 
+def inspect_app(apk, version):
+    identity = parse_apk_badging(tool_output([sdk_tool("aapt"), "dump", "badging", str(apk)]))
+    if identity["application_id"] != PACKAGE or identity["version_code"] != version:
+        raise RuntimeError("Unexpected application APK identity")
+
+def installed_version(expected):
+    result = ui.adb("shell", "dumpsys", "package", PACKAGE)
+    versions = set(re.findall(r"(?m)^\s*versionCode=(\d+)\b", result))
+    if versions != {str(expected)}:
+        raise RuntimeError("Unexpected installed version")
+
+def run_method(method):
+    result = ui.adb("shell", "am", "instrument", "-w", "-r",
+                    "-e", "edenDisposableQa", "true",
+                    "-e", "class", CLASS + "#" + method,
+                    TEST_PACKAGE + "/androidx.test.runner.AndroidJUnitRunner", timeout=120)
+    if not re.search(r"(?m)^OK \(1 test\)\s*$", result) or "FAILURES!!!" in result:
+        raise RuntimeError("Instrumentation did not report exactly one passing test: " + method)
+    print(method + ": PASS")
+    ui.adb("shell", "am", "force-stop", PACKAGE)
+
 def main():
     ui.require_emulator()
-    app = Path("app/build/outputs/apk/debug/app-debug.apk")
-    test = Path("app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk")
+    source = os.environ.get("GITHUB_SHA", "")
+    if not re.fullmatch(r"[0-9a-f]{40}", source):
+        raise RuntimeError("Missing exact CI source")
+    app = Path("qa-inputs/predecessor.apk")
+    test = Path("qa-inputs/instrumentation.apk")
+    successor = Path("qa-inputs/successor.apk")
+    inspect_app(app, 200001)
+    inspect_app(successor, 200002)
     aapt = sdk_tool("aapt")
-    identity = parse_apk_badging(tool_output([aapt, "dump", "badging", str(app)]))
-    if identity["application_id"] != PACKAGE or identity["version_code"] != 200001:
-        raise RuntimeError("Unexpected application APK identity")
     verify_test_manifest(
         tool_output([aapt, "dump", "badging", str(test)]),
         tool_output([aapt, "dump", "xmltree", str(test), "AndroidManifest.xml"]),
     )
-    if signer(app) != signer(test):
-        raise RuntimeError("Instrumentation signer mismatch")
+    cert = signer(app)
+    if cert != signer(test) or cert != signer(successor):
+        raise RuntimeError("Instrumentation or successor signer mismatch")
     inventory = ui.adb("shell", "pm", "list", "packages")
     if recovery.package_installed(inventory) or "package:" + TEST_PACKAGE in inventory.splitlines():
         raise RuntimeError("Existing test installation forbidden")
@@ -45,18 +73,31 @@ def main():
         for apk, package in ((app, PACKAGE), (test, TEST_PACKAGE)):
             ui.adb("install", str(apk), timeout=90)
             owned.append(package)
-        for method in ("seedIdentity", "verifyIdentity"):
-            result = ui.adb("shell", "am", "instrument", "-w", "-r",
-                            "-e", "edenDisposableQa", "true",
-                            "-e", "class", CLASS + "#" + method,
-                            TEST_PACKAGE + "/androidx.test.runner.AndroidJUnitRunner", timeout=120)
-            if not re.search(r"(?m)^OK \(1 test\)\s*$", result) or "FAILURES!!!" in result:
-                raise RuntimeError("Instrumentation did not report exactly one passing test: " + method)
-            print(method + ": PASS")
-            ui.adb("shell", "am", "force-stop", PACKAGE)
+        installed_version(200001)
+        run_method("seedIdentity")
+        run_method("verifyIdentity")
+        ui.adb("install", "-r", str(successor), timeout=90)
+        installed_version(200002)
+        run_method("verifyIdentity")
+        run_method("verifyIdentity")
     finally:
         for package in reversed(owned):
             ui.adb("uninstall", package)
+    receipt = {
+        "source_commit": source,
+        "package": PACKAGE,
+        "signer_sha256": cert,
+        "predecessor_version": 200001,
+        "successor_version": 200002,
+        "apk_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in (app, test, successor)},
+        "result": "PASS",
+        "cases": {"seed": "PASS", "restart": "PASS", "upgrade": "PASS", "post_upgrade_restart": "PASS"},
+        "scope": "Same source version increment; synthetic consent; no UI or physical acceptance",
+    }
+    out = Path("qa-results/identity-upgrade.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
 
 if __name__ == "__main__":
     main()
