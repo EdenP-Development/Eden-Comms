@@ -56,3 +56,7 @@ Run 46103430210 job 140850768313, source 8436b4814cc2b9ef772b7461fcd5d49b70556be
 ## EC-I08G actual acceptance
 
 [Evidence](evidence/encrypted-storage-run-46107109353.json): all twenty distinct case IDs passed in job 140862207612. E07 passed in isolated synthetic debug fixtures. Artifact digest from GitHub metadata; no independent ZIP inspection. EC-I08H adds unsigned release build and static manifest/DEX audit in regression CI; only report uploaded. Release stub behavior and complete E09 acceptance still require additional evidence. No capability activation or distribution.
+
+## EC-I08H first compiled inspection
+
+CI #684 run 46108113789 built unsigned release successfully and passed manifest inspection, but raw DEX token search rejected DebugBluetoothDiscoveryActivity. Shared MainActivity contains class-name strings guarded by debug selection/FLAG_DEBUGGABLE; a name string does not establish a defined class. Revised audit traverses DEX class definitions via type/string tables for named debug activities; manifest exclusions and raw storage/test marker exclusions remain strict. Regression fixtures distinguish a string reference from a class definition and reject malformed tables. Actual revised audit pending; no runtime or release changes.
