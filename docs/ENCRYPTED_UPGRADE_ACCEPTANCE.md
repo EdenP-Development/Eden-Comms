@@ -68,3 +68,7 @@ Exact main c324f86be07116e352e8b37f52327966b6c85bcb, CI #688 run 46109723772: ac
 ## EC-I08H.2 test component correction
 
 CI #689 run 46110116773 failed before executing release tests: testReleaseUnitTest task missing. AGP 9 defaults to only enabling the tested build type's unit-test component (debug). Set android.onlyEnableUnitTestForTheTestedBuildType=false per official AGP 9 migration notes (https://developer.android.com/build/releases/agp-9-0-0-release-notes). Tests use a constructor-free mockable Android ContextWrapper instance confined to JVM test source; Android method access remains fail-fast. No global return-default-values switch, runtime or signing changes. Actual execution pending.
+
+## EC-I08H.2B shared test source isolation
+
+CI #691 run 46115728820 reached release test compilation, confirming the release test component is now enabled. Compilation failed because the legacy shared test source set references debug-only classes (including DebugWifiDirectTargetLinkGate and DebugWifiDirectTcpProbe). Isolate shared Java/Kotlin test sources only during an explicit edenReleaseStubQa invocation; keep normal debug suite intact and release-only test source set enabled. Do not add debug implementation classes to release or relax production boundaries. Actual retest pending.
