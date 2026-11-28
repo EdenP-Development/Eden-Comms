@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/identity-instrumentation-qa.yml'
+      - 'scripts/emulator_identity_qa.py'
+      - 'scripts/tests/test_emulator_identity_qa.py'
       - 'app/src/androidTest/**'
       - 'app/build.gradle.kts'
   workflow_dispatch:
