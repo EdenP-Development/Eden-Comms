@@ -22,8 +22,8 @@ class InstrumentationIdentityTest(unittest.TestCase):
 
     def test_stage_contract(self):
         stages = qa.PRE_UPGRADE + qa.POST_UPGRADE
-        self.assertEqual(len(stages), 20)
-        self.assertEqual(len({case for case, _ in stages}), 20)
+        self.assertEqual(len(stages), 23)
+        self.assertEqual(len({case for case, _ in stages}), 23)
         self.assertEqual({case for case, _ in stages}, qa.REQUIRED_CASES)
         self.assertIn(("peer_pre_upgrade", "verifyPeerMemory"), qa.PRE_UPGRADE)
         self.assertIn(("peer_upgrade", "verifyPeerMemory"), qa.POST_UPGRADE)
@@ -32,6 +32,11 @@ class InstrumentationIdentityTest(unittest.TestCase):
                         qa.POST_UPGRADE.index(("peer_expiry", "verifyPeerMemoryExpiry")))
 
 
+        self.assertEqual(qa.POST_UPGRADE[6:9], (
+            ("session_retained_data", "verifyRetainedDataDoesNotAuthorizeModel"),
+            ("session_fresh_attempt", "verifyFreshAttemptRejectsOldModelApproval"),
+            ("session_decline_peer", "verifyDeclineAndDifferentPeerModel"),
+        ))
         self.assertEqual(qa.POST_UPGRADE[-5:], (
             ('history_corruption', 'verifyHistoryCorruption'),
             ('history_missing_key', 'verifyHistoryMissingKey'),

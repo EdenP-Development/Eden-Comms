@@ -23,7 +23,7 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 | E06 | Session-only default on a new session; retained history does not restore retention selection | NOT RUN |
 | E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | PASS: isolated direct negative fixtures |
 | E08 | No raw keys, plaintext, peer fingerprints or sensitive payloads in artifacts; boolean results only | NOT RUN |
-| E09 | Release stubs remain disabled and no QA entrypoint in production APK | PARTIAL: compiled static inspection passed; release JVM tests pending |
+| E09 | Release stubs remain disabled and no QA entrypoint in production APK | PASS within static APK and targeted release JVM task scope; installed release not tested |
 
 ## Execution design
 
@@ -72,3 +72,7 @@ CI #689 run 46110116773 failed before executing release tests: testReleaseUnitTe
 ## EC-I08H.2B shared test source isolation
 
 CI #691 run 46115728820 reached release test compilation, confirming the release test component is now enabled. Compilation failed because the legacy shared test source set references debug-only classes (including DebugWifiDirectTargetLinkGate and DebugWifiDirectTcpProbe). Isolate shared Java/Kotlin test sources only during an explicit edenReleaseStubQa invocation; keep normal debug suite intact and release-only test source set enabled. Do not add debug implementation classes to release or relax production boundaries. Actual retest pending.
+
+## EC-I09A/B — retained storage and independent authorization models
+
+Exact main 4e712bd989f7c937ab9be4437ccf8c8d0b154548: CI #693 run 46116989169 passed release-specific JVM task and static APK inspection; instrumentation #9 run 46116989213 job 140892915919 logged all 20 required case IDs PASS. Individual release XML not inspected. EC-I09 adds three guarded instrumentation methods after peer_restart and before history_expiry, using retained synthetic records and fresh independent DebugApprovalGate/ProductionSessionAuthorization instances. Checks no automatic model approval, stale attempt rejection, fresh synthetic authenticated-channel notifications and both approvals, decline/close, wrong-peer rejection, and disabled production flags. 23 required case IDs. These independent model tests do not exercise actual adapter wiring, TLS/QR or human consent, or UI retention reset. E06 remains open, E08 remains open; live session acceptance remains open. No runtime changes. Actual new suite execution pending.
