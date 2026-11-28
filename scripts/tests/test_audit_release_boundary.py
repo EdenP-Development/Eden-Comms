@@ -1,16 +1,34 @@
 import sys
 import unittest
+import struct
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import audit_release_boundary as qa
 
 class ReleaseBoundaryTests(unittest.TestCase):
+    @staticmethod
+    def dex(descriptor=b"Lsample/Clean;", trailing=b""):
+        # Minimal table fixture for class-definition traversal, not executable DEX.
+        blob = bytearray(152)
+        blob[:8] = b"dex\n035\x00"
+        for offset, value in ((36, 112), (40, 0x12345678), (56, 1),
+                              (60, 112), (64, 1), (68, 116),
+                              (96, 1), (100, 120), (112, 152)):
+            struct.pack_into("<I", blob, offset, value)
+        blob.extend(bytes([len(descriptor)]) + descriptor + b"\x00" + trailing)
+        struct.pack_into("<I", blob, 32, len(blob))
+        return bytes(blob)
+
     def test_dex(self):
-        qa.inspect_dex([b"dex\nclean"])
+        qa.inspect_dex([self.dex()])
         for token in qa.FORBIDDEN:
             with self.assertRaises(ValueError):
-                qa.inspect_dex([b"dex\nclean", b"dex\n" + token])
-        for bad in ([], [b"invalid"]):
+                qa.inspect_dex([self.dex(), self.dex(trailing=token)])
+        for token in qa.DEBUG_ACTIVITIES:
+            qa.inspect_dex([self.dex(trailing=token)])
+            with self.assertRaises(ValueError):
+                qa.inspect_dex([self.dex(b"Lsample/" + token + b";")])
+        for bad in ([], [b"invalid"], [self.dex()[:-1]]):
             with self.assertRaises(ValueError):
                 qa.inspect_dex(bad)
 
