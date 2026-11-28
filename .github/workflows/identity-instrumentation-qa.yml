@@ -1,0 +1,50 @@
+name: EC-I08 identity instrumentation QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/identity-instrumentation-qa.yml'
+      - 'app/src/androidTest/**'
+      - 'app/build.gradle.kts'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  identity:
+    if: github.repository == 'EdenP-Development/Eden-Comms' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+      - name: Install SDK
+        run: |
+          set -euo pipefail
+          sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0'
+      - name: Build isolated app and separate test APK using same disposable runner signer
+        run: |
+          set -euo pipefail
+          gradle --no-daemon :app:assembleDebug :app:assembleDebugAndroidTest -PedenOfflinePreview=true -PedenOfflinePreviewVersionCode=200001 "-PedenSourceRevision=$GITHUB_SHA"
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Exercise actual Keystore across separate instrumentation invocations
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -camera-back none -camera-front none
+          script: python3 scripts/emulator_identity_qa.py
