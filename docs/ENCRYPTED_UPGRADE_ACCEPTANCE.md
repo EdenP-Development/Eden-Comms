@@ -23,7 +23,7 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 | E06 | Session-only default on a new session; retained history does not restore retention selection | NOT RUN |
 | E07 | Independent wrong-peer, wrong-own-pin, missing-key and corruption fixtures fail closed | PASS: isolated direct negative fixtures |
 | E08 | No raw keys, plaintext, peer fingerprints or sensitive payloads in artifacts; boolean results only | NOT RUN |
-| E09 | Release stubs remain disabled and no QA entrypoint in production APK | NOT RUN |
+| E09 | Release stubs remain disabled and no QA entrypoint in production APK | PARTIAL: compiled static inspection passed; release JVM tests pending |
 
 ## Execution design
 
@@ -60,3 +60,7 @@ Run 46103430210 job 140850768313, source 8436b4814cc2b9ef772b7461fcd5d49b70556be
 ## EC-I08H first compiled inspection
 
 CI #684 run 46108113789 built unsigned release successfully and passed manifest inspection, but raw DEX token search rejected DebugBluetoothDiscoveryActivity. Shared MainActivity contains class-name strings guarded by debug selection/FLAG_DEBUGGABLE; a name string does not establish a defined class. Revised audit traverses DEX class definitions via type/string tables for named debug activities; manifest exclusions and raw storage/test marker exclusions remain strict. Regression fixtures distinguish a string reference from a class definition and reject malformed tables. Actual revised audit pending; no runtime or release changes.
+
+## EC-I08H compiled release acceptance
+
+Exact main c324f86be07116e352e8b37f52327966b6c85bcb, CI #688 run 46109723772: actual unsigned release static inspection PASS and 451 Python tests passed. PR #254 CI #687 also passed. This confirms named manifest exclusions, compiled debug activity class exclusions, storage/test marker exclusions and manifest restrictions within the static audit scope. No release APK distributed. EC-I08H.2 adds three release-only JVM tests using the unmodified release stubs and mock Android ContextWrapper; valid/invalid writes, reads, retention, peer memory and erase operations must refuse or return empty. BuildConfig.DEBUG must be false. Tests are not an installed-device runtime or backup test. Actual execution pending.
