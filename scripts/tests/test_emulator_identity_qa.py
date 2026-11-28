@@ -53,3 +53,9 @@ class InstrumentationIdentityTest(unittest.TestCase):
         self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair PRIVATE START SSL"))
         self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair START START SSLsecret"))
         self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair START START SSL\nEC_QA_STREAM decline_pair START START IO"))
+
+    def test_handshake_failure_subcategories(self):
+        for kind in ("HANDSHAKE_WRAP", "HANDSHAKE_UNWRAP", "HANDSHAKE_INCOMPLETE", "HANDSHAKE_LIMIT", "PROVIDER_STATE", "EXPORTER_UNSUPPORTED", "PIN_VERIFICATION", "HANDSHAKE_PROVIDER"):
+            self.assertEqual(qa.safe_stream_failure("EC_QA_STREAM approve_pair START TLS_PIN " + kind),
+                             "approve_pair START TLS_PIN " + kind)
+            self.assertIsNone(qa.safe_stream_failure("EC_QA_STREAM approve_pair START TLS_PIN " + kind + "_PRIVATE"))

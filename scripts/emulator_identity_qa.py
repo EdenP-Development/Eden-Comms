@@ -81,7 +81,7 @@ def safe_stream_failure(result):
     # No raw instrumentation output, exception message, pin, key or transcript.
     phases = "identity|peer_identity|approve_pair|decline_pair"
     stages = "START|TLS_PIN|QR_CHALLENGES|EXPORTER|COMMITMENT|HUMAN_CONFIRMATIONS"
-    kinds = "SSL|SOCKET_TIMEOUT|WORKER_TIMEOUT|IO|STATE|ARGUMENT|SECURITY|OTHER"
+    kinds = "SSL|SOCKET_TIMEOUT|WORKER_TIMEOUT|IO|STATE|ARGUMENT|SECURITY|OTHER|HANDSHAKE_WRAP|HANDSHAKE_UNWRAP|HANDSHAKE_INCOMPLETE|HANDSHAKE_LIMIT|PROVIDER_STATE|EXPORTER_UNSUPPORTED|PIN_VERIFICATION|HANDSHAKE_PROVIDER"
     pattern = rf"\bEC_QA_STREAM ({phases}) ({stages}) ({stages}) ({kinds})(?=\s|$)"
     matches = set(re.findall(pattern, result))
     return " ".join(next(iter(matches))) if len(matches) == 1 else None
