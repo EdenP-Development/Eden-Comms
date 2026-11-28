@@ -358,6 +358,99 @@ class IdentityContinuityTest {
         check(!historyPath(context).exists())
     }
 
+
+    // Real Android provider and shared protocol over loopback TCP only.
+    // Synthetic decisions, not physical radio or human consent acceptance.
+    @Test fun verifySharedStreamConsent() {
+        guardedContext()
+        val host = checkNotNull(AndroidKeystoreIdentity().existing())
+        val alias = "eden_qa_disposable_stream_peer"
+        val ks = keyStore()
+        check(!ks.containsAlias(alias))
+        val now = System.currentTimeMillis()
+        try {
+            java.security.KeyPairGenerator.getInstance("EC", "AndroidKeyStore").apply {
+                initialize(android.security.keystore.KeyGenParameterSpec.Builder(
+                    alias, android.security.keystore.KeyProperties.PURPOSE_SIGN or
+                        android.security.keystore.KeyProperties.PURPOSE_VERIFY)
+                    .setAlgorithmParameterSpec(java.security.spec.ECGenParameterSpec("secp256r1"))
+                    .setDigests("SHA-256", "NONE")
+                    .setCertificateSubject(javax.security.auth.x500.X500Principal("CN=Disposable QA peer"))
+                    .setCertificateSerialNumber(java.math.BigInteger.ONE)
+                    .setCertificateNotBefore(java.util.Date(now - 86_400_000L))
+                    .setCertificateNotAfter(java.util.Date(now + 86_400_000L))
+                    .build())
+                generateKeyPair()
+            }
+            val entry = keyStore().getEntry(alias, null) as KeyStore.PrivateKeyEntry
+            val join = LocalTlsIdentity(entry.certificate as java.security.cert.X509Certificate, entry.privateKey)
+            check(!host.publicFingerprint().contentEquals(join.publicFingerprint()))
+            fun runPair(decline: Boolean) {
+                val binding = SessionProofBinding(host.publicFingerprint(), join.publicFingerprint(),
+                    ByteArray(16).also { SecureRandom().nextBytes(it) },
+                    ByteArray(16).also { SecureRandom().nextBytes(it) })
+                val expires = System.currentTimeMillis() / 1000 + 180
+                val left = com.edenpractical.comms.bluetooth.DebugBluetoothTlsProbeInput(
+                    host, join.publicFingerprint(), true, binding, expires)
+                val right = com.edenpractical.comms.bluetooth.DebugBluetoothTlsProbeInput(
+                    join, host.publicFingerprint(), false, binding, expires)
+                val admitted = java.util.concurrent.atomic.AtomicInteger()
+                val requested = java.util.concurrent.CountDownLatch(2)
+                val bothDecided = java.util.concurrent.CountDownLatch(2)
+                val loop = java.net.InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1))
+                val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
+                try {
+                    java.net.ServerSocket(0, 1, loop).use { listener ->
+                        java.net.Socket(loop, listener.localPort).use { client ->
+                            listener.accept().use { server ->
+                                server.soTimeout = 15_000
+                                client.soTimeout = 15_000
+                                fun worker(socket: java.net.Socket,
+                                           input: com.edenpractical.comms.bluetooth.DebugBluetoothTlsProbeInput,
+                                           reject: Boolean): Boolean {
+                                    return try {
+                                        com.edenpractical.comms.bluetooth.DebugRfcommTlsProbe.runStreams(
+                                            socket.getInputStream(), socket.getOutputStream(), input,
+                                            onApprovedChannel = { engine, _, _ ->
+                                                check(engine.session.protocol == "TLSv1.3")
+                                                check(bothDecided.count == 0L)
+                                                admitted.incrementAndGet()
+                                            }
+                                        ) { decision ->
+                                            requested.countDown()
+                                            check(requested.await(10, java.util.concurrent.TimeUnit.SECONDS))
+                                            check(admitted.get() == 0)
+                                            check(if (reject) decision.decline() else decision.approve())
+                                            bothDecided.countDown()
+                                            check(bothDecided.await(10, java.util.concurrent.TimeUnit.SECONDS))
+                                        }.close()
+                                        true
+                                    } catch (_: com.edenpractical.comms.bluetooth.DebugBluetoothConsentDenied) {
+                                        false
+                                    }
+                                }
+                                val a = pool.submit(java.util.concurrent.Callable { worker(server, left, false) })
+                                val b = pool.submit(java.util.concurrent.Callable { worker(client, right, decline) })
+                                check(a.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
+                                check(b.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
+                                check(admitted.get() == if (decline) 0 else 2)
+                            }
+                        }
+                    }
+                } finally {
+                    pool.shutdownNow()
+                    left.close()
+                    right.close()
+                }
+            }
+            runPair(false)
+            runPair(true)
+        } finally {
+            keyStore().deleteEntry(alias)
+        }
+        proveSigning(host)
+    }
+
     @Test fun seedIdentity() {
         val context = guardedContext()
         val marker = File(context.noBackupFilesDir, "eden-qa-identity-fingerprint")
