@@ -9,6 +9,7 @@ import com.edenpractical.comms.privacy.LocalHistoryPolicy
 import com.edenpractical.comms.privacy.DebugPeerMemoryStore
 import com.edenpractical.comms.privacy.PeerMemoryPolicy
 import java.io.File
+import java.security.KeyStore
 import java.security.SecureRandom
 import java.security.Signature
 
@@ -142,6 +143,92 @@ class IdentityContinuityTest {
         check(memory.rememberedUntil(other, peer, now) == null)
         check(!memoryPath(context).exists())
         check(memory.rememberedUntil(own, peer, now) == null)
+    }
+
+    private fun historyPath(context: android.content.Context) =
+        File(context.noBackupFilesDir, "eden_comms_local_history_debug_v1/encrypted.ec1")
+
+    private fun keyStore() = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+    private val historyAlias = "eden_comms_debug_history_aes_1"
+    private val memoryAlias = "eden_comms_debug_peer_memory_aes_1"
+
+    private fun corrupt(file: File) {
+        val bytes = file.readBytes()
+        check(bytes.size > 16)
+        bytes[bytes.lastIndex] = (bytes.last().toInt() xor 1).toByte()
+        file.writeBytes(bytes)
+    }
+
+    // Each negative case seeds a fresh synthetic fixture after prior expiry/purge.
+    // Never delete the identity alias or touch a personal installation.
+    @Test fun verifyHistoryCorruption() {
+        val context = guardedContext()
+        val store = DebugLocalHistoryStore(context)
+        val file = historyPath(context)
+        val now = epoch + 4 * day
+        check(!file.exists())
+        check(store.save(peer, LocalHistoryPolicy.Direction.WRITTEN_HERE,
+            81L, fixture, LocalHistoryPolicy.ONE_DAY, now))
+        check(store.read(peer, now).size == 1)
+        corrupt(file)
+        check(store.read(peer, now).isEmpty())
+        check(!file.exists())
+        check(store.read(peer, now).isEmpty())
+    }
+
+    @Test fun verifyHistoryMissingKey() {
+        val context = guardedContext()
+        val store = DebugLocalHistoryStore(context)
+        val file = historyPath(context)
+        val now = epoch + 5 * day
+        check(!file.exists())
+        check(store.save(peer, LocalHistoryPolicy.Direction.WRITTEN_HERE,
+            82L, fixture, LocalHistoryPolicy.ONE_DAY, now))
+        check(store.read(peer, now).size == 1)
+        check(keyStore().containsAlias(historyAlias))
+        keyStore().deleteEntry(historyAlias)
+        check(file.isFile && !keyStore().containsAlias(historyAlias))
+        check(store.read(peer, now).isEmpty())
+        check(!file.exists() && !keyStore().containsAlias(historyAlias))
+        check(store.save(peer, LocalHistoryPolicy.Direction.WRITTEN_HERE,
+            83L, fixture, LocalHistoryPolicy.ONE_DAY, now))
+        check(store.read(peer, now).single().sourceId == 83L)
+        check(store.eraseAll())
+    }
+
+    @Test fun verifyPeerCorruption() {
+        val context = guardedContext()
+        val store = DebugPeerMemoryStore(context)
+        val file = memoryPath(context)
+        val own = ownPin()
+        val now = epoch + 4 * day
+        check(!file.exists())
+        check(store.remember(own, peer, 1, now) == now + day)
+        check(store.rememberedUntil(own, peer, now) == now + day)
+        corrupt(file)
+        check(store.rememberedUntil(own, peer, now) == null)
+        check(!file.exists())
+        check(store.rememberedUntil(own, peer, now) == null)
+    }
+
+    @Test fun verifyPeerMissingKey() {
+        val context = guardedContext()
+        val store = DebugPeerMemoryStore(context)
+        val file = memoryPath(context)
+        val own = ownPin()
+        val now = epoch + 5 * day
+        check(!file.exists())
+        check(store.remember(own, peer, 1, now) == now + day)
+        check(store.rememberedUntil(own, peer, now) == now + day)
+        check(keyStore().containsAlias(memoryAlias))
+        keyStore().deleteEntry(memoryAlias)
+        check(file.isFile && !keyStore().containsAlias(memoryAlias))
+        check(store.rememberedUntil(own, peer, now) == null)
+        check(!file.exists() && !keyStore().containsAlias(memoryAlias))
+        check(store.remember(own, secondPeer, 1, now) == now + day)
+        check(store.rememberedUntil(own, peer, now) == null)
+        check(store.rememberedUntil(own, secondPeer, now) == now + day)
+        check(store.forgetAll())
     }
 
     @Test fun seedIdentity() {
