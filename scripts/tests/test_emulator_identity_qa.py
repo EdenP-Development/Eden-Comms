@@ -19,3 +19,15 @@ class InstrumentationIdentityTest(unittest.TestCase):
         ):
             with self.assertRaises(RuntimeError):
                 qa.verify_test_manifest(bad, xml)
+
+    def test_stage_contract(self):
+        stages = qa.PRE_UPGRADE + qa.POST_UPGRADE
+        self.assertEqual(len(stages), 15)
+        self.assertEqual(len({case for case, _ in stages}), 15)
+        self.assertEqual({case for case, _ in stages}, qa.REQUIRED_CASES)
+        self.assertIn(("peer_pre_upgrade", "verifyPeerMemory"), qa.PRE_UPGRADE)
+        self.assertIn(("peer_upgrade", "verifyPeerMemory"), qa.POST_UPGRADE)
+        self.assertIn(("peer_restart", "verifyPeerMemory"), qa.POST_UPGRADE)
+        self.assertLess(qa.POST_UPGRADE.index(("peer_restart", "verifyPeerMemory")),
+                        qa.POST_UPGRADE.index(("peer_expiry", "verifyPeerMemoryExpiry")))
+
