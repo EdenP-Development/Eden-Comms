@@ -64,3 +64,7 @@ CI #684 run 46108113789 built unsigned release successfully and passed manifest 
 ## EC-I08H compiled release acceptance
 
 Exact main c324f86be07116e352e8b37f52327966b6c85bcb, CI #688 run 46109723772: actual unsigned release static inspection PASS and 451 Python tests passed. PR #254 CI #687 also passed. This confirms named manifest exclusions, compiled debug activity class exclusions, storage/test marker exclusions and manifest restrictions within the static audit scope. No release APK distributed. EC-I08H.2 adds three release-only JVM tests using the unmodified release stubs and mock Android ContextWrapper; valid/invalid writes, reads, retention, peer memory and erase operations must refuse or return empty. BuildConfig.DEBUG must be false. Tests are not an installed-device runtime or backup test. Actual execution pending.
+
+## EC-I08H.2 test component correction
+
+CI #689 run 46110116773 failed before executing release tests: testReleaseUnitTest task missing. AGP 9 defaults to only enabling the tested build type's unit-test component (debug). Set android.onlyEnableUnitTestForTheTestedBuildType=false per official AGP 9 migration notes (https://developer.android.com/build/releases/agp-9-0-0-release-notes). Tests use a constructor-free mockable Android ContextWrapper instance confined to JVM test source; Android method access remains fail-fast. No global return-default-values switch, runtime or signing changes. Actual execution pending.
