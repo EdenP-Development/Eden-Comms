@@ -76,3 +76,15 @@ CI #691 run 46115728820 reached release test compilation, confirming the release
 ## EC-I09A/B — retained storage and independent authorization models
 
 Exact main 4e712bd989f7c937ab9be4437ccf8c8d0b154548: CI #693 run 46116989169 passed release-specific JVM task and static APK inspection; instrumentation #9 run 46116989213 job 140892915919 logged all 20 required case IDs PASS. Individual release XML not inspected. EC-I09 adds three guarded instrumentation methods after peer_restart and before history_expiry, using retained synthetic records and fresh independent DebugApprovalGate/ProductionSessionAuthorization instances. Checks no automatic model approval, stale attempt rejection, fresh synthetic authenticated-channel notifications and both approvals, decline/close, wrong-peer rejection, and disabled production flags. 23 required case IDs. These independent model tests do not exercise actual adapter wiring, TLS/QR or human consent, or UI retention reset. E06 remains open, E08 remains open; live session acceptance remains open. No runtime changes. Actual new suite execution pending.
+
+## EC-I09C/D actual model evidence and retention lifecycle
+
+[Run evidence](evidence/session-model-run-46122387170.json): exact main 57d67004e317db50d985730d62441c411edbc5f8, run 46122387170 job 140909500830, all 23 distinct case IDs PASS. GitHub digest metadata only. Independent model tests passed with actual retained debug data present; no live TLS/consent/UI acceptance. EC-I09D introduces in-memory SessionHistorySelection actually used by LocalPairingTestScreen for fresh/confirmed/reset/explicit successful selection and save suppression. Existing stage checks and storage calls remain in UI. Four JVM tests cover new peer/same peer reset, valid choices, disappearing suppression, invalid input, defensive public-pin copies. Public pins are not secrets; old immutable copies may persist until GC; no secure erasure claim. E06 partial pending actual test execution and live session UI acceptance. No production capability changes.
+
+## EC-I09D source guard correction
+
+CI #696 run 46123077173 job 140911584580 compiled debug and passed JVM task and signing smoke, then failed the existing source guard (legacy inline retention variable assertions). Release checks skipped. Update the guard to require actual UI use of fresh/activate/choose/reset/maySave and the component's default, valid selection and suppression rules; keep all other storage and release checks. No further runtime changes. Retest pending.
+
+## EC-I09D.2 regression assertion correction
+
+CI #697 run 46123381782 passed the revised security shell guard but Python F5-A source regression errored on the removed activeHistoryPin name (451 run, one error). Preserve approval/activation/event/save ordering, callback admission, explicit choice, reset and disappearing suppression assertions against the actual integrated component and UI. No runtime change in this correction. Retest pending.
