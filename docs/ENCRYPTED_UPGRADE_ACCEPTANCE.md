@@ -1,6 +1,6 @@
 # EC-I08 — Encrypted upgrade acceptance contract
 
-Status: design only; every test below NOT RUN. Source audited at 008d72a18ecfd341a1b74790378948a59fb5b5c2.
+Status: initial process-restart instrumentation passed; full acceptance remains open. Source audited at 008d72a18ecfd341a1b74790378948a59fb5b5c2.
 Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. Original internal 10062 remains recommended; physical 0/54; NO-SHIP.
 
 ## Source boundaries
@@ -15,7 +15,7 @@ Prior evidence: EC-I05 6/6 and EC-I06/07 U01–U09 passed on isolated Preview. O
 
 | ID | Required observation | Status |
 |---|---|---|
-| E01 | Fresh isolated Preview identity created by explicit consent; synthetic challenge signed and verified | NOT RUN |
+| E01 | Fresh isolated Preview identity created by explicit consent; synthetic challenge signed and verified | PARTIAL: direct test consent and signing passed; UI consent not tested |
 | E02 | In-place same-signer version increase preserves public certificate fingerprint and usable key; no regeneration | NOT RUN |
 | E03 | Synthetic opted-in history retained with same content, direction, source ID, creation and expiry | NOT RUN |
 | E04 | Synthetic remembered peer retained with same original expiry and own identity | NOT RUN |
@@ -32,3 +32,7 @@ Stage A: inspect existing Android test infrastructure and available UI identity 
 Historical Preview 200040/200043 original artifacts expire Nov 30 07:47/08:50 UTC. Preserve receipts; refresh exact inputs or retire the old automatic trigger deliberately. Existing U01–U09 evidence remains valid for its pinned pair. Do not commit APK binaries or temporary keys to Git. All emulator fixtures are disposable, with no physical devices, no reset between versions, and no public distribution. Output only pass/fail, test ID and nonsensitive scope; never dump app storage, screenshots of secrets, or raw exception payloads.
 
 No app runtime or release feature changes authorized by this contract.
+
+## EC-I08C actual evidence
+
+Run [46099579809](https://github.com/EdenP-Development/Eden-Comms/actions/runs/46099579809), job 140838738160, exact source b3f22416d0ed9e433f5969480b174d8534dc1bfb: successful log lines seedIdentity: PASS and verifyIdentity: PASS. Same APK across process restarts, not upgrade. EC-I08D builds two same-source versions 200001/200002 using one disposable runner signer, verifies both and separate test APK before install, then verifies identity after in-place update and restart. No historical artifact dependency or release signer; only nonsensitive receipt uploaded. E02 pending actual execution.
