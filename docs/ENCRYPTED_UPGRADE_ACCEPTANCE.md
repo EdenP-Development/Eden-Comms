@@ -92,3 +92,7 @@ CI #697 run 46123381782 passed the revised security shell guard but Python F5-A 
 ## EC-I09E — integrated retention and encrypted storage
 
 Exact main 58fee0db51f5415a77a7b2612dda0e2ec7b4f79c Android CI #699 and private signing #86 completed successfully. Add one guarded Android instrumentation method using the same SessionHistorySelection component as the pairing screen plus actual DebugLocalHistoryStore. Independent synthetic fixture after prior destructive tests, before final identity proof. Checks session-only save refusal, successful explicit retention change, new record expiry, unchanged old expiry on lengthening, disappearing suppression through mirrored callback gate, disconnect/same-peer/different-peer reset, and distinction between fresh session-only default (preserves prior records) and explicit off (purges peer history). 24 required stages; execution pending. No actual UI callback or live consent claim. E06 remains partial, E08 open. No runtime changes.
+
+## EC-I09E execution evidence
+
+Exact main b194e6a9acebf83a9b928d246a48c183a2f32f48 CI #701, signing #87 and instrumentation #11 succeeded. Run 46125551518 job 140919236172 logged all 24 case IDs PASS. [Receipt](evidence/retention-storage-run-46125551518.json) preserves log and artifact metadata, not independent archive verification. E06 component/store acceptance passed within isolated synthetic fixture and mirrored callback scope; live UI reset/consent still outstanding. E08 open. Next EC-I10 shared transport acceptance; no production activation.
