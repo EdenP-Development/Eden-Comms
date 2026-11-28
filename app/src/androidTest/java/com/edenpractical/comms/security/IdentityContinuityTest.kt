@@ -363,6 +363,7 @@ class IdentityContinuityTest {
     // Synthetic decisions, not physical radio or human consent acceptance.
     @Test fun verifySharedStreamConsent() {
         guardedContext()
+        var qaPhase = "identity"
         val host = checkNotNull(AndroidKeystoreIdentity().existing())
         val alias = "eden_qa_disposable_stream_peer"
         val ks = keyStore()
@@ -382,10 +383,12 @@ class IdentityContinuityTest {
                     .build())
                 generateKeyPair()
             }
+            qaPhase = "peer_identity"
             val entry = keyStore().getEntry(alias, null) as KeyStore.PrivateKeyEntry
             val join = LocalTlsIdentity(entry.certificate as java.security.cert.X509Certificate, entry.privateKey)
             check(!host.publicFingerprint().contentEquals(join.publicFingerprint()))
             fun runPair(decline: Boolean) {
+                qaPhase = if (decline) "decline_pair" else "approve_pair"
                 val binding = SessionProofBinding(host.publicFingerprint(), join.publicFingerprint(),
                     ByteArray(16).also { SecureRandom().nextBytes(it) },
                     ByteArray(16).also { SecureRandom().nextBytes(it) })
@@ -395,6 +398,8 @@ class IdentityContinuityTest {
                 val right = com.edenpractical.comms.bluetooth.DebugBluetoothTlsProbeInput(
                     join, host.publicFingerprint(), false, binding, expires)
                 val admitted = java.util.concurrent.atomic.AtomicInteger()
+                val hostStage = java.util.concurrent.atomic.AtomicReference("START")
+                val joinStage = java.util.concurrent.atomic.AtomicReference("START")
                 val requested = java.util.concurrent.CountDownLatch(2)
                 val bothDecided = java.util.concurrent.CountDownLatch(2)
                 val loop = java.net.InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1))
@@ -411,6 +416,9 @@ class IdentityContinuityTest {
                                     return try {
                                         com.edenpractical.comms.bluetooth.DebugRfcommTlsProbe.runStreams(
                                             socket.getInputStream(), socket.getOutputStream(), input,
+                                            onVerifiedStage = { stage ->
+                                                (if (input.hostRole) hostStage else joinStage).set(stage.name)
+                                            },
                                             onApprovedChannel = { engine, _, _ ->
                                                 check(engine.session.protocol == "TLSv1.3")
                                                 check(bothDecided.count == 0L)
@@ -431,9 +439,23 @@ class IdentityContinuityTest {
                                 }
                                 val a = pool.submit(java.util.concurrent.Callable { worker(server, left, false) })
                                 val b = pool.submit(java.util.concurrent.Callable { worker(client, right, decline) })
-                                check(a.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
-                                check(b.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
-                                check(admitted.get() == if (decline) 0 else 2)
+                                try {
+                                    check(a.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
+                                    check(b.get(35, java.util.concurrent.TimeUnit.SECONDS) == !decline)
+                                    check(admitted.get() == if (decline) 0 else 2)
+                                } catch (error: Exception) {
+                                    val cause = if (error is java.util.concurrent.ExecutionException) error.cause ?: error else error
+                                    val kind = when (cause) {
+                                        is javax.net.ssl.SSLException -> "SSL"
+                                        is java.net.SocketTimeoutException -> "SOCKET_TIMEOUT"
+                                        is java.util.concurrent.TimeoutException -> "WORKER_TIMEOUT"
+                                        is java.io.IOException -> "IO"
+                                        is IllegalStateException -> "STATE"
+                                        is IllegalArgumentException -> "ARGUMENT"
+                                        else -> "OTHER"
+                                    }
+                                    throw AssertionError("EC_QA_STREAM ${qaPhase} ${hostStage.get()} ${joinStage.get()} ${kind}")
+                                }
                             }
                         }
                     }
@@ -445,6 +467,15 @@ class IdentityContinuityTest {
             }
             runPair(false)
             runPair(true)
+        } catch (error: Exception) {
+            val kind = when (error) {
+                is java.security.GeneralSecurityException -> "SECURITY"
+                is IllegalArgumentException -> "ARGUMENT"
+                is IllegalStateException -> "STATE"
+                is java.io.IOException -> "IO"
+                else -> "OTHER"
+            }
+            throw AssertionError("EC_QA_STREAM ${qaPhase} START START ${kind}")
         } finally {
             keyStore().deleteEntry(alias)
         }
