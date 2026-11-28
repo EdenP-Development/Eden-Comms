@@ -67,6 +67,8 @@ jobs:
         run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - name: Audit packaged APK privacy/dependency surface
         run: python3 scripts/audit_play_surface.py --apk app/build/outputs/apk/debug/app-debug.apk --output-dir app/build/play-evidence
+      - name: Exercise release-only storage stubs
+        run: gradle --no-daemon :app:testReleaseUnitTest --tests com.edenpractical.comms.privacy.ReleaseStorageBoundaryTest "-PedenSourceRevision=$GITHUB_SHA"
       - name: Build unsigned release for boundary inspection only
         run: gradle --no-daemon :app:assembleRelease "-PedenSourceRevision=$GITHUB_SHA"
       - name: Inspect non-debug release APK boundary
