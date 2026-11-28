@@ -1,0 +1,28 @@
+{
+  "source_commit": "6a470a416865c5e8044f032514b1fa8dfbadc10b",
+  "workflow_run": 46106176532,
+  "job": 140859324394,
+  "artifact_id": 15247717148,
+  "artifact_zip_sha256": "ed6e27836e61c05569522a7b544b9b8787cbbab20517500d02a58ab3211baa74",
+  "artifact_expires_utc": "2026-12-05T04:13:30Z",
+  "evidence_basis": "GitHub successful job and fifteen unique case-ID PASS log lines; artifact metadata from GitHub, ZIP not independently inspected",
+  "cases": {
+    "seed": "PASS",
+    "history_seed": "PASS",
+    "peer_seed": "PASS",
+    "restart": "PASS",
+    "history_pre_upgrade": "PASS",
+    "peer_pre_upgrade": "PASS",
+    "upgrade": "PASS",
+    "history_upgrade": "PASS",
+    "peer_upgrade": "PASS",
+    "post_upgrade_restart": "PASS",
+    "history_restart": "PASS",
+    "peer_restart": "PASS",
+    "history_expiry": "PASS",
+    "peer_expiry": "PASS",
+    "peer_wrong_identity": "PASS"
+  },
+  "scope": "Same-source isolated debug Preview 200001 to 200002; synthetic store fixtures; no live consent or production acceptance",
+  "supersedes_incomplete_run": 46103430210
+}
