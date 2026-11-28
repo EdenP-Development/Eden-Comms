@@ -446,7 +446,18 @@ class IdentityContinuityTest {
                                 } catch (error: Exception) {
                                     val cause = if (error is java.util.concurrent.ExecutionException) error.cause ?: error else error
                                     val kind = when (cause) {
-                                        is javax.net.ssl.SSLException -> "SSL"
+                                        is javax.net.ssl.SSLException -> when (cause.message) {
+                                            "Unexpected TLS handshake wrap" -> "HANDSHAKE_WRAP"
+                                            "Unexpected TLS handshake unwrap" -> "HANDSHAKE_UNWRAP"
+                                            "No completed initial TLS handshake" -> "HANDSHAKE_INCOMPLETE"
+                                            "TLS handshake exceeded bounded diagnostic steps" -> "HANDSHAKE_LIMIT"
+                                            "Unsupported Bluetooth TLS control provider state" -> "PROVIDER_STATE"
+                                            "TLS engine exporter requires Android 12 or newer",
+                                            "TLS provider does not support channel exporter" -> "EXPORTER_UNSUPPORTED"
+                                            else -> if (cause is javax.net.ssl.SSLPeerUnverifiedException)
+                                                "PIN_VERIFICATION" else if (cause is javax.net.ssl.SSLHandshakeException)
+                                                "HANDSHAKE_PROVIDER" else "SSL"
+                                        }
                                         is java.net.SocketTimeoutException -> "SOCKET_TIMEOUT"
                                         is java.util.concurrent.TimeoutException -> "WORKER_TIMEOUT"
                                         is java.io.IOException -> "IO"
