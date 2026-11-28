@@ -80,3 +80,7 @@ Exact main 4e712bd989f7c937ab9be4437ccf8c8d0b154548: CI #693 run 46116989169 pas
 ## EC-I09C/D actual model evidence and retention lifecycle
 
 [Run evidence](evidence/session-model-run-46122387170.json): exact main 57d67004e317db50d985730d62441c411edbc5f8, run 46122387170 job 140909500830, all 23 distinct case IDs PASS. GitHub digest metadata only. Independent model tests passed with actual retained debug data present; no live TLS/consent/UI acceptance. EC-I09D introduces in-memory SessionHistorySelection actually used by LocalPairingTestScreen for fresh/confirmed/reset/explicit successful selection and save suppression. Existing stage checks and storage calls remain in UI. Four JVM tests cover new peer/same peer reset, valid choices, disappearing suppression, invalid input, defensive public-pin copies. Public pins are not secrets; old immutable copies may persist until GC; no secure erasure claim. E06 partial pending actual test execution and live session UI acceptance. No production capability changes.
+
+## EC-I09D source guard correction
+
+CI #696 run 46123077173 job 140911584580 compiled debug and passed JVM task and signing smoke, then failed the existing source guard (legacy inline retention variable assertions). Release checks skipped. Update the guard to require actual UI use of fresh/activate/choose/reset/maySave and the component's default, valid selection and suppression rules; keep all other storage and release checks. No further runtime changes. Retest pending.
