@@ -97,6 +97,36 @@ class DebugTlsEngineHandshakeTest {
         }
     }
 
+    @Test fun emptyWrapRequiresRealStateProgressAndNoApplicationConsumption() {
+        val ok = javax.net.ssl.SSLEngineResult.Status.OK
+        val wrap = javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_WRAP
+        val unwrap = javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_UNWRAP
+        val finished = javax.net.ssl.SSLEngineResult.HandshakeStatus.FINISHED
+        val idle = javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
+        fun result(status: javax.net.ssl.SSLEngineResult.Status,
+                   phase: javax.net.ssl.SSLEngineResult.HandshakeStatus,
+                   consumed: Int = 0, produced: Int = 0) =
+            javax.net.ssl.SSLEngineResult(status, phase, consumed, produced)
+        DebugTlsEngineHandshake.requireWrapProgress(result(ok, unwrap), 0, unwrap)
+        DebugTlsEngineHandshake.requireWrapProgress(result(ok, finished), 0, idle)
+        DebugTlsEngineHandshake.requireWrapProgress(result(ok, wrap, produced = 8), 8, wrap)
+        for ((r, current) in listOf(
+            result(ok, wrap) to wrap,
+            result(ok, unwrap) to wrap,
+            result(ok, idle) to idle,
+            result(ok, unwrap, consumed = 1) to unwrap,
+            result(javax.net.ssl.SSLEngineResult.Status.CLOSED, finished) to idle,
+            result(javax.net.ssl.SSLEngineResult.Status.BUFFER_OVERFLOW, wrap) to wrap
+        )) {
+            assertThrows(SSLException::class.java) {
+                DebugTlsEngineHandshake.requireWrapProgress(r, 0, current)
+            }
+        }
+        assertThrows(SSLException::class.java) {
+            DebugTlsEngineHandshake.requireWrapProgress(result(ok, wrap, produced = 8), 7, wrap)
+        }
+    }
+
     @Test fun realEngineWillNotApproveInitialHandshakeWithoutRemoteTlsPeer() {
         val engine = Tls13PeerContext(minimalLocal, ByteArray(32) { 0x31 })
             .unconnectedEngine(client = true)
