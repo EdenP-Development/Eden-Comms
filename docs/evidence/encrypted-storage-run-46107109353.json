@@ -1,0 +1,32 @@
+{
+  "source_commit": "749fdeeaec516b50b2235be392896107f14b797a",
+  "workflow_run": 46107109353,
+  "job": 140862207612,
+  "artifact_id": 15248525854,
+  "artifact_zip_sha256": "e1e364774aff5a4f842913117dace2a47aa0209c9cc478add509a345a1618aa2",
+  "artifact_expires_utc": "2026-12-05T04:26:01Z",
+  "evidence_basis": "Successful GitHub job and twenty distinct case-ID PASS log lines; ZIP digest reported by GitHub, not independently inspected",
+  "cases": {
+    "seed": "PASS",
+    "history_seed": "PASS",
+    "peer_seed": "PASS",
+    "restart": "PASS",
+    "history_pre_upgrade": "PASS",
+    "peer_pre_upgrade": "PASS",
+    "upgrade": "PASS",
+    "history_upgrade": "PASS",
+    "peer_upgrade": "PASS",
+    "post_upgrade_restart": "PASS",
+    "history_restart": "PASS",
+    "peer_restart": "PASS",
+    "history_expiry": "PASS",
+    "peer_expiry": "PASS",
+    "peer_wrong_identity": "PASS",
+    "history_corruption": "PASS",
+    "history_missing_key": "PASS",
+    "peer_corruption": "PASS",
+    "peer_missing_key": "PASS",
+    "identity_after_storage_failures": "PASS"
+  },
+  "scope": "Isolated same-source debug Preview upgrade; synthetic store fixtures only"
+}
