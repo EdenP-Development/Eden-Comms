@@ -40,6 +40,14 @@ val prepareEpsArtwork = tasks.register("prepareEpsArtwork") {
 android {
     sourceSets.getByName("main").res.srcDir(epsResources.get().asFile)
 
+    // Existing shared JVM suite intentionally exercises debug-only classes.
+    // Isolate the release-specific test invocation without moving legacy tests
+    // or changing ordinary debug CI. Only the release test source set is used.
+    if (providers.gradleProperty("edenReleaseStubQa").orNull == "true") {
+        sourceSets.getByName("test").java.setSrcDirs(emptyList<String>())
+        sourceSets.getByName("test").kotlin.setSrcDirs(emptyList<String>())
+    }
+
     namespace = "com.edenpractical.comms"
     compileSdk {
         version = release(37) {
