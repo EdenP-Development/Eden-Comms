@@ -27,6 +27,9 @@ POST_UPGRADE = (
     ("post_upgrade_restart", "verifyIdentity"),
     ("history_restart", "verifyHistory"),
     ("peer_restart", "verifyPeerMemory"),
+    ("session_retained_data", "verifyRetainedDataDoesNotAuthorizeModel"),
+    ("session_fresh_attempt", "verifyFreshAttemptRejectsOldModelApproval"),
+    ("session_decline_peer", "verifyDeclineAndDifferentPeerModel"),
     ("history_expiry", "verifyHistoryExpiry"),
     ("peer_expiry", "verifyPeerMemoryExpiry"),
     ("peer_wrong_identity", "verifyPeerMemoryWrongIdentity"),
@@ -43,6 +46,7 @@ REQUIRED_CASES = frozenset({
     "peer_expiry", "peer_wrong_identity", "history_corruption",
     "history_missing_key", "peer_corruption", "peer_missing_key",
     "identity_after_storage_failures",
+    "session_retained_data", "session_fresh_attempt", "session_decline_peer",
 })
 
 def signer(apk):
@@ -135,7 +139,7 @@ def main():
                        for p in (app, test, successor)},
         "result": "PASS",
         "cases": cases,
-        "scope": "Same source version increment; synthetic store-level fixtures; no UI or physical acceptance",
+        "scope": "Same source version increment; synthetic store and independent authorization model fixtures; no live transport, UI or physical acceptance",
     }
     out = Path("qa-results/identity-upgrade.json")
     out.parent.mkdir(parents=True, exist_ok=True)
