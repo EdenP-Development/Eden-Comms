@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I08C automatic harness trigger and Beta 1 baseline reconciliation
+
+PR #247 merged 4ab43994b551247f61a3598cbab2e85005a398f3; CI #670 passed, exact main Android #671 and signing #76 passed. No instrumentation run triggered because the workflow paths omitted scripts/emulator_identity_qa.py. Add harness and its regression test to main-only path filters. Reconcile BETA_1_RELEASE_AUTHORIZATION.md to recommended 10062/10059 and isolated Preview acceptance evidence without changing NO-SHIP gates. Actual Keystore tests still NOT RUN; physical 0/54; owner custody and independent security pending.
+
 ## EC-I08C instrumentation metadata correction
 
 SDK correction PR #246 merged 66d753f0348bdeb11d52a91e9380c609984e67b9. Android #669 and signing #75 passed. Instrumentation #2 run 46096052875 job 140827520267 compiled both APKs and booted emulator, failed before install at generic APK badging parser. Exact offending APK metadata not printed; likely test APK version fields. Keep strict app package/version verification, separate test package and manifest target/runner checks, matched verified signer and fresh emulator guards. Regression fixtures added. Actual Keystore 0 tests executed; E01–E09 NOT RUN. No runtime change; internal 10062; physical 0/54; NO-SHIP.
