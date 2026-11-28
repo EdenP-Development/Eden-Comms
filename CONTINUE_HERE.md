@@ -1,5 +1,9 @@
 # Continue Eden Comms
 
+## EC-I08C instrumentation metadata correction
+
+SDK correction PR #246 merged 66d753f0348bdeb11d52a91e9380c609984e67b9. Android #669 and signing #75 passed. Instrumentation #2 run 46096052875 job 140827520267 compiled both APKs and booted emulator, failed before install at generic APK badging parser. Exact offending APK metadata not printed; likely test APK version fields. Keep strict app package/version verification, separate test package and manifest target/runner checks, matched verified signer and fresh emulator guards. Regression fixtures added. Actual Keystore 0 tests executed; E01–E09 NOT RUN. No runtime change; internal 10062; physical 0/54; NO-SHIP.
+
 ## EC-I08C instrumentation SDK setup correction (2026-11-27)
 
 PR #245 merged 88e59ee6f8d0d4cddb0b9fb82a3e532f73ab87d1 after CI #666; hub b2427e2f9118b40ec7a82abdcc03ea1ab62dbc9c. Exact main Android #667 and private signing #74 passed. Instrumentation #1 run 46087459097 job 140800287849 failed at Install SDK, sdkmanager not on PATH (exit 127), before APK compilation or test execution. Reuse existing Preview workflow SDK discovery under ANDROID_HOME/cmdline-tools. Automatic scoped main trigger remains. E01–E09 not accepted; initial test is process restart only, not upgrade or UI consent. Internal 10062 remains recommended; physical 0/54; NO-SHIP.
